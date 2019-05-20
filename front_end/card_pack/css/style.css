@@ -1,0 +1,99 @@
+/* Card General and Question Card*/
+
+.card {
+    max-width: 300px;
+    margin: auto;
+    border: #2699FB solid;
+}
+
+.card button {
+    border: none;
+    outline: 0;
+    padding: 12px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    width: 50%;
+    font-size: 18px;
+}
+
+.card button:hover {
+    opacity: 0.7;
+}
+
+.add_button {
+    float: left;
+    background-color: #BCE0FD;
+}
+
+.remove_button {
+    float: right;
+    background-color: #2699FB;
+}
+
+.question_card p {
+    padding: 10px;
+    margin: 0px;
+    text-align: left;
+    border-bottom: #2699FB solid;
+    font-family: 'Quicksand', sans-serif;
+    color: #2699FB;
+}
+
+.card_header {
+    background-color: #2699FB;
+    border: 1px #2699FB solid;
+    padding: 10px;
+}
+
+.card_header h6{
+    font-family: 'Cabin', sans-serif;
+    color: white;
+}
+
+.button_p {
+    padding: 0px;
+    margin: 0px;
+}
+
+
+/* User card */
+
+
+.user_card .card {
+    max-width: 300px;
+    margin: auto;
+    border: #2699FB solid;
+}
+
+.user_card img {
+    width: 50%;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.user_card p {
+    text-align: center;
+    font-family: 'Quicksand', sans-serif;
+    color: #2699FB;
+    font-size: 16px;
+}
+
+/* Add friend card */
+
+.user_card .add_friend_card {
+    max-width: 300px;
+    margin: auto;
+    border: #2699FB solid;
+}
+
+.add_friend_card button {
+    font-family: 'Cabin', sans-serif;
+}
+
+
+
