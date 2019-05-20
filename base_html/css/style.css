@@ -1,0 +1,293 @@
+/*
+Author: Danilo Jovanovic
+
+Colors:
+	sub_header	        : #F1F9FF
+	main_menu, footer 	: #2699FB
+
+Table OF Contents
+------------------------------------
+1 > General
+2 > Header and Menu
+3 > Responsive
+
+------------------------------------*/
+
+
+/*--------------------------------*\
+    General
+\*--------------------------------*/
+
+a {
+  text-decoration: none;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+
+a:hover, a :hover {
+  color: #ff8b23;
+  text-decoration: none;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2a2a2a;
+  font-family: "Cabin", sans-serif;
+}
+
+h2 {
+  font-size: 36px;
+  line-height: 28px;
+  color: #2a2a2a;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 24px;
+  line-height: 25px;
+}
+
+h5 {
+  font-size: 18px;
+  line-height: 22px;
+}
+
+img {
+  max-width: 100%;
+}
+
+a:focus, .button:focus, button:focus, .btn:focus {
+  text-decoration: none;
+  outline: none;
+  box-shadow: none;
+  -webkit-transition: 1s;
+  transition: 1s;
+}
+
+.z_index {
+  z-index: 9 !important;
+  position: relative;
+}
+
+/*--------------------------------*\
+    Header and Menu
+\*--------------------------------*/
+
+.sub_header {
+  padding: 20px 0px;
+  background-color: #F1F9FF;
+}
+
+.sub_header img {
+  height: 100px;
+  width: 100px;
+}
+
+.main_menu {
+  background-color: #2699FB;
+}
+
+.main_menu .navbar-light .navbar-nav .nav-link {
+  color: #2a2a2a;
+  font-weight: 300;
+  font-family: "Roboto", sans-serif;
+}
+
+.menu_fixed {
+  position: fixed;
+  z-index: 9999 !important;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.05);
+  top: 0;
+}
+
+.menu_fixed span {
+  color: #000 !important;
+}
+
+.main_menu .header_social_icon ul li {
+  padding-right: 13px;
+}
+
+.main_menu .header_social_icon ul li a {
+  color: #c3c6c9;
+}
+
+.main_menu .header_social_icon ul li a:hover {
+  color: #ff8b23;
+}
+
+.main_menu ul li {
+  display: inline-block;
+  font-size: 14px;
+  text-transform: uppercase;
+  padding-right: 22px;
+}
+
+.main_menu ul li :hover {
+  color: #ff8b23 !important;
+}
+
+
+/*--------------------------------*\
+    Footer
+\*--------------------------------*/
+
+.footer {
+  background-color: #2699FB;
+}
+
+
+/*--------------------------------*\
+    Responsive
+\*--------------------------------*/
+
+@media (max-width: 576px) {
+
+  h2 {
+    font-size: 22px;
+    line-height: 25px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+
+  h2 {
+    font-size: 24px;
+    line-height: 25px;
+  }
+}
+
+
+@media (max-width: 576px) {
+  h3 {
+    font-size: 20px;
+  }
+}
+
+
+@media (max-width: 576px) {
+
+  .sub_header #logo {
+    text-align: center;
+}
+}
+
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+
+  .sub_header #logo {
+    text-align: center;
+  }
+}
+
+.main_menu .navbar {
+  padding: 20px 0px;
+}
+
+.main_menu ul li {
+  display: inline-block;
+  font-size: 14px;
+  text-transform: uppercase;
+  padding-right: 22px;
+}
+
+.main_menu ul li :hover {
+  color: #ff8b23 !important;
+}
+
+
+@media (max-width: 576px) {
+
+  .main_menu .main_menu {
+    position: relative;
+    z-index: 99;
+  }
+
+  .main_menu .navbar-light .navbar-toggler {
+    border: 0px solid transparent;
+  }
+
+  .main_menu .navbar-collapse {
+    position: absolute;
+    left: 0;
+    top: 78px;
+    z-index: 99;
+    width: 100%;
+    background-color: #fff;
+  }
+
+  .main_menu .nav-item {
+    padding: 5px 10px 5px 15px;
+    background-color: #ff8b23;
+  }
+
+  .main_menu .navbar-nav .nav-link:hover {
+    color: #fff !important;
+  }
+
+}
+
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+
+  .main_menu .main_menu {
+    position: relative;
+  }
+
+  .main_menu .navbar-light .navbar-toggler {
+    border: 0px solid transparent;
+  }
+
+
+  .main_menu .navbar-collapse {
+    position: absolute;
+    left: 0;
+    top: 78px;
+    z-index: 99;
+    width: 100%;
+    background-color: #fff;
+  }
+
+  .main_menu .nav-item {
+    padding: 5px 10px 5px 15px;
+    background-color: #ff8b23;
+  }
+
+  .main_menu .navbar-nav .nav-link:hover {
+    color: #fff !important;
+  }
+
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+  .main_menu .main_menu {
+    position: relative;
+  }
+
+  .main_menu .navbar-light .navbar-toggler {
+    border: 0px solid transparent;
+  }
+
+  .main_menu .navbar-collapse {
+    position: absolute;
+    left: 0;
+    top: 78px;
+    z-index: 99;
+    width: 100%;
+    background-color: #fff;
+  }
+
+  .main_menu .nav-item {
+    padding: 5px 10px 5px 15px;
+    background-color: #ff8b23;
+  }
+
+  .main_menu .navbar-nav .nav-link:hover {
+    color: #fff !important;
+  }
+
+}
+
