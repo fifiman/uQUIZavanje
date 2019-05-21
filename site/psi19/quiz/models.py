@@ -29,8 +29,11 @@ class Senior_user(models.Model):
 # Connects two users, and allows them to see eachothers profiles, and play with eachother
 class Friendship(models.Model):
     first_friend_id = models.ForeignKey(User, related_name = '%(class)s_f1', on_delete=models.DO_NOTHING)
-    first_friend_id = models.ForeignKey(User, related_name = '%(class)s_f2', on_delete=models.DO_NOTHING)
+    second_friend_id = models.ForeignKey(User, related_name = '%(class)s_f2', on_delete=models.DO_NOTHING)
 
+
+    def __str__(self):
+        return self.first_friend_id + " " + self.second_friend_id
 
 #class containing all game relevant data
 class Game(models.Model):
