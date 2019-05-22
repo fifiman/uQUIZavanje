@@ -42,9 +42,15 @@
                         </div>
                     </div>
                     <div class="col-xs-4 col-md-4 col-xl-6">
+                        {% if user.is_authenticated %}
                         <div class="float-right">
-                            <a href="#" class="btn btn-outline-primary"><i class="#"></i>Create Profile</a>
+                            <a href="#" class="btn btn-outline-primary"><i class="#"></i>Signed In</a>
                         </div>
+                        {% else %}
+                        <div class="float-right">
+                            <a href="#" class="btn btn-outline-primary"><i class="#"></i>Not Signed In</a>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
