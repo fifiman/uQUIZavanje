@@ -23,6 +23,13 @@ class Senior_user(models.Model):
     is_moderator = models.BooleanField(default = False)
     ranking = models.IntegerField()
 
+    def __str__(self):
+        return str(self.user) + str(self.ranking)
+
+    def get_global_top_10():
+        return Senior_user.objects.order_by('ranking')[:10]
+
+
 # IMPORTANT - table admin is unnecessary because of the staff member part of user
 # TODO - check out if staff members helps with is_moderator
 
