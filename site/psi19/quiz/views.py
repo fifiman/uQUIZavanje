@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 from quiz.models import *
+from quiz.forms import *
 
 def home(request):
     template = loader.get_template('quiz/home.html')
@@ -25,16 +26,6 @@ def global_rank_list(request):
 
     return HttpResponse(template.render(context, request))
 
-"""
-def search(request):
-    if 'q' in request.GET and request.GET['q']:
-        q = request.GET['q']
-        books = Book.objects.filter(title__icontains=q)
-        return render(request, 'books/search_results.html',
-                      {'books': books, 'query': q})
-    else:
-        return HttpResponse('Please submit a search term.')
-"""
 
 #search by username
 def search(request):
@@ -77,7 +68,39 @@ def unfollow(request):
     return redirect('/home')
 
 
-def signup(request):
+def submit_a_question(request):
+
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = QuestionForm(request.POST)
+        # check whether it's valid:
+        # print('DRUGI POZIV')
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            
+            q = request.POST['question']
+            a1 = request.POST['answer_one']
+            a2 = request.POST['answer_two']
+            a3 = request.POST['answer_three']
+            a4 = request.POST['answer_four']
+            c = request.POST['correct']
+            cat = Category.objects.filter(id = request.POST['category'])[0]
+
+            Question.submit_a_question(q,a1,a2,a3,a4,c,cat)
+            return redirect('/home')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        print('PRVI POZIV')
+        form = QuestionForm()
+
+    return render(request, 'quiz/add_question.html', {'form': form})
+
+
+def signup(request):    
     message = None  
 
     # If POST request we trying to create new user.

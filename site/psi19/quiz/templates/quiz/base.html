@@ -54,6 +54,7 @@
                         <div class="float-right">
                             <a href="/signup" class="btn btn-outline-primary"><i class="#"></i>Create Account</a>
                         </div>
+
                         {% endif %}
                     </div>
                 </div>
@@ -84,6 +85,11 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="{% url 'quiz:rank_list'%}">Rank List</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <!-- NOTE - SOMWHOW SHOW THIS ONLY TO MODERATORS -->
+                                        <!-- HERE FOR TESTING PURPOSES -->
+                                        <a href="/submit_question" class="nav-link">Submit a queston</a>
+                                    </li>
                                 </ul>
                             </div>
 
@@ -95,9 +101,11 @@
                                             <div class="md-form my-0">
                                                 <input class="form-control" name="searched_name" type="search"
                                                     placeholder="Search" aria-label="Search">
-                                                    
-                                                    <button class="btn btn-primary" type='submit' id='lupa'><i class=" ti-search text-white ml-3" aria-hidden="true"></i></button>
-                                                
+
+                                                <button class="btn btn-primary" type='submit' id='lupa'><i
+                                                        class=" ti-search text-white ml-3"
+                                                        aria-hidden="true"></i></button>
+
                                             </div>
                                         </form>
                                     </li>

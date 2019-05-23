@@ -11,4 +11,6 @@ urlpatterns = [
     url(r'^search_results/$',     views.search),
     url(r'^follow/$',     views.follow),
     url(r'^unfollow/$',     views.unfollow),
+    url(r'^submit_question/$',     views.submit_a_question),
+    
 ]

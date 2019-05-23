@@ -48,12 +48,10 @@ class Friendship(models.Model):
         return str(self.first_friend_id) + " " + str(self.second_friend_id)
 
     def already_friends(user1, user2):
-        print(user1)
-        print(user2)
+
         count1 = Friendship.objects.filter(first_friend_id = user1, second_friend_id = user2).count()
         count2 = Friendship.objects.filter(first_friend_id = user2, second_friend_id = user1).count()
-        
-        print(count1+ count2)
+
 
         if (count1 + count2) > 0:
             return True
@@ -110,6 +108,10 @@ class Question(models.Model):
     def __str__(self):
         return "Question:" + self.question + " Answers: " + self.answer_one + " " + self.answer_two + " " + self.answer_three + " " + self.answer_four
 
+    def submit_a_question(question_in, answer_one_in, answer_two_in, answer_three_in, answer_four_in, correct_in, category_in):
+        new_question = Question.objects.create(question = question_in, answer_one = answer_two_in,answer_two = answer_two_in, answer_three=answer_three_in, answer_four=answer_four_in, correct=correct_in, category=category_in)
+        new_question.save()
+        
     #query the db for speceific questions
     #def get_question_from_category(category, number_of_questions):
 
