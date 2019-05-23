@@ -41,11 +41,34 @@ class User_profile(models.Model):
 class Friendship(models.Model):
     first_friend_id = models.ForeignKey(User, related_name = '%(class)s_f1', on_delete=models.DO_NOTHING)
     #idk why ...
-    second_friend_id = models.ForeignKey(User, related_name = '%(class)s_f2', on_delete=models.DO_NOTHING, default = -1)
+    second_friend_id = models.ForeignKey(User, related_name = '%(class)s_f2', on_delete=models.DO_NOTHING)
 
 
     def __str__(self):
-        return self.first_friend_id + " " + self.second_friend_id
+        return str(self.first_friend_id) + " " + str(self.second_friend_id)
+
+    def already_friends(user1, user2):
+        print(user1)
+        print(user2)
+        count1 = Friendship.objects.filter(first_friend_id = user1, second_friend_id = user2).count()
+        count2 = Friendship.objects.filter(first_friend_id = user2, second_friend_id = user1).count()
+        
+        print(count1+ count2)
+
+        if (count1 + count2) > 0:
+            return True
+        else:
+            return False    
+
+    def follow(user1, user2):
+        if(user1 != user2):
+            friendship = Friendship.objects.create(first_friend_id = user1,second_friend_id = user2)
+            friendship.save()
+
+    def unfollow(user1, user2):
+        if(user1 != user2):
+            friendship = Friendship.objects.filter(first_friend_id = user1,second_friend_id = user2)[0]
+            friendship.delete()          
 
 #class containing all game relevant data
 class Game(models.Model):

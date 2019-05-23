@@ -137,6 +137,11 @@ body {
   background-color: #F1F9FF;
 }
 
+#lupa {
+  background-color: #2699FB;
+  border:#2699FB;
+}
+
 
 /*--------------------------------*\
     Cards
@@ -464,3 +469,5 @@ body {
   }
 
 }
+
+

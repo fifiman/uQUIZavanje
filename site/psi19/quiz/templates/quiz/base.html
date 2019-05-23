@@ -3,30 +3,30 @@
 <!doctype html>
 <html lang="en">
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <title>HomePage</title>
+    <title>HomePage</title>
 
-        <!-- Tab icon -->
-        <link rel="icon" href="{% static 'quiz/uqizavanje_logo.png' %}">
+    <!-- Tab icon -->
+    <link rel="icon" href="{% static 'quiz/uqizavanje_logo.png' %}">
 
-        <!-- CSS files-->
-            <!-- Bootstrap CSS -->
-            <link rel="stylesheet" href="{% static 'quiz/bootstrap.min.css' %}">
-            <!-- Animate CSS -->
-            <link rel="stylesheet" href="{% static 'quiz/animate.css' %}">
-            <!-- Font Awesome -->
-            <link rel="stylesheet" href="{% static 'quiz/font-awesome.min.css' %}">
-            <!-- style CSS -->
-            <link rel="stylesheet" href="{% static 'quiz/style.css' %}">
-            <!-- themify CSS -->
-            <link rel="stylesheet" href="{% static 'quiz/themify-icons.css' %}">
-        <!-- /CSS files -->
-    </head>
+    <!-- CSS files-->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'quiz/bootstrap.min.css' %}">
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="{% static 'quiz/animate.css' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'quiz/font-awesome.min.css' %}">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="{% static 'quiz/style.css' %}">
+    <!-- themify CSS -->
+    <link rel="stylesheet" href="{% static 'quiz/themify-icons.css' %}">
+    <!-- /CSS files -->
+</head>
 
-    <body>
+<body>
 
     <!-- Header and Menu -->
     <header class="header_area">
@@ -37,7 +37,8 @@
                 <div class="row align-items-center">
                     <div class="col-xs-8 col-md-8 col-xl-6">
                         <div id="logo">
-                            <a href="{% url 'quiz:home' %}"><img src="{% static 'quiz/uqizavanje_logo.png' %}" alt="" title="" /></a>
+                            <a href="{% url 'quiz:home' %}"><img src="{% static 'quiz/uqizavanje_logo.png' %}" alt=""
+                                    title="" /></a>
                         </div>
                     </div>
                     <div class="col-xs-4 col-md-4 col-xl-6">
@@ -51,8 +52,8 @@
                             <a href="/accounts/login" class="btn btn-outline-primary"><i class="#"></i>Sign In</a>
                         </div>
                         <div class="float-right">
-                                <a href="/signup" class="btn btn-outline-primary"><i class="#"></i>Create Account</a>
-                            </div>
+                            <a href="/signup" class="btn btn-outline-primary"><i class="#"></i>Create Account</a>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -69,7 +70,9 @@
 
                         <!-- Navbar -->
                         <nav class="navbar navbar-expand-lg navbar-light">
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
                                 <span class="navbar-toggler-icon"></span>
                             </button>
 
@@ -79,18 +82,22 @@
                                         <a class="nav-link active" href="{% url 'quiz:home' %}">Home</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href = "{% url 'quiz:rank_list'%}">Rank List</a>
+                                        <a class="nav-link" href="{% url 'quiz:rank_list'%}">Rank List</a>
                                     </li>
                                 </ul>
                             </div>
 
                             <div class="header_social_icon d-none d-sm-block">
                                 <ul>
-                                    <li><!-- Search form -->
-                                        <form class="form-inline mr-auto">
+                                    <li>
+                                        <!-- Search form -->
+                                        <form action="/search_results/" method="GET" class="form-inline mr-auto">
                                             <div class="md-form my-0">
-                                                <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                                                <i class="ti-search text-white ml-3" aria-hidden="true"></i>
+                                                <input class="form-control" name="searched_name" type="search"
+                                                    placeholder="Search" aria-label="Search">
+                                                    
+                                                    <button class="btn btn-primary" type='submit' id='lupa'><i class=" ti-search text-white ml-3" aria-hidden="true"></i></button>
+                                                
                                             </div>
                                         </form>
                                     </li>
@@ -128,12 +135,12 @@
     <!-- /Footer -->
 
     <!-- Scripts -->
-        <!-- jquery -->
-        <script src="{% static 'quiz/jquery-1.12.1.min.js' %}"></script>
-        <!-- bootstrap js -->
-        <script src="{% static 'quiz/bootstrap.min.js' %}"></script>
+    <!-- jquery -->
+    <script src="{% static 'quiz/jquery-1.12.1.min.js' %}"></script>
+    <!-- bootstrap js -->
+    <script src="{% static 'quiz/bootstrap.min.js' %}"></script>
     <!-- /Scripts -->
 
-    </body>
+</body>
 
 </html>

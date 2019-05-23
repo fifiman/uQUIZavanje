@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
-from quiz.models import User_profile, User
+from quiz.models import *
 
 def home(request):
     template = loader.get_template('quiz/home.html')
@@ -15,7 +15,7 @@ def home(request):
 
     return HttpResponse(template.render(context, request))
 
-
+#searches for 10 best players overall
 def global_rank_list(request):
     template = loader.get_template('quiz/rank_list.html')
 
@@ -24,6 +24,58 @@ def global_rank_list(request):
     }    
 
     return HttpResponse(template.render(context, request))
+
+"""
+def search(request):
+    if 'q' in request.GET and request.GET['q']:
+        q = request.GET['q']
+        books = Book.objects.filter(title__icontains=q)
+        return render(request, 'books/search_results.html',
+                      {'books': books, 'query': q})
+    else:
+        return HttpResponse('Please submit a search term.')
+"""
+
+#search by username
+def search(request):
+
+    user = None
+
+    if 'searched_name' in request.GET and request.GET['searched_name']:
+        searched_name = request.GET['searched_name']
+        user = User.objects.filter(username = searched_name)[0]
+
+    already_friends = Friendship.already_friends(user, request.user)
+    me = (user == request.user)
+
+    return render(request, 'quiz/search_results.html', {'found' : user, 'already_friends': already_friends, 'me' : me})
+    
+def follow(request):    
+
+    if 'username' in request.GET and request.GET['username']:
+        recieved_username = request.GET['username']
+    
+    user1 = User.objects.filter(username=recieved_username)[0]
+
+    if user1 != request.user:
+        Friendship.follow(request.user, user1)
+   
+
+    return redirect('/home')
+
+def unfollow(request):    
+
+    if 'username' in request.GET and request.GET['username']:
+        recieved_username = request.GET['username']
+    
+    user1 = User.objects.filter(username=recieved_username)[0]
+
+    if user1 != request.user:
+        Friendship.unfollow(request.user, user1)
+   
+
+    return redirect('/home')
+
 
 def signup(request):
     message = None  
