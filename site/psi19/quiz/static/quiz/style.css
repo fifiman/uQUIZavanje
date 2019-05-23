@@ -9,7 +9,10 @@ Table OF Contents
 ------------------------------------
 1 > General
 2 > Header and Menu
-3 > Responsive
+3 > Cards
+4 > Home Page
+5 > Search Result Page
+6 > Responsive
 
 ------------------------------------*/
 
@@ -80,8 +83,8 @@ a:focus, .button:focus, button:focus, .btn:focus {
 }
 
 .sub_header img {
-  height: 100px;
-  width: 100px;
+  height: 15%;
+  width: 15%;
 }
 
 .main_menu {
@@ -130,6 +133,171 @@ a:focus, .button:focus, button:focus, .btn:focus {
   color: #ff8b23 !important;
 }
 
+body {
+  background-color: #F1F9FF;
+}
+
+
+/*--------------------------------*\
+    Cards
+\*--------------------------------*/
+
+/* Card General and Question Card*/
+
+.card {
+  max-width: 300px;
+  margin: 15px;
+  border: #2699FB solid;
+}
+
+.card button {
+  border: none;
+  outline: 0;
+  padding: 12px;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  width: 50%;
+  font-size: 18px;
+}
+
+.card button:hover {
+  opacity: 0.7;
+}
+
+.add_button {
+  float: left;
+  background-color: #BCE0FD;
+}
+
+.remove_button {
+  float: right;
+  background-color: #2699FB;
+}
+
+.question_card p {
+  padding: 10px;
+  margin: 0px;
+  text-align: left;
+  border-bottom: #2699FB solid;
+  font-family: 'Quicksand', sans-serif;
+  color: #2699FB;
+}
+
+.card_header {
+  background-color: #2699FB;
+  border: 1px #2699FB solid;
+  padding: 10px;
+}
+
+.card_header h6{
+  font-family: 'Cabin', sans-serif;
+  color: white;
+}
+
+.button_p {
+  padding: 0px;
+  margin: 0px;
+}
+
+
+/* User card */
+
+.user_card {
+  margin: 15px;
+  background-color: white;
+}
+
+.user_card .card {
+  max-width: 300px;
+  border: #2699FB solid;
+}
+
+.user_card img {
+  width: 50%;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.user_card p {
+  text-align: center;
+  font-family: 'Quicksand', sans-serif;
+  color: #2699FB;
+  font-size: 16px;
+}
+
+/* Add friend card */
+
+.user_card .add_friend_card {
+  max-width: 300px;
+  margin: auto;
+  border: #2699FB solid;
+}
+
+.add_friend_card button {
+  font-family: 'Cabin', sans-serif;
+  background-color: #F1F9FF;
+}
+
+
+
+/*--------------------------------*\
+    HomePage
+\*--------------------------------*/
+
+
+.homepage_tile {
+  border: black solid;
+  margin: 10px;
+  padding: 20px;
+  background-color: #2699FB;
+}
+
+.homepage_tile a{
+  font-family: 'Cabin', sans-serif;
+  color: white;
+}
+
+/*--------------------------------*\
+    Search Result Page
+\*--------------------------------*/
+
+#search_result p {
+  margin-top: 15px;
+  border: #2699FB solid;
+  font-family: 'Cabin', sans-serif;
+  color: #2699FB;
+  padding: 10px;
+  background-color: white;
+}
+
+
+/*--------------------------------*\
+    Rank List Page
+\*--------------------------------*/
+
+
+.rank_list_table {
+  margin-top: 15px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.rank_list_table thead tr {
+  text-align: left;
+  background-color: #2699FB;
+  color: white;
+}
+
+.rank_list_table tbody tr{
+  text-align: left;
+  background-color: white;
+}
+
+
 
 /*--------------------------------*\
     Footer
@@ -137,6 +305,12 @@ a:focus, .button:focus, button:focus, .btn:focus {
 
 .footer {
   background-color: #2699FB;
+  height: 100px;
+}
+
+.footer p {
+  margin-top: 40px;
+  text-align: left;
 }
 
 
@@ -290,4 +464,3 @@ a:focus, .button:focus, button:focus, .btn:focus {
   }
 
 }
-
