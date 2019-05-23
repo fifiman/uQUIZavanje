@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
-from quiz.models import Senior_user, User
+from quiz.models import User_profile, User
 
 def home(request):
     template = loader.get_template('quiz/home.html')
@@ -15,11 +15,12 @@ def home(request):
 
     return HttpResponse(template.render(context, request))
 
+
 def global_rank_list(request):
     template = loader.get_template('quiz/rank_list.html')
 
     context = {
-        'top_10_users': Senior_user.get_global_top_10(),
+        'top_10_users': User_profile.get_global_top_10(),
     }    
 
     return HttpResponse(template.render(context, request))
