@@ -27,7 +27,7 @@ class Senior_user(models.Model):
         return str(self.user) + str(self.ranking)
 
     def get_global_top_10():
-        return Senior_user.objects.order_by('ranking')[:10]
+        return Senior_user.objects.order_by('-ranking')[:10]
 
 
 # IMPORTANT - table admin is unnecessary because of the staff member part of user
