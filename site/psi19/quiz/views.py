@@ -27,21 +27,35 @@ def global_rank_list(request):
     return HttpResponse(template.render(context, request))
 
 
-# NOTE CHECK THIS OUT
-# Entry.objects.get(headline__contains='Lennon') <=> LIKE in SQL
-#search by username
+
+# search by username
 def search(request):
 
     user = None
 
     if 'searched_name' in request.GET and request.GET['searched_name']:
         searched_name = request.GET['searched_name']
-        user = User.objects.filter(username = searched_name)[0]
+        users = User.objects.filter(username__contains = searched_name)
 
-    already_friends = Friendship.already_friends(user, request.user)
-    me = (user == request.user)
+    ret = []
 
-    return render(request, 'quiz/search_results.html', {'found' : user, 'already_friends': already_friends, 'me' : me})
+    for user in users:
+        
+        # cannot chech already friends if im already logged in
+        if(request.user.is_authenticated):
+            already_friends = Friendship.already_friends(user, request.user)
+        else:
+            already_friends = False;
+        
+        me = (user == request.user)
+
+        if(not me):
+            ret.append({
+                'user' : user,
+                'already_friends' : already_friends,
+            })
+
+    return render(request, 'quiz/search_results.html', {'found' : ret})
     
 def follow(request):    
 
@@ -96,7 +110,6 @@ def submit_a_question(request):
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        print('PRVI POZIV')
         form = QuestionForm()
 
     return render(request, 'quiz/add_question.html', {'form': form})

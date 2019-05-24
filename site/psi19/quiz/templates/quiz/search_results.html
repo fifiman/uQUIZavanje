@@ -9,7 +9,7 @@
     <!-- Serach Result Number -->
     <div class="row d-flex justify-content-center" id="search_result">
         <div class="col-md-6">
-            <p>Number of Search Results : {{ search_result|length }} </p>
+            <p>Number of Search Results : {{ found|length }} </p>
         </div>
     </div>
     <!-- /Serach Result Number -->
@@ -18,8 +18,7 @@
     <div class="row">
 
 
-
-        {% if not me %}
+        {% for record in found %}
 
         <div class="col-md-3 col-sm-6 col-xs-12">
             <!-- Add Friend card -->
@@ -34,17 +33,17 @@
                             class="rounded-circle center" alt="woman avatar">
                     </div>
 
-                    <p>{{found.username}}</p>
+                    <p>{{record.user.username}}</p>
 
-                    <p>{{found.rank}}</p>
+                    <p>{{record.user.rank}}</p>
 
 
                     {% if user.is_authenticated %}
-                    {% if already_friends %}
+                    {% if record.already_friends %}
                     <div class="card-body text-center">
                         <form method="GET" action="/unfollow/">
                             <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
-                            <input type="hidden" name="username" value={{found.username}}>
+                            <input type="hidden" name="username" value='{{record.user.username}}'>
                             <input type="submit" class="btn btn-outline-primary" value="UNFOLLOW"></input>
                         </form>
                     </div>
@@ -54,7 +53,7 @@
                     <div class="card-body text-center">
                         <form method="GET" action="/follow/">
                             <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
-                            <input type="hidden" name="username" value={{found.username}}>
+                            <input type="hidden" name="username" value='{{record.user.username}}'>
                             <input type="submit" class="btn btn-outline-primary" value="FOLLOW"></input>
                         </form>
                     </div>
@@ -67,10 +66,7 @@
             <!-- /Add Friend card -->
         </div>
 
-        {% endif %}
-
-
-
+        {% endfor %}
     </div>
 
 </div>
