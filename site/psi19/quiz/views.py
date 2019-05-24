@@ -120,7 +120,54 @@ def signup(request):
 
     # If POST request we trying to create new user.
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
+
+        if form.is_valid():
+            #form.save()
+            
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            name = form.cleaned_data.get('first_name')
+            last = form.cleaned_data.get('last_name')
+            email = form.cleaned_data.get('email')
+            agef = form.cleaned_data.get('age')
+            
+            new_user = User.objects.create_user(username,email,raw_password)
+            new_user.first_name = name
+            new_user.last_name = last
+            new_user.save()
+
+            print(new_user.id)
+
+            new_prof = User_profile.objects.create(user = new_user, age = agef)
+            new_prof.save()
+
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('/home')
+
+        message = form.errors
+
+    # If GET or bad form we should return
+    # the form again to the user.
+    template = loader.get_template('quiz/signup.html')
+
+    # Fill with form context.
+    context = {
+        'form': SignUpForm()
+    }
+
+    if message is not None:
+        context['message'] = message
+
+    return HttpResponse(template.render(context, request))
+
+def signup_profile(request):    
+    message = None  
+
+    # If POST request we trying to create new user.
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST)
 
         if form.is_valid():
             form.save()
@@ -129,7 +176,7 @@ def signup(request):
 
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('/home')
+            return redirect('/signup_profile')
 
         message = 'BAD SIGNUP'
 
@@ -139,7 +186,7 @@ def signup(request):
 
     # Fill with form context.
     context = {
-        'form': UserCreationForm()
+        'form': UserProfileForm()
     }
 
     if message is not None:

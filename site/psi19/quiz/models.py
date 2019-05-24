@@ -13,9 +13,9 @@ from django.contrib.auth.models import User
 class User_profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     age = models.IntegerField()
-    level = models.IntegerField()
-    picture = models.TextField(max_length = 50, blank = True, null = True)
-    banned = models.TextField(max_length = 50, blank = True, null = True)
+    level = models.IntegerField(default = 0)
+    picture = models.TextField(default = " ", max_length = 50, blank = True, null = True)
+    banned = models.TextField(default = "", max_length = 50, blank = True, null = True)
     is_moderator = models.BooleanField(default = False)
     is_admin = models.BooleanField(default = False)
     ranking = models.IntegerField(default = -1)
