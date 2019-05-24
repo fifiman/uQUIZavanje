@@ -12,7 +12,9 @@ Table OF Contents
 3 > Cards
 4 > Home Page
 5 > Search Result Page
-6 > Responsive
+6 > My Profile
+7 > Footer
+8 > Responsive
 
 ------------------------------------*/
 
@@ -243,7 +245,72 @@ body {
   background-color: #F1F9FF;
 }
 
+/* Trophy card */
 
+.trophy_card {
+  border: #2699FB solid;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background: white;
+}
+
+.trophy_card img{
+  width: 50%;
+}
+
+.trophy_card_header {
+  background-color: #2699FB;
+  padding: 10px;
+}
+
+.trophy_card p {
+  font-family: 'Cabin', sans-serif;
+  color: #2699FB;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+/* Friend card */
+
+.friend_card {
+  border: #2699FB solid;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background: white;
+}
+
+.friend_card img{
+  width: 50%;
+}
+
+.friend_card p {
+  font-family: 'Cabin', sans-serif;
+  color: #2699FB;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+
+#friend_h1 {
+  margin-top: 10px;
+}
+
+#friend_h1 h1 {
+  color: #2699FB;
+  font-family: 'Cabin', sans-serif;
+}
+
+#trophy_h1 {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#trophy_h1 h1 {
+  color: #2699FB;
+  font-family: 'Cabin', sans-serif;
+}
 
 /*--------------------------------*\
     HomePage
@@ -297,6 +364,81 @@ body {
   background-color: white;
 }
 
+/*--------------------------------*\
+    My Profile
+\*--------------------------------*/
+
+.profile_big_container {
+  border: 1px black solid;
+  margin: 10px;
+  background-color: white;
+}
+
+.profile_big_container img {
+  margin-top: 10%;
+  width: 50%;
+}
+
+.profile_big_container h3 {
+  font-family: 'Cabin', sans-serif;
+  color: #2699FB;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-bottom: 20px;
+}
+
+.profile_big_container p{
+  font-family: 'Cabin', sans-serif;
+  color: #2699FB;
+}
+
+.profile_big_container table {
+  width: 100%; margin: 2%;
+}
+
+.p_wrapper_profile {
+  margin-top: 10px;
+}
+
+#stats_container {
+  margin-top: 15%;
+}
+
+.small_container_content {
+  margin: 10px;
+}
+
+.small_container_content h3{
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-bottom: 20px;
+  color: #2699FB;
+  font-family: 'Cabin', sans-serif;
+}
+
+.small_container_content span {
+  padding: 10px;
+}
+
+.small_container_content img {
+  margin: 2px;
+  width: 20%;
+}
+
+.small_container_content button {
+  margin-top: 10%;
+}
+
+#trophy_container {
+  border: 1px black solid;
+  margin-bottom: 10px;
+  background-color: white;
+}
+
+#friends_container {
+  border: 1px black solid;
+  background-color: white;
+}
 
 
 /*--------------------------------*\
