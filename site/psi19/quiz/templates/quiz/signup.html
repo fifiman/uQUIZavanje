@@ -4,14 +4,18 @@
 
 <!-- Error Message for bad login -->
 {% if message %}
-<p><font color="red">{{ message }}</font></p>
+<p>
+    <font color="red">{{ message }}</font>
+</p>
 {% endif %}
 
-<h2>Sign up</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign up</button>
-</form>
+<div style="padding:50px">
+    <h2>Sign up</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Sign up</button>
+    </form>
+</div>
 
 {% endblock content %}

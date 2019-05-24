@@ -27,6 +27,8 @@ def global_rank_list(request):
     return HttpResponse(template.render(context, request))
 
 
+# NOTE CHECK THIS OUT
+# Entry.objects.get(headline__contains='Lennon') <=> LIKE in SQL
 #search by username
 def search(request):
 

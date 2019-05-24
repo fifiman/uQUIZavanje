@@ -98,10 +98,10 @@ class Category(models.Model):
 class Question(models.Model):
     question = models.TextField(max_length = 100)
     is_valid = models.BooleanField(default = False)
-    answer_one = models.TextField(max_length = 100)
-    answer_two = models.TextField(max_length = 100)
-    answer_three = models.TextField(max_length = 100)
-    answer_four = models.TextField(max_length = 100)
+    answer_one = models.TextField(max_length = 20)
+    answer_two = models.TextField(max_length = 20)
+    answer_three = models.TextField(max_length = 20)
+    answer_four = models.TextField(max_length = 20)
     correct = models.IntegerField()
     category = models.OneToOneField(Category, on_delete=models.DO_NOTHING)
 
