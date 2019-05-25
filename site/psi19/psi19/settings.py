@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'quiz.apps.QuizConfig',
-    'channels'
+    'channels'  
 ]	
 
 MIDDLEWARE = [
@@ -141,3 +141,5 @@ STATIC_URL = '/static/'
 # AUTH Accounts
 LOGIN_REDIRECT_URL = '/home'
 LOGOUT_REDIRECT_URL = '/home'
+
+AUTH_USER_MODEL = 'quiz.User'
