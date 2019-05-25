@@ -140,20 +140,15 @@
 
                                     {% if user.is_senior and not user.moderator %}
 
-                                    <li class="nav-item">
-                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                            id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false">
-                                            Moderator options
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" role="button"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Senior user options
                                         </a>
-
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                            <a href="/submit_question" class="nav-link">Submit a queston</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="elements.html">Dodaj pitanje</a>
+                                            <a class="dropdown-item" href="elements.html">Odobri pitanje</a>
                                         </div>
-
-
                                     </li>
 
                                     {% endif %}
