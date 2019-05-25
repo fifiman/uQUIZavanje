@@ -85,15 +85,93 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="{% url 'quiz:rank_list'%}">Rank List</a>
                                     </li>
+                                    
 
+                                    <!-- Danlo pls help ovo je ruzno ko djvao :( -->
                                     <!--Moderator, admin i senior mogu da dodaju pitanja-->
-                                    {% if user.is_senior or user.is_superuser %}
+                                    {% if user.is_senior %}
 
                                     <li class="nav-item">
-                                        <a href="/submit_question" class="nav-link">Submit a queston</a>
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                            id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                            Senor options
+                                        </a>
+
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a href="/submit_question" class="nav-link">Submit a queston</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+
+
                                     </li>
 
                                     {% endif %}
+
+                                    {% if user.is_superuser %}
+
+                                    <li class="nav-item">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                            id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                            Admin options
+                                        </a>
+
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a href="/submit_question" class="nav-link">Submit a queston</a>
+                                            <a class="dropdown-item" href="#">Approve questions</a>
+                                            <a class="dropdown-item" href="/grant_moderator">Grant moderator</a>
+                                        </div>
+
+
+                                    </li>
+
+                                    {% endif %}
+
+                                    {% if user.moderator %}
+
+                                    <li class="nav-item">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                            id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                            Moderator options
+                                        </a>
+
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a href="/submit_question" class="nav-link">Submit a queston</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+
+
+                                    </li>
+
+                                    {% endif %}
+
+
+
+                                    {% if user.is_senior and not user.moderator %}
+
+                                    <li class="nav-item">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                            id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                            Moderator options
+                                        </a>
+
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a href="/submit_question" class="nav-link">Submit a queston</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+
+
+                                    </li>
+
+                                    {% endif %}
+
+                                    
 
                                 </ul>
                             </div>

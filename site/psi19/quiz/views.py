@@ -32,7 +32,7 @@ def global_rank_list(request):
 # search by username
 def search(request):
 
-    user = None
+    users = []
 
     if 'searched_name' in request.GET and request.GET['searched_name']:
         searched_name = request.GET['searched_name']

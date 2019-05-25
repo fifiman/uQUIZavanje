@@ -1,9 +1,0 @@
-1. Promeni Create an account formu
-2. Dodaj like u pretragu i omoguci da lepo radi
-
-
-
-DO NOT FORGET 
-Queries involving related objects follow the same rules as queries involving normal value fields.
-When specifying the value for a query to match, 
-you may use either an object instance itself, OR the primary key value for the object.

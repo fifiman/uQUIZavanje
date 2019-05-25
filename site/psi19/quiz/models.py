@@ -3,6 +3,47 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
+
+class User(AbstractUser):
+    
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True,
+    )
+    age = models.IntegerField(null = True)
+    #equivalent to banned
+    is_active = models.BooleanField(default=True)
+    is_moderator = models.BooleanField(default=False)
+    wants_moderator = models.BooleanField(default = False)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField( max_length=50)
+    level = models.IntegerField(default = 0)
+    picture = models.TextField(default = " ", max_length = 50, blank = True, null = True)
+    ranking = models.IntegerField(default = -1)
+
+    def __str__(self):
+        temp = str(self.username) + " Level: " + str(self.level)
+        if self.level >= 10:
+            temp = temp + " Rating: " + str(self.ranking) 
+
+        return temp
+
+    def moderator(self):
+        return self.is_moderator
+
+    def is_senior(self):    
+        return self.level >= 10
+    
+    def get_global_top_10():
+        return User.objects.raw("SELECT * FROM quiz_User WHERE level > 10 ORDER BY ranking desc")[:10]
+
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
+
+
+'''
 class User(AbstractUser):
     email = models.EmailField(max_length=254)
     first_name = models.CharField(max_length=50)
@@ -30,7 +71,7 @@ class User(AbstractUser):
     def get_global_top_10():
         return User.objects.raw("SELECT * FROM quiz_User WHERE level > 10 ORDER BY ranking desc")[:10]
 
-
+'''
 
 
 # Connects two users, and allows them to see eachothers profiles, and play with eachother
@@ -101,6 +142,8 @@ class Question(models.Model):
     def __str__(self):
         return "Question:" + self.question + " Answers: " + self.answer_one + " " + self.answer_two + " " + self.answer_three + " " + self.answer_four
 
+
+    #NOTE Dodaj proveru da su svi odgovori razliciti
     def submit_a_question(question_in, answer_one_in, answer_two_in, answer_three_in, answer_four_in, correct_in, category_in):
         new_question = Question.objects.create(question = question_in, answer_one = answer_two_in,answer_two = answer_two_in, answer_three=answer_three_in, answer_four=answer_four_in, correct=correct_in, category=category_in)
         new_question.save()
