@@ -89,20 +89,7 @@
 
                                     <!-- Danlo pls help ovo je ruzno ko djvao :( -->
                                     <!--Moderator, admin i senior mogu da dodaju pitanja-->
-                                    {% if user.is_senior %}
-
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" role="button"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Senior options
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <a class="dropdown-item" href="elements.html">Dodaj pitanje</a>
-                                            <a class="dropdown-item" href="single-blog.html">Postani moderator</a>
-                                        </div>
-                                    </li>
-
-                                    {% endif %}
+                              
 
                                     {% if user.is_superuser %}
 
@@ -143,11 +130,11 @@
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" role="button"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Senior user options
+                                            Senior options
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                             <a class="dropdown-item" href="elements.html">Dodaj pitanje</a>
-                                            <a class="dropdown-item" href="elements.html">Odobri pitanje</a>
+                                            <a class="dropdown-item" href="single-blog.html">Postani moderator</a>
                                         </div>
                                     </li>
 
