@@ -248,11 +248,9 @@ body {
 /* Trophy card */
 
 .trophy_card {
-  border: #2699FB solid;
   text-align: center;
   margin-top: 10px;
   margin-bottom: 10px;
-  background: white;
 }
 
 .trophy_card img{
