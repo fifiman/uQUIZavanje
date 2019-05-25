@@ -36,7 +36,7 @@ class User(AbstractUser):
         return self.level >= 10
     
     def get_global_top_10():
-        return User.objects.raw("SELECT * FROM quiz_User WHERE level > 10 ORDER BY ranking desc")[:10]
+        return User.objects.raw("SELECT * FROM quiz_User WHERE level >= 10 ORDER BY ranking desc")[:10]
 
 
     USERNAME_FIELD = 'username'

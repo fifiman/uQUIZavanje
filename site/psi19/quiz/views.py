@@ -23,7 +23,9 @@ def global_rank_list(request):
 
     context = {
         'top_10_users': User.get_global_top_10(),
-    }    
+    }   
+
+    print (User.get_global_top_10()) 
 
     return HttpResponse(template.render(context, request))
 
