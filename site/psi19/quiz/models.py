@@ -1,23 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
-# Create your models here.
-# Django's user already has
-# username
-# email
-# first name
-# last name
-# staff status
-# User profile will contain everything else
-# and have 1-1 relationship with user
-class User_profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    age = models.IntegerField()
-    level = models.IntegerField()
-    picture = models.TextField(max_length = 50, blank = True, null = True)
-    banned = models.TextField(max_length = 50, blank = True, null = True)
+class User(AbstractUser):
+    email = models.EmailField(max_length=254)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField( max_length=50)
+    age = models.IntegerField(default = 0, blank = True, null = True)
+    level = models.IntegerField(default = 0)
+    picture = models.TextField(default = " ", max_length = 50, blank = True, null = True)
+    banned = models.TextField(default = "", max_length = 50, blank = True, null = True)
     is_moderator = models.BooleanField(default = False)
-    is_admin = models.BooleanField(default = False)
     ranking = models.IntegerField(default = -1)
 
     def __str__(self):
@@ -27,22 +21,22 @@ class User_profile(models.Model):
 
         return temp
 
+    def is_moderator(self):
+        return self.is_moderator
 
+    def is_senior(self):    
+        return self.level >= 10
+    
     def get_global_top_10():
-        return User_profile.objects.raw("SELECT * FROM quiz_User_profile WHERE level > 10 ORDER BY ranking desc")[:10]
+        return User.objects.raw("SELECT * FROM quiz_User WHERE level > 10 ORDER BY ranking desc")[:10]
 
 
 
-
-# IMPORTANT - table admin is unnecessary because of the staff member part of user
-# TODO - check out if staff members helps with is_moderator
 
 # Connects two users, and allows them to see eachothers profiles, and play with eachother
 class Friendship(models.Model):
-    first_friend_id = models.ForeignKey(User, related_name = '%(class)s_f1', on_delete=models.DO_NOTHING)
-    #idk why ...
-    second_friend_id = models.ForeignKey(User, related_name = '%(class)s_f2', on_delete=models.DO_NOTHING)
-
+    first_friend_id = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_f1', on_delete=models.DO_NOTHING)
+    second_friend_id = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_f2', on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return str(self.first_friend_id) + " " + str(self.second_friend_id)
@@ -51,7 +45,6 @@ class Friendship(models.Model):
 
         count1 = Friendship.objects.filter(first_friend_id = user1, second_friend_id = user2).count()
         count2 = Friendship.objects.filter(first_friend_id = user2, second_friend_id = user1).count()
-
 
         if (count1 + count2) > 0:
             return True
@@ -70,10 +63,10 @@ class Friendship(models.Model):
 
 #class containing all game relevant data
 class Game(models.Model):
-    player_one = models.ForeignKey(User,related_name = '%(class)s_p1', on_delete=models.DO_NOTHING)
-    player_two = models.ForeignKey(User, related_name = '%(class)s_p2',on_delete=models.DO_NOTHING)
-    player_three = models.ForeignKey(User, related_name = '%(class)s_p3', on_delete=models.DO_NOTHING)
-    player_four = models.ForeignKey(User, related_name = '%(class)s_p4', on_delete=models.DO_NOTHING)
+    player_one = models.ForeignKey(settings.AUTH_USER_MODEL,related_name = '%(class)s_p1', on_delete=models.DO_NOTHING)
+    player_two = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_p2',on_delete=models.DO_NOTHING)
+    player_three = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_p3', on_delete=models.DO_NOTHING)
+    player_four = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_p4', on_delete=models.DO_NOTHING)
     
     player_one_pts = models.IntegerField()
     player_two_pts = models.IntegerField()

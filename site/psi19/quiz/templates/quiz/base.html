@@ -86,13 +86,14 @@
                                         <a class="nav-link" href="{% url 'quiz:rank_list'%}">Rank List</a>
                                     </li>
 
-
+                                    <!--Moderator, admin i senior mogu da dodaju pitanja-->
+                                    {% if user.is_senior or user.is_superuser %}
 
                                     <li class="nav-item">
-                                        <!-- NOTE - SOMWHOW SHOW THIS ONLY TO MODERATORS -->
-                                        <!-- HERE FOR TESTING PURPOSES -->
                                         <a href="/submit_question" class="nav-link">Submit a queston</a>
                                     </li>
+
+                                    {% endif %}
 
                                 </ul>
                             </div>

@@ -11,4 +11,3 @@ admin.site.register(Category)
 
 admin.site.register(Game)
 admin.site.register(Friendship)
-admin.site.register(User_profile)
