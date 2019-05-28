@@ -7,14 +7,16 @@ Colors:
 
 Table OF Contents
 ------------------------------------
-1 > General
-2 > Header and Menu
-3 > Cards
-4 > Home Page
-5 > Search Result Page
-6 > My Profile
-7 > Footer
-8 > Responsive
+1  > General
+2  > Header and Menu
+3  > Cards
+4  > Home Page
+5  > Search Result Page
+6  > My Profile
+7  > Login and Signup
+8  > Add Question Form
+9  > Footer
+10 > Responsive
 
 ------------------------------------*/
 
@@ -445,6 +447,111 @@ body {
   border: 1px black solid;
   background-color: white;
 }
+
+
+/*--------------------------------*\
+    Login and Signup
+\*--------------------------------*/
+
+.login_form {
+  padding: 50px;
+  text-align: center;
+}
+
+.login_form h2 {
+  color: #2699FB;
+  margin-bottom: 30px;
+}
+
+.login_form p {
+  color: #2699FB;
+}
+
+.login_form input {
+  color: #2699FB;
+  border: 1px #2699FB solid;
+}
+
+.sign_up_form {
+  padding: 20px;
+}
+
+.sign_up_form h2 {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #2699FB;
+}
+
+.sign_up_form label {
+  color: #2699FB;
+}
+
+.sign_up_form input {
+  color: #2699FB;
+  border: 1px #2699FB solid;
+}
+
+
+
+/*--------------------------------*\
+    Add Question Form
+\*--------------------------------*/
+
+.add_question_form {
+  margin-top : 30px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.form_wrapper_question textarea {
+  height: 100px;
+  border: 1px #2699FB solid;  
+  color: #2699FB;
+}
+
+.form_wrapper_question label {
+  color: #2699FB;
+}
+
+.form_wrapper_answer {
+  text-align: center;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.form_wrapper_answer textarea {
+  height: 50px;
+  color: #2699FB;
+  border: 1px #2699FB solid;
+}
+
+.form_wrapper_answer label {
+  color: #2699FB;
+}
+
+.form_wrapper_correct_answer label {
+  color: #2699FB;
+}
+
+.form_wrapper_correct_answer input {
+  color: #2699FB;
+  border: 1px #2699FB solid; 
+}
+
+.form_wrapper_category label {
+  color: #2699FB;
+}
+
+.form_wrapper_category select {
+  border: 1px #2699FB solid; 
+  color: #2699FB;
+}
+
+
+
+
+
+
 
 
 
