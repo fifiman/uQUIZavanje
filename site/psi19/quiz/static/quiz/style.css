@@ -13,8 +13,9 @@ Table OF Contents
 4 > Home Page
 5 > Search Result Page
 6 > My Profile
-7 > Footer
-8 > Responsive
+7 > Login
+8 > Footer
+9 > Responsive
 
 ------------------------------------*/
 
@@ -446,6 +447,29 @@ body {
   background-color: white;
 }
 
+
+/*--------------------------------*\
+    Login
+\*--------------------------------*/
+
+.login_form {
+  padding: 50px;
+  text-align: center;
+}
+
+.login_form h2 {
+  color: #2699FB;
+  margin-bottom: 30px;
+}
+
+.login_form p {
+  color: #2699FB;
+}
+
+.login_form input {
+  color: #2699FB;
+  border: 1px #2699FB solid;
+}
 
 
 /*--------------------------------*\

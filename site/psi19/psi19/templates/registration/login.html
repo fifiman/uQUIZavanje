@@ -1,7 +1,26 @@
 <!-- templates/registration/login.html -->
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
-</form>
+
+{% extends "quiz/base.html" %}
+
+
+{% block content %}
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 login_form">
+        <h2>Login</h2>
+
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button class="btn btn-primary" type="submit">Login</button>
+        </form>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock content %}
