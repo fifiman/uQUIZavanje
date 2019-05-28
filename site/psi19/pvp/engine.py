@@ -63,8 +63,45 @@ class Engine:
         if answer_index < 0 or answer_index >= Engine.NUM_ANSWERS:
             raise Exception('Answer id is out of range for the current room: {}.'.format(answer_index))
 
-        # Check that the user has not answered already.
+        # Check that the game has not started.
+        if self.game_state == Engine.GAME_NOT_STARTED:
+            raise Exception('Cannot answer question before the game has started.')
+        
+        # Check that the game has ended.
+        if self.game_state == Engine.GAME_OVER:
+            raise Exception('Cannot answer once game is over.')
 
+        # Check if user is not trying to answer the current question.
+        if self.cur_question != question_id:
+            raise Exception('Cannot answer question that is not the current question.')
+
+        # Check that the user has not answered already.
+        has_answered_before = (self.players_answers[question_id][player_id] != -1)
+
+        if has_answered_before:
+            return Exception('User has already answered question before.')
+
+        # Otherwise save answer and return whether the answer is correct.
+        self.players_answers[question_id][player_id] = answer_index
+
+        # Move on to next question if all players have answered the current question.
+        self._update_current_question()
+
+        return answer_index == self.answers[question_id]
+
+    def _update_current_question(self):
+        all_players_answered = True  # Assume true until a negative is found.
+
+        for player_id in range(self.num_players):
+            if self.players_answers[self.cur_question][player_id] == -1:
+                all_players_answered = False
+
+        if all_players_answered:
+            self.cur_question += 1
+        
+        # Check whether all questions have been exhausted.
+        if self.cur_question == self.num_questions:
+            self.game_state = Engine.GAME_OVER
 
     def get_state(self):
         """
@@ -107,6 +144,32 @@ class Engine:
         can_join = (self.game_state == Engine.GAME_NOT_STARTED) and (self.num_players < Engine.MAX_PLAYERS)
 
         if can_join:
+            new_player_id = self.num_players
             self.num_players += 1
 
-        return can_join        
+            return new_player_id
+        else:
+            return None
+
+if __name__ == '__main__':
+
+    questions = ['Which year is the oldest?', 'Which year is the youngest?']
+    answers = [3, 0]
+    answer_texts = [['1', '2', '3', '4'], ['1', '2', '3', '4']]
+
+    game = Engine(questions, answers, answer_texts)
+
+    # Players join.
+    p1_id = game.join_game()
+    p2_id = game.join_game()
+
+    # Start game.
+    game.start_game()
+
+    # Answer first round of questions.
+    print (game.answer(p1_id, 0, 0))        # Wrong answer.
+    print (game.answer(p2_id, 0, 3))        # Correct answer.
+
+    # Answer second round of question.
+    print (game.answer(p1_id, 1, 1))        # Wrong answer.
+    print (game.answer(p2_id, 1, 2))        # Wrong answer.
