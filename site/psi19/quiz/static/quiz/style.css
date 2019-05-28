@@ -13,7 +13,7 @@ Table OF Contents
 4 > Home Page
 5 > Search Result Page
 6 > My Profile
-7 > Login
+7 > Login and Signup
 8 > Footer
 9 > Responsive
 
@@ -449,7 +449,7 @@ body {
 
 
 /*--------------------------------*\
-    Login
+    Login and Signup
 \*--------------------------------*/
 
 .login_form {
@@ -470,6 +470,27 @@ body {
   color: #2699FB;
   border: 1px #2699FB solid;
 }
+
+.sign_up_form {
+  padding: 20px;
+}
+
+.sign_up_form h2 {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #2699FB;
+}
+
+.sign_up_form label {
+  color: #2699FB;
+}
+
+.sign_up_form input {
+  color: #2699FB;
+  border: 1px #2699FB solid;
+}
+
+
 
 
 /*--------------------------------*\
