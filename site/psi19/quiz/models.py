@@ -37,9 +37,19 @@ class User(AbstractUser):
     def is_senior(self):    
         return self.level >= 10
 
+    # gets 10 best players overall
     def get_global_top_10():
-        return User.objects.raw("SELECT * FROM quiz_User WHERE level >= 10 ORDER BY ranking desc")[:10]
-        
+        #return User.objects.raw("SELECT * FROM quiz_User WHERE level >= 10 ORDER BY ranking desc")[:10]
+        return User.objects.filter(level >= 10).order_by(ranking)[:10]
+    
+    #returns all users who want to be modeators, and are eligible for the role
+    def get_moderator_candidates():
+        return User.objects.filter(wants_moderator = True, is_moderator = False, level >= 10)    
+
+    # returns all users who are not banned
+    def get_acitive_users():
+        return User.objects.filter(is_active = True)
+
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
@@ -131,13 +141,22 @@ class Friendship(models.Model):
 
     #needs testing, return 10 friends with best scores
     def top_10_friends(user):
-        return Friendship.objects.filter(first_firend_id = user).filter(second_friend_id__level>=10).order_by(second_friend_id__ranking)
+        return Friendship.objects.filter(first_firend_id = user).filter(second_friend_id__level>=10).order_by(second_friend_id__ranking)[:10]
 
     
     # should return list of friends ordered by username
     def get_friends(user):
         return Friendship.objects.filter(first_friend_id = user).order_by(second_friend_id__username)    
         
+    # gets all friend request that the user has sent    
+    def get_sent_friend_requests(user):
+        return Friendship.objects.filter(first_friend_id = user, accepted = False)
+
+    # gets all friend requests that a user has recieved
+    def get_recieved_friend_requests(user):
+        return Friendship.objects.filter(second_friend_id = user, accepted = False)    
+
+
 #class containing all game relevant data
 class Game(models.Model):
     player_one = models.ForeignKey(settings.AUTH_USER_MODEL,related_name = '%(class)s_p1', on_delete=models.DO_NOTHING)
