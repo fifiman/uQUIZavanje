@@ -2,11 +2,69 @@
 
 {% block content %}
 
-<div style="padding:15px">
-    <form action="/submit_question/" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Submit">
-    </form>
+
+
+
+        
+  
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="add_question_form">
+                <form action="/submit_question/" method="post">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-md-12 form_wrapper_question">
+                            <label for="text_question">Question Text</label>
+                            <p id="text_question"> {{ form.question }} </p>        
+                        </div>
+
+                        
+                         <div class="col-md-6 form_wrapper_answer">
+                                <label for="answer_one_question">Answer One</label>
+                                <p id="answer_one_question"> {{ form.answer_one }} </p>       
+                        </div>
+        
+                        <div class="col-md-6 form_wrapper_answer">
+                            <label for="answer_two_question">Answer Two</label>
+                            <p id="answer_two_question"> {{ form.answer_two }} </p>   
+                        </div>
+        
+                        <div class="col-md-6 form_wrapper_answer">
+                            <label for="answer_three_question">Answer Three</label>
+                            <p id="answer_three_question"> {{ form.answer_three }} </p>    
+                        </div>
+        
+                        <div class="col-md-6 form_wrapper_answer">
+                            <label for="answer_four_question">Answer Four</label>
+                            <p id="answer_four_question"> {{ form.answer_four }} </p> 
+                        </div>
+        
+                        <div class="col-md-6 form_wrapper_correct_answer">
+                            <label for="correct_question">Correct Answer</label>
+                            <p id="correct_question"> {{ form.correct }} </p>        
+                        </div>
+        
+                        <div class="col-md-6 form_wrapper_category">
+                            <label for="category_question">Question Category</label>
+                            <p id="category_question"> {{ form.category }} </p>    
+                        </div>
+                    
+                    </div>
+                
+                    <input class="btn btn-primary" type="submit" value="Submit">
+                    
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+
+
 {% endblock content %}
