@@ -5,7 +5,9 @@ from django.shortcuts import render, redirect
 from django.template import loader
 from quiz.models import *
 from quiz.forms import *
-
+from django.views import generic
+from django.views.generic import UpdateView
+from django.http import Http404
 
 def home(request):
     template = loader.get_template('quiz/home.html')
@@ -47,20 +49,26 @@ def search(request):
         # cannot check already friends if im already logged in
         if(request.user.is_authenticated):
             already_friends = Friendship.already_friends(user, request.user)
+            request_sent = Friendship.request_sent(request.user, user)
+            request_recieved = Friendship.request_sent(user, request.user)
         else:
-            already_friends = False;
+            already_friends = False
+            request_sent = False
+            request_recieved = False
         
         me = (user == request.user)
-
+        
         if(not me):
             ret.append({
                 'user' : user,
                 'already_friends' : already_friends,
+                'request_sent' : request_sent,
+                'request_recieved' : request_recieved
             })
 
     return render(request, 'quiz/search_results.html', {'found' : ret})
     
-def follow(request):    
+def send_request(request):    
 
     if 'username' in request.GET and request.GET['username']:
         recieved_username = request.GET['username']
@@ -68,12 +76,37 @@ def follow(request):
     user1 = User.objects.filter(username=recieved_username)[0]
 
     if user1 != request.user:
-        Friendship.follow(request.user, user1)
+        Friendship.send_request(request.user, user1)
    
 
     return redirect('/home')
 
-def unfollow(request):    
+def cancel_request(request):
+
+    if 'username' in request.GET and request.GET['username']:
+        recieved_username = request.GET['username']
+    
+    user1 = User.objects.get(username=recieved_username)
+
+    if user1 != request.user:
+        Friendship.cancel_request(request.user, user1)
+   
+
+    return redirect('/home')
+
+def confirm_request(request):    
+
+    if 'username' in request.GET and request.GET['username']:
+        recieved_username = request.GET['username']
+    
+    user1 = User.objects.get(username=recieved_username)
+
+    if user1 != request.user:
+        Friendship.accept_request(request.user, user1)
+   
+    return redirect('/home')
+
+def unfriend(request):    
 
     if 'username' in request.GET and request.GET['username']:
         recieved_username = request.GET['username']
@@ -81,13 +114,10 @@ def unfollow(request):
     user1 = User.objects.filter(username=recieved_username)[0]
 
     if user1 != request.user:
-        Friendship.unfollow(request.user, user1)
+        Friendship.unfriend(request.user, user1)
    
 
     return redirect('/home')
-
-
-
 
 def submit_a_question(request):
 
@@ -165,36 +195,34 @@ def signup(request):
 
     return HttpResponse(template.render(context, request))
 
-'''
-def signup_profile(request):    
-    message = None  
-
-    # If POST request we trying to create new user.
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return redirect('/signup_profile')
-
-        message = 'BAD SIGNUP'
-
-    # If GET or bad form we should return
-    # the form again to the user.
-    template = loader.get_template('quiz/signup.html')
-
-    # Fill with form context.
+def needs_validation(request):
+    
+    template = loader.get_template('quiz/questions_that_need_validation.html')
+    questions = []
+    questions =  Question.get_all_not_validated()
     context = {
-        'form': UserProfileForm()
-    }
-
-    if message is not None:
-        context['message'] = message
+        'questions': questions,
+    }   
 
     return HttpResponse(template.render(context, request))
-'''
+
+
+class EditQuestion(UpdateView): 
+    model = Question
+    form_class = AdminQuestionForm
+    template_name = "quiz/question_update_form.html"
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse('quiz:home')
+
+    def get_object(self, queryset=None):
+    
+        user = self.request.user
+        question = super(EditQuestion, self).get_object(queryset)
+        
+        if not user.is_authenticated:
+            raise Http404("You are not allowed here")
+        else:
+            if not user.is_superuser and not user.is_moderator:
+                raise Http404("You are not allowed here")
+        return question

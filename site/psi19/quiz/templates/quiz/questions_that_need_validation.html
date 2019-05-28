@@ -1,0 +1,14 @@
+{% extends "quiz/base.html" %}
+
+{% block content %}
+
+<div style="padding:15px">
+
+    {% for question in questions %}
+
+    <a href="../questions/{{question.id}}/update/">{{question.question}}</a>
+    <br />
+    {% endfor %}
+</div>
+
+{% endblock content %}
