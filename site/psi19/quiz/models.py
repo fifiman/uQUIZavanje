@@ -218,4 +218,8 @@ class Question(models.Model):
     #def get_question_from_category(category, number_of_questions):
 
 
-    
+    def approve_question(question_id):
+        Question.objects.filter(id = question_id).update(is_valid = True)
+
+    def delete_question(question_id):
+        Question.objects.filter(id = question_id).delete()
