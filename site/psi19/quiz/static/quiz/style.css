@@ -15,8 +15,9 @@ Table OF Contents
 6  > My Profile
 7  > Login and Signup
 8  > Add Question Form
-9  > Footer
-10 > Responsive
+9  > Avatar Page
+10  > Footer
+11 > Responsive
 
 ------------------------------------*/
 
@@ -548,11 +549,19 @@ body {
 }
 
 
+/*--------------------------------*\
+    Avatar Page
+\*--------------------------------*/
 
+.avatar {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 
-
-
-
+.avatar_bottom {
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
 
 
 /*--------------------------------*\

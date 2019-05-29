@@ -19,7 +19,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField( max_length=50)
     level = models.IntegerField(default = 0)
-    picture = models.TextField(default = " ", max_length = 50, blank = True, null = True)
+    picture = models.TextField(default = "quiz/default_avatar.jpg", max_length = 50, blank = True, null = True)
     ranking = models.IntegerField(default = -1)
 
     def __str__(self):
