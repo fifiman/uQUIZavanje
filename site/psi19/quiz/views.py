@@ -206,6 +206,17 @@ def needs_validation(request):
 
     return HttpResponse(template.render(context, request))
 
+def approve_question(request):
+    recieved_operation = request.GET['operation']
+    recieved_id = request.GET['id']
+
+    if recieved_operation == "ok":
+        Question.approve_question(recieved_id)
+    else:
+        Question.delete_question(recieved_id)
+
+    return redirect('/needs_validation')
+
 
 class EditQuestion(UpdateView): 
     model = Question
