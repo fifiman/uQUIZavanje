@@ -29,8 +29,9 @@
                     </div>
 
                     <div class="card-body">
-                        <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg"
-                            class="rounded-circle center" alt="woman avatar">
+                        {% load static %}
+                        <img src='{% get_static_prefix %}{{record.user.picture }}'
+                            class="rounded-circle center" alt="avatar">
                     </div>
 
                     <p>{{record.user.username}}</p>

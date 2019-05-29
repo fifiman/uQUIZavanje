@@ -18,11 +18,11 @@ urlpatterns = [
     url(r'^submit_question/$',           views.submit_a_question,            name = 'submit_a_question'),
     
     # questions/need_validation
-    url(r'^needs_validation/$',  views.needs_validation,             name = 'needs_validation'),
-
-    url(r'^approve_question/$',         views.approve_question,             name = 'approve_question'),
-
-    url(r'^moderator_candidates/$',  views.moderator_candidates,             name = 'moderator_candidates'),
-
-    url(r'^approve_moderator/$',        views.approve_moderator,             name = 'approve_moderator'),
+    url(r'^needs_validation/$',          views.needs_validation,             name = 'needs_validation'),
+    url(r'^approve_question/$',          views.approve_question,             name = 'approve_question'),
+    url(r'^moderator_candidates/$',      views.moderator_candidates,         name = 'moderator_candidates'),
+    url(r'^approve_moderator/$',         views.approve_moderator,            name = 'approve_moderator'),
+    url(r'^change_avatar/$',             views.change_avatar,                name = 'change_avatar'),
+    url(r'^choose_avatar/$',             views.choose_avatar,                name = 'choose_avatar'),
+    
 ]

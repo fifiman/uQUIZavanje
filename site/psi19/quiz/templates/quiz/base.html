@@ -43,7 +43,7 @@
                     </div>
                     <div class="col-xs-4 col-md-4 col-xl-6">
                         {% if user.is_authenticated %}
-                        <div class="float-right">
+                        <div class="float-right" id="welcome_message">
                             Welcome, {{ user.get_username }}
                             <a href="/accounts/logout" class="btn btn-outline-primary"><i class="#"></i>Logout</a>
                         </div>

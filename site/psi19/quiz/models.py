@@ -61,6 +61,50 @@ class User(AbstractUser):
     def update_image(username, pic):
         User.objects.filter(username = username).update(picture = pic)
 
+    def is_over_level_five(self):
+        if(self.level >= 5):
+            return True
+        else:
+            return False
+
+    def is_over_level_ten(self):
+        if(self.level >= 10):
+            return True
+        else:
+            return False
+
+    def is_over_level_twenty(self):
+        if(self.level >= 20):
+            return True
+        else:
+            return False
+
+    def has_more_than_five_wins(self):
+        count = Game.number_of_wins()
+
+        if count > 5:
+            return True
+        else:
+            return False    
+
+    def has_more_than_fifty_wins(self):
+        count = Game.number_of_wins()
+
+        if count > 50:
+            return True
+        else:
+            return False    
+
+    def has_more_than_hundred_wins(self):
+        count = Game.number_of_wins()
+
+        if count > 100:
+            return True
+        else:
+            return False    
+
+            
+
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
 
@@ -195,10 +239,13 @@ class Game(models.Model):
     player_three_pts = models.IntegerField()
     player_four_pts = models.IntegerField()
 
-    winner = models.IntegerField()
+    winner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_win', on_delete=models.DO_NOTHING, blank = True, null = True)
     
     # racuna broj partija koje je pobedio korisnik user
     def number_of_wins(user):
+        
+        return Game.objects.filter(winner = user).count()
+        '''
         win_total = 0
 
         games1 = Game.objects.filter(player_one = user)
@@ -222,8 +269,8 @@ class Game(models.Model):
                 win_total = win_total + 1
         
         return win_total
+        '''
 
-        
     # racuna broj partija koje je odigrao korisnik user
     def number_of_games_played(user):
         p1 = Game.objects.filter(player_one = user).count()

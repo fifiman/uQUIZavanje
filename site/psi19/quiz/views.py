@@ -276,10 +276,36 @@ class EditQuestion(UpdateView):
                 raise Http404("You are not allowed here")
         return question
 
-
+'''
 def active_users(request):
 
     users = User.get_acitive_users()
+'''
 
+def change_avatar(request):
+
+    user = request.user
+
+    # slika moze da se menja samo ako je user ulogovan
+    if(user.is_authenticated and 'avatar_option' in request.GET):
+        recieved_avatar = request.GET['avatar_option']
+        
+        User.update_image(user.username, recieved_avatar)
+
+        # TODO change to my_profile
+        return redirect('/home')
+
+    # if not logged in just redirect to home    
+    return redirect('/home')
+
+def choose_avatar(request):
+    template = loader.get_template('quiz/choose_avatar.html')
+
+    context = {
+        
+    }   
+
+    return HttpResponse(template.render(context, request))
+            
 
 
