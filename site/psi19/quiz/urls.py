@@ -19,5 +19,7 @@ urlpatterns = [
     # questions/need_validation
     url(r'^needs_validation/$',  views.needs_validation,             name = 'needs_validation'),
 
+    url(r'^approve_question/$',         views.approve_question,             name = 'approve_question'),
+
     
 ]
