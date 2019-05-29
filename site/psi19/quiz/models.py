@@ -169,6 +169,10 @@ class Friendship(models.Model):
     def get_recieved_friend_requests(user):
         return Friendship.objects.filter(second_friend_id = user, accepted = False)    
 
+    # counts how many friends user user has
+    def count_my_friends(user):
+        return Friendship.objects.filter(first_user_id = user, accepted = True).count()    
+
 
 #class containing all game relevant data
 class Game(models.Model):
@@ -184,12 +188,20 @@ class Game(models.Model):
 
     winner = models.IntegerField()
     
+    # racuna broj partija koje je pobedio korisnik user
     def number_of_wins(user):
         return Game.objects.filter(winner = user).count()
     
-    def number_of_games_played():
-        p1 = Game
+    # racuna broj partija koje je odigrao korisnik user
+    def number_of_games_played(user):
+        p1 = Game.objects.filter(player_one = user).count()
+        p2 = Game.objects.filter(player_two = user).count()
+        p3 = Game.objects.filter(player_three = user).count()
+        p4 = Game.objects.filter(player_four = user).count()
 
+        result = p1+p2+p3+p4
+
+        return result
 
 #categorie id's and their names 
 class Category(models.Model):
