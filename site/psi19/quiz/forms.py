@@ -11,6 +11,14 @@ class QuestionForm(forms.ModelForm):
         model = Question
         fields = ['question', 'answer_one','answer_two','answer_three','answer_four','correct','category']
 
+
+class AdminQuestionForm(forms.ModelForm):
+    
+    class Meta:
+        model = Question
+        fields = '__all__'
+
+
 class SignUpForm(UserCreationForm):
     
     class Meta:

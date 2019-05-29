@@ -99,8 +99,8 @@
                                             Admin options
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <a class="dropdown-item" href="/submit_question/">Dodaj pitanje</a>
-                                            <a class="dropdown-item" href="elements.html">Odobri pitanje</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:submit_a_question' %}">Dodaj pitanje</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:needs_validation' %}">Odobri pitanje</a>
                                             <a class="dropdown-item" href="single-blog.html">Dodeli moderatora</a>
                                             <a class="dropdown-item" href="single-blog.html">Blokiraj korisnika</a>
 
@@ -117,7 +117,7 @@
                                             Moderator options
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <a class="dropdown-item" href="elements.html">Dodaj pitanje</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:submit_a_question' %}">Dodaj pitanje</a>
                                             <a class="dropdown-item" href="elements.html">Odobri pitanje</a>
                                         </div>
                                     </li>
@@ -133,7 +133,7 @@
                                             Senior options
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <a class="dropdown-item" href="elements.html">Dodaj pitanje</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:submit_a_question' %}">Dodaj pitanje</a>
                                             <a class="dropdown-item" href="single-blog.html">Postani moderator</a>
                                         </div>
                                     </li>
