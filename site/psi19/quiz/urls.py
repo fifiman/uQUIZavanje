@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^search_results/$',            views.search,                       name = 'search_results'),
     url(r'^send_request/$',              views.send_request,                 name = 'send_request'),
     url(r'^confirm_request/$',           views.confirm_request,              name = 'confirm_request'),
+    url(r'^deny_request/$',              views.deny_request,                 name = 'deny_request'),
     url(r'^cancel_request/$',            views.cancel_request,               name = 'cancel_request'),
     url(r'^unfriend/$',                  views.unfriend,                     name = 'unfriend'),
     url(r'^submit_question/$',           views.submit_a_question,            name = 'submit_a_question'),

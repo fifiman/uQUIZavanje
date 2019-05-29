@@ -106,6 +106,20 @@ def confirm_request(request):
    
     return redirect('/home')
 
+
+def deny_request(request):    
+
+    if 'username' in request.GET and request.GET['username']:
+        recieved_username = request.GET['username']
+    
+    user1 = User.objects.get(username=recieved_username)
+
+    if user1 != request.user:
+        Friendship.deny_request(request.user, user1)
+   
+    return redirect('/home')
+
+
 def unfriend(request):    
 
     if 'username' in request.GET and request.GET['username']:
@@ -226,3 +240,11 @@ class EditQuestion(UpdateView):
             if not user.is_superuser and not user.is_moderator:
                 raise Http404("You are not allowed here")
         return question
+
+
+def active_users(request):
+
+    users = User.get_acitive_users()
+
+
+

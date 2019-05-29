@@ -1,9 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
-from django.urls import reverse
-from django.db.models import Q
+
 
 
 class User(AbstractUser):
@@ -37,14 +35,17 @@ class User(AbstractUser):
     def is_senior(self):    
         return self.level >= 10
 
+    def get_level(self):
+        return self.level
+
     # gets 10 best players overall
     def get_global_top_10():
-        #return User.objects.raw("SELECT * FROM quiz_User WHERE level >= 10 ORDER BY ranking desc")[:10]
-        return User.objects.filter(level >= 10).order_by(ranking)[:10]
+        return User.objects.filter(level__gte = 10).order_by('-ranking')[:10]
     
     #returns all users who want to be modeators, and are eligible for the role
     def get_moderator_candidates():
-        return User.objects.filter(wants_moderator = True, is_moderator = False, level >= 10)    
+        
+        return User.objects.filter(wants_moderator = True, is_moderator = False, level__gte = 10)    
 
     # returns all users who are not banned
     def get_acitive_users():
@@ -116,6 +117,18 @@ class Friendship(models.Model):
                 friendship = Friendship.objects.create(first_friend_id = user1,second_friend_id = user2, accepted = True)
                 friendship.save()
 
+    def deny_request(user1, user2):
+        f = Friendship.objects.filter(second_friend_id = user1, first_friend_id = user2)
+        
+        count = f.count()
+
+        if count > 0:
+            accepted = f[0].accepted    
+            if(user1 != user2 and not accepted):
+                # ne znam sto sam morao ponovo da dohvatam, ali drugacije nije htelo
+                fr = Friendship.objects.get(second_friend_id = user1, first_friend_id = user2)
+                fr.delete()
+
     # current user wants to cancel his request, should be called only if the request isnt already confirmed
     def cancel_request(user1, user2): 
         friendship = Friendship.objects.get(first_friend_id = user1,second_friend_id = user2)
@@ -170,11 +183,12 @@ class Game(models.Model):
     player_four_pts = models.IntegerField()
 
     winner = models.IntegerField()
-    '''
+    
     def number_of_wins(user):
-        return Game.objects.filter()
+        return Game.objects.filter(winner = user).count()
+    
     def number_of_games_played():
-    '''
+        p1 = Game
 
 
 #categorie id's and their names 
