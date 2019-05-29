@@ -57,6 +57,9 @@ class User(AbstractUser):
     def delete_moderator(username):
         User.objects.filter(username = username).update(wants_moderator = False, is_moderator = True)
 
+    # sets path for a chosen image
+    def update_image(username, pic):
+        User.objects.filter(username = username).update(picture = pic)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
@@ -196,8 +199,31 @@ class Game(models.Model):
     
     # racuna broj partija koje je pobedio korisnik user
     def number_of_wins(user):
-        return Game.objects.filter(winner = user).count()
-    
+        win_total = 0
+
+        games1 = Game.objects.filter(player_one = user)
+        for g in games1:
+            if(winner == 1):
+                win_total = win_total + 1
+
+        games2 = Game.objects.filter(player_two = user)
+        for g in games2:
+            if(winner == 2):
+                win_total = win_total + 1
+        
+        games3 = Game.objects.filter(player_three = user)
+        for g in games3:
+            if(winner == 3):
+                win_total = win_total + 1
+        
+        games4 = Game.objects.filter(player_four = user)
+        for g in games1:
+            if(winner == 4):
+                win_total = win_total + 1
+        
+        return win_total
+
+        
     # racuna broj partija koje je odigrao korisnik user
     def number_of_games_played(user):
         p1 = Game.objects.filter(player_one = user).count()
