@@ -4,7 +4,7 @@
 
 <div class="container">
     <div class="row">
-        {% for question in questions %}
+        {% for moderator in moderators %}
         <div class="col-md-3">
             <div class="card">
                 <div class="card_header">
@@ -12,27 +12,27 @@
                 </div>
         
                 <div class="question_card">
-                    <p>{{question.question}}</p>
-                    <p>{{question.answer_one}}</p>
-                    <p>{{question.answer_two}}</p>
-                    <p>{{question.answer_three}}</p>
-                    <p>{{question.answer_four}}</p>
-                    <p>{{question.correct}}</p>
+                    <p>{{moderator.username}}</p>
+                    <p>{{moderator.first_name}}</p>
+                    <p>{{moderator.last_name}}</p>
+                    <p>{{moderator.level}}</p>
+                    <p>{{moderator.ranking}}</p>
+                    <p>{{moderator.age}}</p>
                 </div>
         
                 <span>
-                    <form method='GET' action="/approve_question/">
+                    <form method='GET' action="/approve_moderator/">
                         <p class="button_p">
-                            <input type="hidden" name="operation" value='ok'>
-                            <input type="hidden" name="id" value='{{question.id}}'>
+                            <input type="hidden" name="operation_mod" value='ok'>
+                            <input type="hidden" name="username_mod" value='{{moderator.username}}'>
                             <button type="submit" class="add_button"><i class="ti-thumb-up"></i></button>
                         </p>
                     </form>
                     
-                    <form method='GET' action="/approve_question/">
+                    <form method='GET' action="/approve_moderator/">
                         <p class="button_p">
-                            <input type="hidden" name="operation" value='not'>
-                            <input type="hidden" name="id" value='{{question.id}}'>
+                            <input type="hidden" name="operation_mod" value='not'>
+                            <input type="hidden" name="username_mod" value='{{moderator.username}}'>
                             <button type="submit" class="remove_button"><i class="ti-thumb-down"></i></button>
                         </p>
                     </form>

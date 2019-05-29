@@ -19,6 +19,9 @@ urlpatterns = [
     # questions/need_validation
     url(r'^needs_validation/$',  views.needs_validation,             name = 'needs_validation'),
 
-    # questions/2/update
-    url(r'^questions/(?P<pk>\d+)/update/$',    views.EditQuestion.as_view(), name = 'update-question'),
+    url(r'^approve_question/$',         views.approve_question,             name = 'approve_question'),
+
+    url(r'^moderator_candidates/$',  views.moderator_candidates,             name = 'moderator_candidates'),
+
+    url(r'^approve_moderator/$',        views.approve_moderator,             name = 'approve_moderator'),
 ]
