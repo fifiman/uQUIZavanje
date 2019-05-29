@@ -51,6 +51,12 @@ class User(AbstractUser):
     def get_acitive_users():
         return User.objects.filter(is_active = True)
 
+    def approve_moderator(username):
+        User.objects.filter(username = username).update(wants_moderator = False, is_moderator = True)
+        
+    def delete_moderator(username):
+        User.objects.filter(username = username).update(wants_moderator = False, is_moderator = True)
+
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
@@ -243,5 +249,8 @@ class Question(models.Model):
     #query the db for speceific questions
     #def get_question_from_category(category, number_of_questions):
 
+    def approve_question(question_id):
+        Question.objects.filter(id = question_id).update(is_valid = True)
 
-    
+    def delete_question(question_id):
+        Question.objects.filter(id = question_id).delete()

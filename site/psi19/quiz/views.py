@@ -220,6 +220,41 @@ def needs_validation(request):
 
     return HttpResponse(template.render(context, request))
 
+def approve_question(request):
+    recieved_operation = request.GET['operation']
+    recieved_id = request.GET['id']
+
+    if recieved_operation == "ok":
+        Question.approve_question(recieved_id)
+    else:
+        Question.delete_question(recieved_id)
+
+    return redirect('/needs_validation')
+
+def moderator_candidates(request):
+    template = loader.get_template('quiz/approve_moderator.html')
+    moderators = []
+    moderators = User.get_moderator_candidates()
+    context = {
+        'moderators': moderators,
+    }
+
+    return HttpResponse(template.render(context, request))
+
+def approve_moderator(request):
+    
+    recieved_operation = request.GET['operation_mod']
+    
+    username = request.GET['username_mod']
+
+    if recieved_operation == "ok":
+        User.approve_moderator(username)
+    else:
+        User.delete_moderator(username)
+
+    return redirect('/moderator_candidates/')
+
+
 
 class EditQuestion(UpdateView): 
     model = Question
