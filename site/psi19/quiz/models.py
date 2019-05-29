@@ -170,7 +170,11 @@ class Game(models.Model):
     player_four_pts = models.IntegerField()
 
     winner = models.IntegerField()
-
+    '''
+    def number_of_wins(user):
+        return Game.objects.filter()
+    def number_of_games_played():
+    '''
 
 
 #categorie id's and their names 
