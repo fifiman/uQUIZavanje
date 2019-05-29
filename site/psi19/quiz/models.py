@@ -39,17 +39,23 @@ class User(AbstractUser):
 
     # gets 10 best players overall
     def get_global_top_10():
-        return User.objects.raw("SELECT * FROM quiz_User WHERE level >= 10 ORDER BY ranking desc")[:10]
-        #return User.objects.filter(level >= 10).order_by(ranking)[:10]
+        #return User.objects.raw("SELECT * FROM quiz_User WHERE level >= 10 ORDER BY ranking desc")[:10]
+        return User.objects.filter(level__gte = 10).order_by('-ranking')[:10]
     
     #returns all users who want to be modeators, and are eligible for the role
     def get_moderator_candidates():
-        #return User.objects.filter(wants_moderator = True, is_moderator = False, level >= 10)    
-        return null
+        return User.objects.filter(wants_moderator = True, is_moderator = False, level__gte = 10)    
+        
 
     # returns all users who are not banned
     def get_acitive_users():
         return User.objects.filter(is_active = True)
+
+    def approve_moderator(username):
+        User.objects.filter(username = username).update(wants_moderator = False, is_moderator = True)
+        
+    def delete_moderator(username):
+        User.objects.filter(username = username).update(wants_moderator = False, is_moderator = True)
 
 
     USERNAME_FIELD = 'username'

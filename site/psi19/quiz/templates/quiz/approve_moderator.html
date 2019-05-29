@@ -1,0 +1,47 @@
+{% extends "quiz/base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        {% for moderator in moderators %}
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card_header">
+                    <h6></h6>
+                </div>
+        
+                <div class="question_card">
+                    <p>{{moderator.username}}</p>
+                    <p>{{moderator.first_name}}</p>
+                    <p>{{moderator.last_name}}</p>
+                    <p>{{moderator.level}}</p>
+                    <p>{{moderator.ranking}}</p>
+                    <p>{{moderator.age}}</p>
+                </div>
+        
+                <span>
+                    <form method='GET' action="/approve_moderator/">
+                        <p class="button_p">
+                            <input type="hidden" name="operation_mod" value='ok'>
+                            <input type="hidden" name="username_mod" value='{{moderator.username}}'>
+                            <button type="submit" class="add_button"><i class="ti-thumb-up"></i></button>
+                        </p>
+                    </form>
+                    
+                    <form method='GET' action="/approve_moderator/">
+                        <p class="button_p">
+                            <input type="hidden" name="operation_mod" value='not'>
+                            <input type="hidden" name="username_mod" value='{{moderator.username}}'>
+                            <button type="submit" class="remove_button"><i class="ti-thumb-down"></i></button>
+                        </p>
+                    </form>
+                </span>            
+            </div>
+        </div>
+        
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}
