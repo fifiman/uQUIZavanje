@@ -255,6 +255,74 @@ def approve_moderator(request):
     return redirect('/moderator_candidates/')
 
 
+def my_profile(request):
+    user = request.user
+    if request.user.is_authenticated:
+    
+        template = loader.get_template('quiz/my_profile.html')
+        lvl = user.get_level()
+        wins = Game.number_of_wins(request.user)
+        played = Game.number_of_games_played(request.user)
+        if played != 0:
+            percentage = (float)(wins/played)
+        else: percentage = 0
+        friends = Friendship.count_my_friends(request.user.id)
+        trophies = []
+        trophies.append({'name': "New user", 'src':"quiz/new_user.jpg"})
+        if wins>=10:
+            trophies.append({'name': "10 wins", 'src': "quiz/10win.jpg"})
+        if wins>=50:
+            trophies.append({'name': "50 wins", 'src': "quiz/50win.jpg"})
+        if wins>=100:
+            trophies.append({'name': "100 wins", 'src': "quiz/100win.jpg"})
+        if lvl>=5:
+            trophies.append({'name': "Level 5+", 'src': "quiz/lvl5.jpg"})
+        if lvl>=20:
+            trophies.append({'name': "Level 20+", 'src': "quiz/lvl20.jpg"})  
+        if user.is_moderator:
+            trophies.append({'name': "Moderator", 'src': "quiz/moderator.jpg"})
+        if user.is_senior():
+            trophies.append({'name': "Senior", 'src': "quiz/senior_user.jpg"})               
+        context = {
+            'wins': wins,
+            'played': played,
+            'percentage': percentage,
+            'friends': friends,
+            'trophies': trophies
+        }
+        return HttpResponse(template.render(context, request))
+    
+    else: 
+        return redirect('/home')
+    
+
+def trophy_page(request):
+    if request.user.is_authenticated:
+        user = request.user
+        template = loader.get_template('quiz/trophy_page.html')
+        lvl = user.get_level()
+        wins = Game.number_of_wins(request.user)
+        played = Game.number_of_games_played(request.user)
+        if played != 0:
+            percentage = (float)(wins/played)
+        else: 
+            percentage = 0
+        senior = lvl>=10
+        moderator = user.moderator()
+        friends = Friendship.count_my_friends(request.user.id)
+        context = {
+                'wins10': wins>=10,
+                'wins50': wins>=50,
+                'wins100': wins>=100,
+                'senior': senior,
+                'moderator': moderator,
+                'level5' : lvl>=5,
+                'level10' : lvl>=10,
+                'level20' : lvl>=20,
+            }
+        return HttpResponse(template.render(context, request))
+    else: 
+        return redirect('/home')
 
 class EditQuestion(UpdateView): 
     model = Question

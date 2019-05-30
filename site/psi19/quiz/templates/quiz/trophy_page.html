@@ -1,0 +1,136 @@
+{% extends "quiz/base.html" %} {% block content %}
+
+<!-- Page Content -->
+
+<div class="container">
+  <div class="row justify-content-center" id="trophy_h1">
+    <h1 class="text-center">Trophy</h1>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="trophy_card">
+        <div class="card-body">
+          {% load static %}
+          <img src="{% get_static_prefix %}quiz/new_user.jpg" />
+        </div>
+
+        <p>Welcome New User</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="trophy_card">
+        <div class="card-body">
+          {%if senior%} {% load static %}
+          <img src="{% get_static_prefix %}quiz/senior_user.jpg" />
+          {% else %} {% load static %}
+          <img src="{% get_static_prefix %}quiz/uqizavanje_logo.png" />
+          {% endif %}
+        </div>
+
+        <p>Senior User</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="trophy_card">
+        <div class="card-body">
+          {%if moderator%}
+          <img src="{% get_static_prefix %}quiz/moderator.jpg" />
+          {% else %}
+          <img src="{% get_static_prefix %}quiz/uqizavanje_logo.png" />
+          {% endif %}
+        </div>
+
+        <p>Moderator</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="trophy_card">
+        <div class="card-body">
+          {%if win10 %}
+          <img src="{% get_static_prefix %}quiz/10win.jpg" />
+          {% else %}
+          <img src="{% get_static_prefix %}quiz/uqizavanje_logo.png" />
+          {% endif %}
+        </div>
+
+        <p>10 Win</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="trophy_card">
+        <div class="card-body">
+          {%if win50 %}
+          <img src="{% get_static_prefix %}quiz/50win.jpg" />
+          {% else %}
+          <img src="{% get_static_prefix %}quiz/uqizavanje_logo.png" />
+          {% endif %}
+        </div>
+
+        <p>50 Win</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="trophy_card">
+        <div class="card-body">
+          {%if win >= 100 %}
+          <img src="{% get_static_prefix %}quiz/100win.jpg" />
+          {% else %}
+          <img src="{% get_static_prefix %}quiz/uqizavanje_logo.png" />
+          {% endif %}
+        </div>
+
+        <p>100 Win</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="trophy_card">
+        <div class="card-body">
+          {%if level5%}
+          <img src="{% get_static_prefix %}quiz/lvl5.jpg" />
+          {% else %}
+          <img src="{% get_static_prefix %}quiz/uqizavanje_logo.png" />
+          {% endif %}
+        </div>
+
+        <p>Level 5</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="trophy_card">
+        <div class="card-body">
+          {%if level10%}
+          <img src="{% get_static_prefix %}quiz/lvl10.jpg" />
+          {% else %}
+          <img src="{% get_static_prefix %}quiz/uqizavanje_logo.png" />
+          {% endif %}
+        </div>
+        <p>Level 10</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="trophy_card">
+        <div class="card-body">
+          {%if level20%}
+          <img src="{% get_static_prefix %}quiz/lvl20.jpg" />
+          {% else %}
+          <img src="{% get_static_prefix %}quiz/uqizavanje_logo.png" />
+          {% endif %}
+        </div>
+
+        <p>Level 20</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- /Page Content -->
+{% endblock content%}

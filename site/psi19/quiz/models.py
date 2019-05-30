@@ -38,6 +38,12 @@ class User(AbstractUser):
     def get_level(self):
         return self.level
 
+    def get_ranking(self):
+        return self.ranking
+
+    def get_age(self):
+        return self.age
+
     # gets 10 best players overall
     def get_global_top_10():
         return User.objects.filter(level__gte = 10).order_by('-ranking')[:10]
@@ -224,7 +230,7 @@ class Friendship(models.Model):
 
     # counts how many friends user user has
     def count_my_friends(user):
-        return Friendship.objects.filter(first_user_id = user, accepted = True).count()    
+        return Friendship.objects.filter(first_friend_id = user, accepted = True).count()    
 
 
 #class containing all game relevant data

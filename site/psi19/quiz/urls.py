@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^cancel_request/$',            views.cancel_request,               name = 'cancel_request'),
     url(r'^unfriend/$',                  views.unfriend,                     name = 'unfriend'),
     url(r'^submit_question/$',           views.submit_a_question,            name = 'submit_a_question'),
+    url(r'^my_profile/$',                views.my_profile,                   name = 'my_profile'),
+    url(r'^trophy_page/$',               views.trophy_page,                  name = 'trophy_page'),
     
     # questions/need_validation
     url(r'^needs_validation/$',          views.needs_validation,             name = 'needs_validation'),
@@ -23,6 +25,5 @@ urlpatterns = [
     url(r'^moderator_candidates/$',      views.moderator_candidates,         name = 'moderator_candidates'),
     url(r'^approve_moderator/$',         views.approve_moderator,            name = 'approve_moderator'),
     url(r'^change_avatar/$',             views.change_avatar,                name = 'change_avatar'),
-    url(r'^choose_avatar/$',             views.choose_avatar,                name = 'choose_avatar'),
     
 ]

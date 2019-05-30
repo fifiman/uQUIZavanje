@@ -85,6 +85,11 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="{% url 'quiz:rank_list'%}">Rank List</a>
                                     </li>
+                                    {% if user.is_authenticated %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'quiz:my_profile'%}">My Profile</a>
+                                    </li>
+                                    {% endif %}
 
 
                                     <!-- Danlo pls help ovo je ruzno ko djvao :( -->

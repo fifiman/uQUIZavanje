@@ -1,0 +1,125 @@
+{% extends "quiz/base.html" %} {% load static %} {% block content %}
+<!-- Page Content -->
+
+<div class="container">
+  <div class="row justify-content-center" style="margin: 10px;">
+    <!-- Profile info -->
+    <div class="col-lg-4 col-md-12 profile_big_container">
+      <div class="text-center justify-content-center">
+        <div class="card-body">
+          <img
+            src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg"
+            class="rounded-circle center"
+            alt="woman avatar"
+          />
+        </div>
+
+        <div class="p_wrapper_profile">
+          <p>{{ user.get_username }}</p>
+          <p>{{ user.get_name }}</p>
+          <p>{{ user.get_surname }}</p>
+          {% if user.get_age != null%}
+          <p>{{ user.get_age }}</p>
+          {% endif %}
+        </div>
+
+        <div class="card-body text-center">
+          <button class="btn btn-outline-primary">Moderator</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="col-lg-3 col-md-12 profile_big_container">
+      <div id="stats_container">
+        <h3 style="">Stats</h3>
+
+        <table>
+          <tr>
+            <td>Games won</td>
+            <td>{{ wins }}</td>
+          </tr>
+
+          <tr>
+            <td>Games played</td>
+            <td>{{ played }}</td>
+          </tr>
+          <tr>
+            <td>Win %</td>
+            <td>{{ percentage }}%</td>
+          </tr>
+          <tr>
+            <td>Lvl</td>
+            <td>{{ user.get_level }}</td>
+          </tr>
+          <tr>
+            <td>Ranking</td>
+            <td>{{ user.get_ranking }}</td>
+          </tr>
+          <tr>
+            <td>Friends</td>
+            <td>{{ friends }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-12" style="margin: 10px;">
+      <div class="row">
+        <!-- Trophy -->
+        <div class="col-md-12" id="trophy_container">
+          <div class="small_container_content text-center">
+            <h3>Trophies</h3>
+
+            <span>
+              {%for trophy in trophies%}
+              <div style="display: inline">
+                <img src="{% get_static_prefix %}{{ trophy.src }}" />
+              </div>
+              {%endfor%}
+            </span>
+
+            <p>
+              <button class="btn btn-outline-primary">
+                <a href="{% url 'quiz:trophy_page' %}">Trophy case</a>
+              </button>
+            </p>
+          </div>
+        </div>
+
+        <!-- Friends -->
+        <div class="col-md-12" id="friends_container">
+          <div class="small_container_content text-center">
+            <h3>Friends</h3>
+
+            <span>
+              <img
+                src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg"
+                class="rounded-circle"
+              />
+              <img
+                src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg"
+                class="rounded-circle"
+              />
+              <img
+                src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg"
+                class="rounded-circle"
+              />
+              <img
+                src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg"
+                class="rounded-circle"
+              />
+            </span>
+
+            <button class="btn btn-outline-primary">
+              <a href="#">View Friends</a>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- /Page Content -->
+{% endblock content %}
