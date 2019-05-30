@@ -14,18 +14,21 @@
         </div>
 
         <div class="p_wrapper_profile">
-          <p>{{ user.get_username }}</p>
-          <p>{{ user.first_name }}</p>
-          <p>{{ user.last_name }}</p>
+          <p>Username : {{ user.get_username }}</p>
+          <p>Fist name :{{ user.first_name }}</p>
+          <p>Last name : {{ user.last_name }}</p>
           {% if user.get_age != null%}
-          <p>{{ user.get_age }}</p>
+          <p>Age : {{ user.get_age }}</p>
+          {% endif %}
+          {% if senior %}
+            {% if not moderator and not wants_moderator %}
+              <div class="card-body text-center">
+                <a href = "{% url 'quiz:submit_wants_moderator' %}"><button class="btn btn-outline-primary">Moderator</button></a>
+              </div>
+            {% endif %}
           {% endif %}
         </div>
-        {% if not moderator and senior %}
-        <div class="card-body text-center">
-          <a href = "quiz:submit_wants_moderator"><button class="btn btn-outline-primary">Moderator</button></a>
-        </div>
-        {% endif %}
+      
       </div>
     </div>
 
@@ -58,7 +61,7 @@
           </tr>
           <tr>
             <td>Friends</td>
-            <td>{{ friends }}</td>
+            <td>{{ number_of_friends }}</td>
           </tr>
         </table>
       </div>
@@ -91,26 +94,16 @@
         <div class="col-md-12" id="friends_container">
           <div class="small_container_content text-center">
             <h3>Friends</h3>
-
+            <!-- pretvoriti u linkove ka profilima -->
             <span>
-              <img
-                src="{% static 'quiz/avatar1.jpg' %}"
-                class="rounded-circle"
-              />
-              <img
-                src="{% static 'quiz/avatar2.jpg' %}"
-                class="rounded-circle"
-              />
-              <img
-                src="{% static 'quiz/avatar3.jpg' %}"
-                class="rounded-circle"
-              />
-              <img
-                src="{% static 'quiz/avatar4.jpg' %}"
-                class="rounded-circle"
-              />
+              {% for friend in friends %}
+                {% load static %}
+                <img src='{% get_static_prefix %}{{friend.second_friend_id__picture }}' class="rounded-circle" alt="avatar">    
+              {% empty %}
+                <h6>You do not have any friends yet !</h6>
+              {% endfor %}
             </span>
-
+            <br/>
             <button class="btn btn-outline-primary">
               <a href="{% url 'quiz:friends_page' %}">View Friends</a>
             </button>

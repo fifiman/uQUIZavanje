@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
-
+import random
 
 
 class User(AbstractUser):
@@ -224,6 +224,8 @@ class Friendship(models.Model):
     def get_friends(user):
         return Friendship.objects.filter(first_friend_id = user, accepted = True).select_related('second_friend_id').values('second_friend_id', 'accepted', 'second_friend_id__username', 'second_friend_id__picture', 'second_friend_id__ranking')  
 
+    def get_random_four_freinds(user):
+        return Friendship.objects.filter(first_friend_id = user, accepted = True).select_related('second_friend_id').values('second_friend_id', 'accepted', 'second_friend_id__username', 'second_friend_id__picture', 'second_friend_id__ranking').order_by('?')[:4] 
 
     # gets all friend request that the user has sent    
     def get_sent_friend_requests(user):

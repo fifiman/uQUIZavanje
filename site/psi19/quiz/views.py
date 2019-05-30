@@ -9,6 +9,8 @@ from django.views import generic
 from django.views.generic import UpdateView
 from django.http import Http404
 
+
+
 def home(request):
     template = loader.get_template('quiz/home.html')
 
@@ -259,22 +261,26 @@ def approve_moderator(request):
     return redirect('/moderator_candidates/')
 
 def submit_wants_moderator(request):
-    user = request.User
-    
+    user = request.user
+    print("Zelim")
     # iz nekog razloga mi ne radi lazy eval tako da if u ifu
     if user.is_authenticated:
-        if user.is_senior() and not user.moderator():
-            user.set_wants_moderator()
+        if user.is_senior() and not user.is_moderator:
+            User.set_wants_moderator(user.username)
 
     return redirect('/my_profile')    
     
 
 def my_profile(request):
     user = request.user
+    print('OK')
     if request.user.is_authenticated:
     
         template = loader.get_template('quiz/my_profile.html')
-        lvl = user.get_level()
+        lvl = user.level
+
+        print(lvl)
+
         wins = Game.number_of_wins(request.user)
         played = Game.number_of_games_played(request.user)
         
@@ -283,10 +289,14 @@ def my_profile(request):
         else:
             percentage = 0
 
-        friends = Friendship.count_my_friends(request.user)
-        
+        number_of_friends = Friendship.count_my_friends(request.user)
+        friends = Friendship.get_random_four_freinds(user)
+        senior = user.is_senior()
+        wants_moderator = user.wants_moderator
+
         trophies = []
         trophies.append({'name': "New user", 'src':"quiz/new_user.jpg"})
+        
         if wins>=10:
             trophies.append({'name': "10 wins", 'src': "quiz/10win.jpg"})
         if wins>=50:
@@ -301,12 +311,18 @@ def my_profile(request):
             trophies.append({'name': "Moderator", 'src': "quiz/moderator.jpg"})
         if user.is_senior():
             trophies.append({'name': "Senior", 'src': "quiz/senior_user.jpg"})               
+        
+        print(wants_moderator)
+
         context = {
             'wins': wins,
             'played': played,
             'percentage': percentage,
-            'friends': friends,
-            'trophies': trophies
+            'number_of_friends': number_of_friends,
+            'trophies': trophies,
+            'friends' : friends,
+            'senior' : senior,
+            'wants_moderator' : wants_moderator,
         }
         return HttpResponse(template.render(context, request))
     else: 
@@ -317,7 +333,7 @@ def trophy_page(request):
     if request.user.is_authenticated:
         user = request.user
         template = loader.get_template('quiz/trophy_page.html')
-        lvl = user.get_level()
+        lvl = user.level
         wins = Game.number_of_wins(request.user)
         played = Game.number_of_games_played(request.user)
         if played != 0:
@@ -326,7 +342,7 @@ def trophy_page(request):
             percentage = 0
         senior = lvl>=10
         moderator = user.moderator()
-        friends = Friendship.count_my_friends(request.user.id)
+        #friends = Friendship.count_my_friends(request.user.id)
         context = {
                 'wins10': wins>=10,
                 'wins50': wins>=50,
