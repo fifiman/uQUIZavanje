@@ -34,8 +34,8 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
         ('Login data', {'fields': ('username','email', 'password')}),
         ('Personal data', {'fields':('first_name', 'last_name', 'age')}),
-        ('Account data', {'fields':('level', 'picture', 'ranking')})
-        )
+        ('Account data', {'fields':('level', 'picture', 'ranking')}),
+        ('Moderator data', {'fields':('is_moderator', 'wants_moderator')}),)
     add_fieldsets = (
         ('Login data', {'fields': ('username','email', 'password')}),
         ('Personal data', {'fields':('first_name', 'last_name', 'age')}),
