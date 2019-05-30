@@ -16,7 +16,7 @@ Table OF Contents
 7  > Login and Signup
 8  > Add Question Form
 9  > Avatar Page
-10  > Footer
+10 > Footer
 11 > Responsive
 
 ------------------------------------*/
@@ -575,6 +575,9 @@ body {
 .footer {
   background-color: #2699FB;
   height: 100px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 .footer p {
@@ -734,4 +737,12 @@ body {
 
 }
 
+#page_container {
+  position: relative;
+  min-height: 100vh;
+}
+
+#content_wrapper {
+  padding-bottom: 100px;
+}
 

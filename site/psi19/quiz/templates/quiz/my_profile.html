@@ -9,7 +9,7 @@
         <div class="card-body">
           <a href = "{% url 'quiz:choose_avatar' %}">
             {% load static %}
-            <img src="{% get_static_prefix %}{{user.picture}}" />
+            <img src="{% get_static_prefix %}{{user.picture}}" class="rounded-circle" />
           </a>
         </div>
 
@@ -94,19 +94,19 @@
 
             <span>
               <img
-                src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg"
+                src="{% static 'quiz/avatar1.jpg' %}"
                 class="rounded-circle"
               />
               <img
-                src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg"
+                src="{% static 'quiz/avatar2.jpg' %}"
                 class="rounded-circle"
               />
               <img
-                src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg"
+                src="{% static 'quiz/avatar3.jpg' %}"
                 class="rounded-circle"
               />
               <img
-                src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg"
+                src="{% static 'quiz/avatar4.jpg' %}"
                 class="rounded-circle"
               />
             </span>
