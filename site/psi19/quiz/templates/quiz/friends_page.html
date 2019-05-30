@@ -1,11 +1,11 @@
 {% extends "quiz/base.html" %} 
 {% block content %}
 
-<!-- Page Content -->
+<!-- Friends Page Content -->
 
 <div class="container">
   <div class="row justify-content-center" id="friend_h1">
-    <h1 class="text-center">Friends</h1>
+    <h1 class="text-center">My Friends</h1>
   </div>
 
   <div class="row">
@@ -29,27 +29,91 @@
     
                 <p>{{record.second_friend_id__rank}}</p>
     
-              
+                <div class="card-body text-center">
+                  <form method="GET" action="/unfriend/">
+                      <input type="hidden" name="username" value='{{record.second_friend_id__username}}'>
+                      <input type="submit" class="btn btn-outline-primary" value="UNFRIEND"></input>
+                  </form>
+                </div>
+    
     
            
         </div>
         <!-- /Add Friend card -->
     
         </div>
-    </div>
+    </div>      
+    {% empty %}
+      <h3>You do not have any friends yet!</h3>
     {% endfor %}
  
     </div>
   </div>
 
+<!-- Recieved -->
   <div class="container">
     <div class="row justify-content-center" id="friend_h1">
-      <h1 class="text-center">Friends</h1>
+      <h1 class="text-center">Recieved requests</h1>
     </div>
   
     <div class="row">
   
-      {% for record in friends %}
+      {% for record in recieved %}
+      
+      <div class="col-md-3 col-sm-6 col-xs-12">
+          <!-- Add Friend card -->
+          <div class="user_card">
+              <div class="add_friend_card">
+                  <div class="card_header">
+                      <h6>{{record.first_friend_id__username}}</h6>
+                  </div>
+      
+                  <div class="card-body">
+                      {% load static %}
+                      <img src='{% get_static_prefix %}{{record.first_friend_id__picture }}' class="rounded-circle center" alt="avatar">
+                  </div>
+      
+                  <p>{{record.first_friend_id__username}}</p>
+      
+                  <p>{{record.first_friend_id__rank}}</p>
+      
+                  <div class="card-body text-center">
+                    <form method="GET" action="/confirm_request/">
+                        <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
+                        <input type="hidden" name="username" value='{{record.first_friend_id__username}}'>
+                        <input type="submit" class="btn btn-outline-primary" value="CONFIRM REQUEST"></input>
+                    </form>
+                  </div>  
+                  <div class="card-body text-center">
+                    <form method="GET" action="/deny_request/">
+                        <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
+                        <input type="hidden" name="username" value='{{record.first_friend_id__username}}'>
+                        <input type="submit" class="btn btn-outline-primary" value="DENY REQUEST"></input>
+                    </form>
+                  </div>  
+             
+          </div>
+          <!-- /Add Friend card -->
+      
+          </div>
+      </div>
+      {% empty %}
+        <h3>You did not recieve any new friend request !</h3>
+      {% endfor %}
+   
+      </div>
+    </div>
+
+  <!-- /Page Content -->
+
+  <div class="container">
+    <div class="row justify-content-center" id="friend_h1">
+      <h1 class="text-center">Sent requests</h1>
+    </div>
+  
+    <div class="row">
+  
+      {% for record in sent %}
       
       <div class="col-md-3 col-sm-6 col-xs-12">
           <!-- Add Friend card -->
@@ -67,7 +131,15 @@
                   <p>{{record.second_friend_id__username}}</p>
       
                   <p>{{record.second_friend_id__rank}}</p>
-      
+                  
+                    <!-- ako sam poslao zahtev a zelim da ga ponistim -->
+                    <div class="card-body text-center">
+                      <form method="GET" action="/cancel_request/">
+                          <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
+                          <input type="hidden" name="username" value='{{record.second_friend_id__username}}'>
+                          <input type="submit" class="btn btn-outline-primary" value="CANCEL REQUEST"></input>
+                      </form>
+                  </div>  
                 
       
              
@@ -76,10 +148,11 @@
       
           </div>
       </div>
+      {% empty %}
+        <h3>You did not send any new friend requests !</h3>
       {% endfor %}
    
       </div>
     </div>
 
-  <!-- /Page Content -->
   {% endblock content %}

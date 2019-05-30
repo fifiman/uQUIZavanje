@@ -115,154 +115,200 @@ def search(request):
     return render(request, 'quiz/search_results.html', {'found' : ret})
 
 # friendship related methods
-    
+
+# secured    
 def send_request(request):    
 
-    if 'username' in request.GET and request.GET['username']:
-        recieved_username = request.GET['username']
+    if request.user.is_authenticated:    
+        if 'username' in request.GET and request.GET['username']:
+            recieved_username = request.GET['username']
+        
+        user1 = User.objects.filter(username=recieved_username)[0]
+
+        if user1 != request.user:
+            Friendship.send_request(request.user, user1)
     
-    user1 = User.objects.filter(username=recieved_username)[0]
-
-    if user1 != request.user:
-        Friendship.send_request(request.user, user1)
-   
-
+        return redirect('/friends_page')
     return redirect('/home')
 
+# secured
 def cancel_request(request):
+    if request.user.is_authenticated:
+        if 'username' in request.GET and request.GET['username']:
+            recieved_username = request.GET['username']
+        
+        user1 = User.objects.get(username=recieved_username)
 
-    if 'username' in request.GET and request.GET['username']:
-        recieved_username = request.GET['username']
+        if user1 != request.user:
+            Friendship.cancel_request(request.user, user1)
     
-    user1 = User.objects.get(username=recieved_username)
-
-    if user1 != request.user:
-        Friendship.cancel_request(request.user, user1)
-   
-
+        return redirect('/friends_page')
     return redirect('/home')
 
+#secured
 def confirm_request(request):    
 
-    if 'username' in request.GET and request.GET['username']:
-        recieved_username = request.GET['username']
-    
-    user1 = User.objects.get(username=recieved_username)
+    if request.user.is_authenticated:    
+        if 'username' in request.GET and request.GET['username']:
+            recieved_username = request.GET['username']
+        
+        user1 = User.objects.get(username=recieved_username)
 
-    if user1 != request.user:
-        Friendship.accept_request(request.user, user1)
-   
+        if user1 != request.user:
+            Friendship.accept_request(request.user, user1)
+        
+        return redirect('/friends_page')
     return redirect('/home')
 
+# secured
 def deny_request(request):    
 
-    if 'username' in request.GET and request.GET['username']:
-        recieved_username = request.GET['username']
+    if request.user.is_authenticated:
+        if 'username' in request.GET and request.GET['username']:
+            recieved_username = request.GET['username']
+        
+        user1 = User.objects.get(username=recieved_username)
+
+        if user1 != request.user:
+            Friendship.deny_request(request.user, user1)
     
-    user1 = User.objects.get(username=recieved_username)
-
-    if user1 != request.user:
-        Friendship.deny_request(request.user, user1)
-   
-    return redirect('/home')
-
+        return redirect('/friends_page')
+    return ('/home')
+# secured
 def unfriend(request):    
-
-    if 'username' in request.GET and request.GET['username']:
-        recieved_username = request.GET['username']
     
-    user1 = User.objects.filter(username=recieved_username)[0]
+    if request.user.is_authenticated:
+        if 'username' in request.GET and request.GET['username']:
+            recieved_username = request.GET['username']
+        
+        user1 = User.objects.filter(username=recieved_username)[0]
 
-    if user1 != request.user:
-        Friendship.unfriend(request.user, user1)
-   
+        if user1 != request.user:
+            Friendship.unfriend(request.user, user1)
 
+        return redirect('/friends_page')
+    
     return redirect('/home')
-
 # friendship related methods done
 
-# Question submission methods
+# Question submission methods : SENIOR + only - 
+
+# secured
 def submit_a_question(request):
+    user = request.user
 
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = QuestionForm(request.POST)
-        # check whether it's valid:
-        # print('DRUGI POZIV')
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            
-            q = request.POST['question']
-            a1 = request.POST['answer_one']
-            a2 = request.POST['answer_two']
-            a3 = request.POST['answer_three']
-            a4 = request.POST['answer_four']
-            c = request.POST['correct']
-            cat = Category.objects.filter(id = request.POST['category'])[0]
+    if user.is_authenticated:
+        if user.is_senior():
+            # if this is a POST request we need to process the form data
+            if request.method == 'POST':
+                # create a form instance and populate it with data from the request:
+                form = QuestionForm(request.POST)
+                # check whether it's valid:
+                # print('DRUGI POZIV')
+                if form.is_valid():
+                    # process the data in form.cleaned_data as required
+                    # ...
+                    # redirect to a new URL:
+                    
+                    q = request.POST['question']
+                    a1 = request.POST['answer_one']
+                    a2 = request.POST['answer_two']
+                    a3 = request.POST['answer_three']
+                    a4 = request.POST['answer_four']
+                    c = request.POST['correct']
+                    cat = Category.objects.filter(id = request.POST['category'])[0]
 
-            Question.submit_a_question(q,a1,a2,a3,a4,c,cat)
-            return redirect('/home')
+                    Question.submit_a_question(q,a1,a2,a3,a4,c,cat)
+                    return redirect('/home')
 
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = QuestionForm()
+            # if a GET (or any other method) we'll create a blank form
+            else:
+                form = QuestionForm()
 
-    return render(request, 'quiz/add_question.html', {'form': form})
+            return render(request, 'quiz/add_question.html', {'form': form})
 
+    return redirect('/home')        
+
+# secured
 def needs_validation(request):
     
-    template = loader.get_template('quiz/questions_that_need_validation.html')
-    questions = []
-    questions =  Question.get_all_not_validated()
-    context = {
-        'questions': questions,
-    }   
+    user = request.user
 
-    return HttpResponse(template.render(context, request))
+    if user.is_authenticated:
+        if user.is_moderator or user.is_superuser:
+            template = loader.get_template('quiz/questions_that_need_validation.html')
+            questions = []
+            questions =  Question.get_all_not_validated()
+            context = {
+                'questions': questions,
+            }   
 
+            return HttpResponse(template.render(context, request))
+
+    return redirect('\home')
+
+# secured
 def approve_question(request):
-    recieved_operation = request.GET['operation']
-    recieved_id = request.GET['id']
+    
+    user = request.user
 
-    if recieved_operation == "ok":
-        Question.approve_question(recieved_id)
-    else:
-        Question.delete_question(recieved_id)
+    if user.is_authenticated:
+        if user.is_superuser or user.is_moderator:
+            recieved_operation = request.GET['operation']
+            recieved_id = request.GET['id']
+
+            if recieved_operation == "ok":
+                Question.approve_question(recieved_id)
+            else:
+                Question.delete_question(recieved_id)
 
     return redirect('/needs_validation')
 
 # Question submission methods done
 
 # moderator related views
+
+# secured
 def moderator_candidates(request):
-    template = loader.get_template('quiz/approve_moderator.html')
-    moderators = []
-    moderators = User.get_moderator_candidates()
-    context = {
-        'moderators': moderators,
-    }
 
-    return HttpResponse(template.render(context, request))
+    user = request.user
+    if user.is_authenticated:
+        if user.is_superuser:
+            template = loader.get_template('quiz/approve_moderator.html')
+            moderators = []
+            moderators = User.get_moderator_candidates()
+            context = {
+                'moderators': moderators,
+            }
 
+            return HttpResponse(template.render(context, request))
+    
+    return redirect('/home')
+
+# secured
 def approve_moderator(request):
     
-    recieved_operation = request.GET['operation_mod']
-    
-    username = request.GET['username_mod']
+    user = request.user
 
-    if recieved_operation == "ok":
-        User.approve_moderator(username)
-    else:
-        User.delete_moderator(username)
+    if user.is_authenticated:
+        if user.is_superuser:
+            recieved_operation = request.GET['operation_mod']
+            
+            username = request.GET['username_mod']
 
-    return redirect('/moderator_candidates/')
+            if recieved_operation == "ok":
+                User.approve_moderator(username)
+            else:
+                User.delete_moderator(username)
 
+            return redirect('/moderator_candidates/')
+
+    return redirect('/home')
+
+# secured    
 def submit_wants_moderator(request):
     user = request.user
-    print("Zelim")
+
     # iz nekog razloga mi ne radi lazy eval tako da if u ifu
     if user.is_authenticated:
         if user.is_senior() and not user.is_moderator:
@@ -270,10 +316,9 @@ def submit_wants_moderator(request):
 
     return redirect('/my_profile')    
     
-
+# secured
 def my_profile(request):
     user = request.user
-    print('OK')
     if request.user.is_authenticated:
     
         template = loader.get_template('quiz/my_profile.html')
@@ -328,7 +373,7 @@ def my_profile(request):
     else: 
         return redirect('/home')
     
-
+# secured
 def trophy_page(request):
     if request.user.is_authenticated:
         user = request.user
@@ -357,15 +402,21 @@ def trophy_page(request):
     else: 
         return redirect('/home')
 
+# secured
 def friends_page(request):
     if request.user.is_authenticated:
         user = request.user
         template = loader.get_template('quiz/friends_page.html')
         friends = Friendship.get_friends(user)
-        #friends = Friendship.get_sent_received_friends(user)
-        print(friends)
+        recieved = Friendship.get_recieved_friend_requests(user)
+        sent = Friendship.get_sent_friend_requests(user)
+
+        print(recieved)
+
         context = {
                 'friends': friends,
+                'recieved': recieved,
+                'sent': sent,
             }
         return HttpResponse(template.render(context, request))
     else: 
@@ -391,7 +442,7 @@ class EditQuestion(UpdateView):
                 raise Http404("You are not allowed here")
         return question
 
-
+# secured
 def change_avatar(request):
 
     user = request.user
@@ -408,14 +459,18 @@ def change_avatar(request):
     # if not logged in just redirect to home    
     return redirect('/home')
 
+# secured
 def choose_avatar(request):
-    template = loader.get_template('quiz/choose_avatar.html')
+    if(user.request.is_authenticated):
+        template = loader.get_template('quiz/choose_avatar.html')
 
-    context = {
-        
-    }   
+        context = {
+            
+        }   
 
-    return HttpResponse(template.render(context, request))
+        return HttpResponse(template.render(context, request))
+    
+    return redirect('\home')
             
 
 
