@@ -48,20 +48,24 @@ class User(AbstractUser):
     def get_global_top_10():
         return User.objects.filter(level__gte = 10).order_by('-ranking')[:10]
     
-    #returns all users who want to be modeators, and are eligible for the role
-    def get_moderator_candidates():
-        
-        return User.objects.filter(wants_moderator = True, is_moderator = False, level__gte = 10)    
+    
 
     # returns all users who are not banned
     def get_acitive_users():
         return User.objects.filter(is_active = True)
 
+    #returns all users who want to be modeators, and are eligible for the role
+    def get_moderator_candidates():
+        return User.objects.filter(wants_moderator = True, is_moderator = False, level__gte = 10)    
+
+    def set_wants_moderator(username):
+        User.objects.filter(username = username).update(wants_moderator = True)
+
     def approve_moderator(username):
         User.objects.filter(username = username).update(wants_moderator = False, is_moderator = True)
         
     def delete_moderator(username):
-        User.objects.filter(username = username).update(wants_moderator = False, is_moderator = True)
+        User.objects.filter(username = username).update(wants_moderator = False, is_moderator = False)
 
     # sets path for a chosen image
     def update_image(username, pic):
@@ -216,17 +220,18 @@ class Friendship(models.Model):
         return Friendship.objects.filter(first_firend_id = user).filter(second_friend_id__level>=10).order_by(second_friend_id__ranking)[:10]
 
     
-    # should return list of friends ordered by username
+    # returns list of friends 
     def get_friends(user):
-        return Friendship.objects.filter(first_friend_id = user)  
-        
+        return Friendship.objects.filter(first_friend_id = user, accepted = True).select_related('second_friend_id').values('second_friend_id', 'accepted', 'second_friend_id__username', 'second_friend_id__picture', 'second_friend_id__ranking')  
+
+
     # gets all friend request that the user has sent    
     def get_sent_friend_requests(user):
-        return Friendship.objects.filter(first_friend_id = user, accepted = False)
+        return Friendship.objects.filter(first_friend_id = user, accepted = False).select_related('second_friend_id').values('second_friend_id', 'second_friend_id__username', 'second_friend_id__picture', 'second_friend_id__ranking')  
 
     # gets all friend requests that a user has recieved
     def get_recieved_friend_requests(user):
-        return Friendship.objects.filter(second_friend_id = user, accepted = False)    
+        return Friendship.objects.filter(second_friend_id = user, accepted = False).select_related('first_friend_id').values('first_friend_id', 'first_friend_id__username', 'first_friend_id__picture', 'first_friend_id__ranking')  
 
     # counts how many friends user user has
     def count_my_friends(user):
@@ -249,33 +254,8 @@ class Game(models.Model):
     
     # racuna broj partija koje je pobedio korisnik user
     def number_of_wins(user):
-        
         return Game.objects.filter(winner = user).count()
-        '''
-        win_total = 0
-
-        games1 = Game.objects.filter(player_one = user)
-        for g in games1:
-            if(winner == 1):
-                win_total = win_total + 1
-
-        games2 = Game.objects.filter(player_two = user)
-        for g in games2:
-            if(winner == 2):
-                win_total = win_total + 1
-        
-        games3 = Game.objects.filter(player_three = user)
-        for g in games3:
-            if(winner == 3):
-                win_total = win_total + 1
-        
-        games4 = Game.objects.filter(player_four = user)
-        for g in games1:
-            if(winner == 4):
-                win_total = win_total + 1
-        
-        return win_total
-        '''
+       
 
     # racuna broj partija koje je odigrao korisnik user
     def number_of_games_played(user):

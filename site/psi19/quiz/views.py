@@ -19,151 +19,6 @@ def home(request):
 
     return HttpResponse(template.render(context, request))
 
-#searches for 10 best players overall
-def global_rank_list(request):
-    template = loader.get_template('quiz/rank_list.html')
-
-    context = {
-        'top_10_users': User.get_global_top_10(),
-    }   
-
-    print (User.get_global_top_10()) 
-
-    return HttpResponse(template.render(context, request))
-
-
-
-# search by username
-def search(request):
-
-    users = []
-
-    if 'searched_name' in request.GET and request.GET['searched_name']:
-        searched_name = request.GET['searched_name']
-        users = User.objects.filter(username__contains = searched_name)
-
-    ret = []
-
-    for user in users:
-        
-        # cannot check already friends if im already logged in
-        if(request.user.is_authenticated):
-            already_friends = Friendship.already_friends(user, request.user)
-            request_sent = Friendship.request_sent(request.user, user)
-            request_recieved = Friendship.request_sent(user, request.user)
-        else:
-            already_friends = False
-            request_sent = False
-            request_recieved = False
-        
-        me = (user == request.user)
-        
-        if(not me):
-            ret.append({
-                'user' : user,
-                'already_friends' : already_friends,
-                'request_sent' : request_sent,
-                'request_recieved' : request_recieved
-            })
-
-    return render(request, 'quiz/search_results.html', {'found' : ret})
-    
-def send_request(request):    
-
-    if 'username' in request.GET and request.GET['username']:
-        recieved_username = request.GET['username']
-    
-    user1 = User.objects.filter(username=recieved_username)[0]
-
-    if user1 != request.user:
-        Friendship.send_request(request.user, user1)
-   
-
-    return redirect('/home')
-
-def cancel_request(request):
-
-    if 'username' in request.GET and request.GET['username']:
-        recieved_username = request.GET['username']
-    
-    user1 = User.objects.get(username=recieved_username)
-
-    if user1 != request.user:
-        Friendship.cancel_request(request.user, user1)
-   
-
-    return redirect('/home')
-
-def confirm_request(request):    
-
-    if 'username' in request.GET and request.GET['username']:
-        recieved_username = request.GET['username']
-    
-    user1 = User.objects.get(username=recieved_username)
-
-    if user1 != request.user:
-        Friendship.accept_request(request.user, user1)
-   
-    return redirect('/home')
-
-
-def deny_request(request):    
-
-    if 'username' in request.GET and request.GET['username']:
-        recieved_username = request.GET['username']
-    
-    user1 = User.objects.get(username=recieved_username)
-
-    if user1 != request.user:
-        Friendship.deny_request(request.user, user1)
-   
-    return redirect('/home')
-
-
-def unfriend(request):    
-
-    if 'username' in request.GET and request.GET['username']:
-        recieved_username = request.GET['username']
-    
-    user1 = User.objects.filter(username=recieved_username)[0]
-
-    if user1 != request.user:
-        Friendship.unfriend(request.user, user1)
-   
-
-    return redirect('/home')
-
-def submit_a_question(request):
-
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = QuestionForm(request.POST)
-        # check whether it's valid:
-        # print('DRUGI POZIV')
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            
-            q = request.POST['question']
-            a1 = request.POST['answer_one']
-            a2 = request.POST['answer_two']
-            a3 = request.POST['answer_three']
-            a4 = request.POST['answer_four']
-            c = request.POST['correct']
-            cat = Category.objects.filter(id = request.POST['category'])[0]
-
-            Question.submit_a_question(q,a1,a2,a3,a4,c,cat)
-            return redirect('/home')
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = QuestionForm()
-
-    return render(request, 'quiz/add_question.html', {'form': form})
-
-
 def signup(request):    
     message = None  
 
@@ -209,6 +64,152 @@ def signup(request):
 
     return HttpResponse(template.render(context, request))
 
+#searches for 10 best players overall
+def global_rank_list(request):
+    template = loader.get_template('quiz/rank_list.html')
+
+    context = {
+        'top_10_users': User.get_global_top_10(),
+    }   
+
+    print (User.get_global_top_10()) 
+
+    return HttpResponse(template.render(context, request))
+
+
+# search by username
+def search(request):
+
+    users = []
+
+    if 'searched_name' in request.GET and request.GET['searched_name']:
+        searched_name = request.GET['searched_name']
+        users = User.objects.filter(username__contains = searched_name)
+
+    ret = []
+
+    for user in users:
+        
+        # cannot check already friends if im already logged in
+        if(request.user.is_authenticated):
+            already_friends = Friendship.already_friends(user, request.user)
+            request_sent = Friendship.request_sent(request.user, user)
+            request_recieved = Friendship.request_sent(user, request.user)
+        else:
+            already_friends = False
+            request_sent = False
+            request_recieved = False
+        
+        me = (user == request.user)
+        
+        if(not me):
+            ret.append({
+                'user' : user,
+                'already_friends' : already_friends,
+                'request_sent' : request_sent,
+                'request_recieved' : request_recieved
+            })
+
+    return render(request, 'quiz/search_results.html', {'found' : ret})
+
+# friendship related methods
+    
+def send_request(request):    
+
+    if 'username' in request.GET and request.GET['username']:
+        recieved_username = request.GET['username']
+    
+    user1 = User.objects.filter(username=recieved_username)[0]
+
+    if user1 != request.user:
+        Friendship.send_request(request.user, user1)
+   
+
+    return redirect('/home')
+
+def cancel_request(request):
+
+    if 'username' in request.GET and request.GET['username']:
+        recieved_username = request.GET['username']
+    
+    user1 = User.objects.get(username=recieved_username)
+
+    if user1 != request.user:
+        Friendship.cancel_request(request.user, user1)
+   
+
+    return redirect('/home')
+
+def confirm_request(request):    
+
+    if 'username' in request.GET and request.GET['username']:
+        recieved_username = request.GET['username']
+    
+    user1 = User.objects.get(username=recieved_username)
+
+    if user1 != request.user:
+        Friendship.accept_request(request.user, user1)
+   
+    return redirect('/home')
+
+def deny_request(request):    
+
+    if 'username' in request.GET and request.GET['username']:
+        recieved_username = request.GET['username']
+    
+    user1 = User.objects.get(username=recieved_username)
+
+    if user1 != request.user:
+        Friendship.deny_request(request.user, user1)
+   
+    return redirect('/home')
+
+def unfriend(request):    
+
+    if 'username' in request.GET and request.GET['username']:
+        recieved_username = request.GET['username']
+    
+    user1 = User.objects.filter(username=recieved_username)[0]
+
+    if user1 != request.user:
+        Friendship.unfriend(request.user, user1)
+   
+
+    return redirect('/home')
+
+# friendship related methods done
+
+# Question submission methods
+def submit_a_question(request):
+
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = QuestionForm(request.POST)
+        # check whether it's valid:
+        # print('DRUGI POZIV')
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            
+            q = request.POST['question']
+            a1 = request.POST['answer_one']
+            a2 = request.POST['answer_two']
+            a3 = request.POST['answer_three']
+            a4 = request.POST['answer_four']
+            c = request.POST['correct']
+            cat = Category.objects.filter(id = request.POST['category'])[0]
+
+            Question.submit_a_question(q,a1,a2,a3,a4,c,cat)
+            return redirect('/home')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = QuestionForm()
+
+    return render(request, 'quiz/add_question.html', {'form': form})
+
 def needs_validation(request):
     
     template = loader.get_template('quiz/questions_that_need_validation.html')
@@ -231,6 +232,9 @@ def approve_question(request):
 
     return redirect('/needs_validation')
 
+# Question submission methods done
+
+# moderator related views
 def moderator_candidates(request):
     template = loader.get_template('quiz/approve_moderator.html')
     moderators = []
@@ -254,6 +258,16 @@ def approve_moderator(request):
 
     return redirect('/moderator_candidates/')
 
+def submit_wants_moderator(request):
+    user = request.User
+    
+    # iz nekog razloga mi ne radi lazy eval tako da if u ifu
+    if user.is_authenticated:
+        if user.is_senior() and not user.moderator():
+            user.set_wants_moderator()
+
+    return redirect('/my_profile')    
+    
 
 def my_profile(request):
     user = request.user
@@ -263,10 +277,14 @@ def my_profile(request):
         lvl = user.get_level()
         wins = Game.number_of_wins(request.user)
         played = Game.number_of_games_played(request.user)
+        
         if played != 0:
             percentage = (float)(wins/played)
-        else: percentage = 0
-        friends = Friendship.count_my_friends(request.user.id)
+        else:
+            percentage = 0
+
+        friends = Friendship.count_my_friends(request.user)
+        
         trophies = []
         trophies.append({'name': "New user", 'src':"quiz/new_user.jpg"})
         if wins>=10:
@@ -329,6 +347,7 @@ def friends_page(request):
         template = loader.get_template('quiz/friends_page.html')
         friends = Friendship.get_friends(user)
         #friends = Friendship.get_sent_received_friends(user)
+        print(friends)
         context = {
                 'friends': friends,
             }
@@ -356,11 +375,6 @@ class EditQuestion(UpdateView):
                 raise Http404("You are not allowed here")
         return question
 
-'''
-def active_users(request):
-
-    users = User.get_acitive_users()
-'''
 
 def change_avatar(request):
 
@@ -373,7 +387,7 @@ def change_avatar(request):
         User.update_image(user.username, recieved_avatar)
 
         # TODO change to my_profile
-        return redirect('/home')
+        return redirect('/my_profile')
 
     # if not logged in just redirect to home    
     return redirect('/home')

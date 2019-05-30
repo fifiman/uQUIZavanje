@@ -7,11 +7,10 @@
     <div class="col-lg-4 col-md-12 profile_big_container">
       <div class="text-center justify-content-center">
         <div class="card-body">
-          <img
-            src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg"
-            class="rounded-circle center"
-            alt="woman avatar"
-          />
+          <a href = "{% url 'quiz:choose_avatar' %}">
+            {% load static %}
+            <img src="{% get_static_prefix %}{{user.picture}}" />
+          </a>
         </div>
 
         <div class="p_wrapper_profile">
@@ -22,17 +21,18 @@
           <p>{{ user.get_age }}</p>
           {% endif %}
         </div>
-
+        {% if not moderator and senior %}
         <div class="card-body text-center">
-          <button class="btn btn-outline-primary">Moderator</button>
+          <a href = "quiz:submit_wants_moderator"><button class="btn btn-outline-primary">Moderator</button></a>
         </div>
+        {% endif %}
       </div>
     </div>
 
     <!-- Stats -->
     <div class="col-lg-3 col-md-12 profile_big_container">
       <div id="stats_container">
-        <h3 style="">Stats</h3>
+        <h3>Stats</h3>
 
         <table>
           <tr>
