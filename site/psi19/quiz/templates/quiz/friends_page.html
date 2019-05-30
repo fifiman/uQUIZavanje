@@ -1,0 +1,100 @@
+{% extends "quiz/base.html" %} {% block content %}
+
+<!-- Page Content -->
+
+<div class="container">
+  <div class="row justify-content-center" id="friend_h1">
+    <h1 class="text-center">Friends</h1>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2">
+    {% for record in friends %}
+    
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <!-- Add Friend card -->
+        <div class="user_card">
+            <div class="add_friend_card">
+                <div class="card_header">
+                    <h6></h6>
+                </div>
+    
+                <div class="card-body">
+                    {% load static %}
+                    <img src='{% get_static_prefix %}{{record.user.picture }}' class="rounded-circle center" alt="avatar">
+                </div>
+    
+                <p>{{record.user.username}}</p>
+    
+                <p>{{record.user.rank}}</p>
+    
+                <!-- Za bilo koju od ovih opcija korisnik mora biti logovan-->
+                {% if user.is_authenticated %}
+    
+                {% if record.already_friends %}
+    
+                <div class="card-body text-center">
+                    <form method="GET" action="/unfriend/">
+                        <input type="hidden" name="username" value='{{record.user.username}}'>
+                        <input type="submit" class="btn btn-outline-primary" value="UNFRIEND"></input>
+                    </form>
+                </div>
+    
+                {% else %}
+    
+                <!--ako mi korisnik nije prijatelj, a ja nisam poslao zahtev za prijateljstvo -->
+                {% if  not record.request_sent %}
+    
+                <!-- ako nisam primio zahtev od korisnika, onda mogu da mu posaljem zahtev-->
+                {% if not record.request_recieved %}
+                <div class="card-body text-center">
+                    <form method="GET" action="/send_request/">
+                        <input type="hidden" name="username" value='{{record.user.username}}'>
+                        <input type="submit" class="btn btn-outline-primary" value="SEND REQUEST"></input>
+                    </form>
+                </div>
+                {% else %}
+                <!-- ako mi je ipak poslao zahtev, mogu da ga prihvatim -->
+                <div class="card-body text-center">
+                    <form method="GET" action="/confirm_request/">
+                        <input type="hidden" name="username" value='{{record.user.username}}'>
+                        <input type="submit" class="btn btn-outline-primary" value="CONFIRM REQUEST"></input>
+                    </form>
+                </div>
+    
+                <!-- ako mi je ipak poslao zahtev, mogu da ga prihvatim -->
+                <div class="card-body text-center">
+                    <form method="GET" action="/deny_request/">
+                        <input type="hidden" name="username" value='{{record.user.username}}'>
+                        <input type="submit" class="btn btn-outline-primary" value="DENY REQUEST"></input>
+                    </form>
+                </div>
+                {% endif %}
+    
+                {% else %}
+    
+                <!-- ako sam poslao zahtev a zelim da ga ponistim -->
+                <div class="card-body text-center">
+                    <form method="GET" action="/cancel_request/">
+                        <input type="hidden" name="username" value='{{record.user.username}}'>
+                        <input type="submit" class="btn btn-outline-primary" value="CANCEL REQUEST"></input>
+                    </form>
+                </div>
+                {% endif %}
+    
+    
+                {% endif %}
+                {% endif %}
+    
+            </div>
+        </div>
+        <!-- /Add Friend card -->
+    </div>
+    
+    {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- /Page Content -->
+  {% endblock content %}

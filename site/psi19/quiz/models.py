@@ -218,7 +218,7 @@ class Friendship(models.Model):
     
     # should return list of friends ordered by username
     def get_friends(user):
-        return Friendship.objects.filter(first_friend_id = user).order_by(second_friend_id__username)    
+        return Friendship.objects.filter(first_friend_id = user)  
         
     # gets all friend request that the user has sent    
     def get_sent_friend_requests(user):

@@ -323,6 +323,19 @@ def trophy_page(request):
     else: 
         return redirect('/home')
 
+def friends_page(request):
+    if request.user.is_authenticated:
+        user = request.user
+        template = loader.get_template('quiz/friends_page.html')
+        friends = Friendship.get_friends(user)
+        #friends = Friendship.get_sent_received_friends(user)
+        context = {
+                'friends': friends,
+            }
+        return HttpResponse(template.render(context, request))
+    else: 
+        return redirect('/home')        
+
 class EditQuestion(UpdateView): 
     model = Question
     form_class = AdminQuestionForm

@@ -16,8 +16,8 @@
 
         <div class="p_wrapper_profile">
           <p>{{ user.get_username }}</p>
-          <p>{{ user.get_name }}</p>
-          <p>{{ user.get_surname }}</p>
+          <p>{{ user.first_name }}</p>
+          <p>{{ user.last_name }}</p>
           {% if user.get_age != null%}
           <p>{{ user.get_age }}</p>
           {% endif %}
@@ -112,7 +112,7 @@
             </span>
 
             <button class="btn btn-outline-primary">
-              <a href="#">View Friends</a>
+              <a href="{% url 'quiz:friends_page' %}">View Friends</a>
             </button>
           </div>
         </div>

@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^submit_question/$',           views.submit_a_question,            name = 'submit_a_question'),
     url(r'^my_profile/$',                views.my_profile,                   name = 'my_profile'),
     url(r'^trophy_page/$',               views.trophy_page,                  name = 'trophy_page'),
+    url(r'^friends_page/$',              views.friends_page,                name = 'friends_page'),
     
     # questions/need_validation
     url(r'^needs_validation/$',          views.needs_validation,             name = 'needs_validation'),
