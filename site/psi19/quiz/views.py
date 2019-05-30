@@ -198,7 +198,7 @@ def submit_a_question(request):
     user = request.user
 
     if user.is_authenticated:
-        if user.is_senior():
+        if user.is_senior() or user.is_moderator or user.is_superuser:
             # if this is a POST request we need to process the form data
             if request.method == 'POST':
                 # create a form instance and populate it with data from the request:
@@ -411,7 +411,7 @@ def friends_page(request):
         recieved = Friendship.get_recieved_friend_requests(user)
         sent = Friendship.get_sent_friend_requests(user)
 
-        print(recieved)
+        print(recieved  )
 
         context = {
                 'friends': friends,
