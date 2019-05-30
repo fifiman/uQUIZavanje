@@ -9,7 +9,7 @@
         <div class="card-body">
           <a href = "{% url 'quiz:choose_avatar' %}">
             {% load static %}
-            <img src="{% get_static_prefix %}{{user.picture}}" />
+            <img src="{% get_static_prefix %}{{user.picture}}" class="rounded-circle" />
           </a>
         </div>
 
