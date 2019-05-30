@@ -291,7 +291,6 @@ def my_profile(request):
             'trophies': trophies
         }
         return HttpResponse(template.render(context, request))
-    
     else: 
         return redirect('/home')
     
