@@ -303,11 +303,11 @@ body {
 }
 
 
-#friend_h1 {
-  margin-top: 10px;
+.friend_h1 {
+  margin-top: 20px;
 }
 
-#friend_h1 h1 {
+.friend_h1 h1 {
   color: #2699FB;
   font-family: 'Cabin', sans-serif;
 }
@@ -320,6 +320,15 @@ body {
 #trophy_h1 h1 {
   color: #2699FB;
   font-family: 'Cabin', sans-serif;
+}
+
+.no_content_message {
+  padding-top : 50px;
+  padding-bottom: 50px;
+}
+
+.no_content_message h3 {
+  color: #2699FB;
 }
 
 
