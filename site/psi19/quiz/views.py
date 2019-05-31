@@ -461,7 +461,8 @@ def change_avatar(request):
 
 # secured
 def choose_avatar(request):
-    if(user.request.is_authenticated):
+    user = request.user
+    if(user.is_authenticated):
         template = loader.get_template('quiz/choose_avatar.html')
 
         context = {
