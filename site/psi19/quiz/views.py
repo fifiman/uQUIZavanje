@@ -71,6 +71,7 @@ def global_rank_list(request):
     template = loader.get_template('quiz/rank_list.html')
 
     context = {
+        'top_10_friends': Friendship.top_10_friends(request.user),
         'top_10_users': User.get_global_top_10(),
     }   
 
@@ -472,6 +473,7 @@ def choose_avatar(request):
         return HttpResponse(template.render(context, request))
     
     return redirect('\home')
-            
+
+        
 
 

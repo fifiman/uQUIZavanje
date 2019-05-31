@@ -51,7 +51,7 @@ class User(AbstractUser):
     
 
     # returns all users who are not banned
-    def get_acitive_users():
+    def get_active_users():
         return User.objects.filter(is_active = True)
 
     #returns all users who want to be modeators, and are eligible for the role
@@ -142,7 +142,6 @@ class Friendship(models.Model):
         else:
             return False    
 
-
     # ako zahtev postoji **** request_recieved(user1, user2) <=> request_sent(user2, user1) ****
     def request_sent(user1, user2):
         count = Friendship.objects.filter(first_friend_id = user1, second_friend_id = user2).count()
@@ -217,7 +216,11 @@ class Friendship(models.Model):
 
     #needs testing, return 10 friends with best scores
     def top_10_friends(user):
-        return Friendship.objects.filter(first_firend_id = user).filter(second_friend_id__level>=10).order_by(second_friend_id__ranking)[:10]
+        friends =  Friendship.objects.filter(first_friend_id = user.id)
+        friendsLvl = friends.filter(second_friend_id__level__gte = 10)
+        friendsLvlId = friendsLvl.values_list('second_friend_id')
+        users = User.objects.filter(id__in = friendsLvlId)
+        return users.order_by('ranking')[:10]
 
     
     # returns list of friends 

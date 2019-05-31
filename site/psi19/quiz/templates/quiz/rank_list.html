@@ -22,6 +22,25 @@
         </tbody>
       </table>
     </div>
+    <div class="col-md-6">
+      <table class="table table-bordered rank_list_table">
+        <thead>
+          <tr>
+            <td colspan="2">Friends</td>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for user in top_10_friends %}
+          <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.ranking }}</td>
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
