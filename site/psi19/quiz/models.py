@@ -345,3 +345,30 @@ class Question(models.Model):
 
         return ret_q_set
 
+class Report(models.Model):
+    reporter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_f1', on_delete=models.DO_NOTHING)
+    reported = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_f2', on_delete=models.DO_NOTHING)
+    report_text = models.TextField(max_length = 200)    
+
+
+    def __str__(self):  
+        return "Reporter : " + str(self.reporter) + " Reported :" + str(self.reported) + " beceause of :" + str(self.report_text)
+
+    def add_report(reporter, reported, text):
+        report = Report.objects.create(reporter = reporter, reported = reported, report_text = text)
+        report.save()
+
+
+    # report is valid if reported is still active - 
+    # if admin decides that report is not valid, it will be removed, 
+    # and if he decides otherwise user will not be active anymore
+    def list_valid_reports():    
+        return Report.objects.filter(reported__is_active = True)
+
+    def deny_report(report_id):
+        Report.objects.filter(id = report_id).delete()
+
+    def approve_report(report_id):
+        reported = Report.objects.filter(id = report_id).values('reported')[0]
+        rep_id = reported['reported']
+        User.objects.filter(id = rep_id).update(is_active = False)    
