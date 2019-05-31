@@ -296,12 +296,20 @@ class Question(models.Model):
     def __str__(self):
         return "Question:" + self.question + " Answers: " + self.answer_one + " " + self.answer_two + " " + self.answer_three + " " + self.answer_four
 
+    def get_all_questions():
+        return Question.objects.all()
 
     #NOTE Dodaj proveru da su svi odgovori razliciti
     def submit_a_question(question_in, answer_one_in, answer_two_in, answer_three_in, answer_four_in, correct_in, category_in):
+        
         new_question = Question.objects.create(question = question_in, answer_one = answer_two_in,answer_two = answer_two_in, answer_three=answer_three_in, answer_four=answer_four_in, correct=correct_in, category=category_in)
         new_question.save()
 
+    # nema smisla da admin i moderator potvrdjuju pitanja koja su dodali
+    def privileged_submit_a_question(question_in, answer_one_in, answer_two_in, answer_three_in, answer_four_in, correct_in, category_in):
+        new_question = Question.objects.create(question = question_in, answer_one = answer_two_in,answer_two = answer_two_in, answer_three=answer_three_in, answer_four=answer_four_in, correct=correct_in, category=category_in, is_valid = True)
+        new_question.save()
+ 
 
     # returns all questions that needs validating
     def get_all_not_validated():
@@ -315,3 +323,22 @@ class Question(models.Model):
 
     def delete_question(question_id):
         Question.objects.filter(id = question_id).delete()
+
+    # ako se prosledi prazan niz dohvata dohvata random 10 pitanja iz baze
+    def get_questions_from_categories(categories):
+        
+        ret_q_set = Question.objects.none()
+        # ako nema odabranih kategorija
+        if(not categories):
+            ret_q_set = Question.objects.all().order_by('?')[:10]
+        else:
+            # dohvati pitanja iz svih prosledjenih kategorija i skupi ih u jedan q_set
+            for i in range(0,len(categories)):
+                q_set = Question.objects.filter(category = categories[i]).order_by('?')[:10]    
+                ret_q_set = ret_q_set | q_set
+
+            # izmesaj q_set i uzmi 10 sa vrha
+            ret_q_set.order_by('?')[:10]
+
+        return ret_q_set
+

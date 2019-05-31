@@ -2,7 +2,12 @@
 
 {% block content %}
       
-
+<!-- Error Message for bad login -->
+{% if message %}
+<p>
+    <font color="red">{{ message }}</font>
+</p>
+{% endif %}
 
 <div class="container">
     <div class="row">

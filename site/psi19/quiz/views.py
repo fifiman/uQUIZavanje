@@ -196,7 +196,7 @@ def unfriend(request):
 # secured
 def submit_a_question(request):
     user = request.user
-
+    message = ""
     if user.is_authenticated:
         if user.is_senior() or user.is_moderator or user.is_superuser:
             # if this is a POST request we need to process the form data
@@ -204,28 +204,40 @@ def submit_a_question(request):
                 # create a form instance and populate it with data from the request:
                 form = QuestionForm(request.POST)
                 # check whether it's valid:
-                # print('DRUGI POZIV')
+   
                 if form.is_valid():
                     # process the data in form.cleaned_data as required
                     # ...
                     # redirect to a new URL:
-                    
+                    q = form.cleaned_data.get('question')
                     q = request.POST['question']
-                    a1 = request.POST['answer_one']
-                    a2 = request.POST['answer_two']
-                    a3 = request.POST['answer_three']
-                    a4 = request.POST['answer_four']
-                    c = request.POST['correct']
+                    a1 = form.cleaned_data.get('answer_one')
+                    a2 = form.cleaned_data.get('answer_two')
+                    a3 = form.cleaned_data.get('answer_three')
+                    a4 = form.cleaned_data.get('answer_four')
+                    c = form.cleaned_data.get('correct')
                     cat = Category.objects.filter(id = request.POST['category'])[0]
 
-                    Question.submit_a_question(q,a1,a2,a3,a4,c,cat)
-                    return redirect('/home')
+                    if(c > 4 or c < 0):
+                        message = "Odgovor je van opsega"
+                    else:
+                        if (a1 == a2 or a1 == a3 or a1 == a4 or a2 == a3 or a2 == a4 or a3 == a4):
+                            message = "Neki od odgovora su isti"
+                        else:
+                            # privileged_submit unapred potvrdjuje pitanje, jer nema smisla admin i moderator
+                            if(user.is_moderator or user.is_superuser):
+                                Question.privileged_submit_a_question(q,a1,a2,a3,a4,c,cat)
+                            else:    
+                                Question.submit_a_question(q,a1,a2,a3,a4,c,cat)
+                            
+                            # ako je izvrsen uspesan unos renderuj novu, praznu formu
+                            form = QuestionForm()
 
             # if a GET (or any other method) we'll create a blank form
             else:
                 form = QuestionForm()
 
-            return render(request, 'quiz/add_question.html', {'form': form})
+            return render(request, 'quiz/add_question.html', {'form': form, 'message' : message})
 
     return redirect('/home')        
 
@@ -263,6 +275,38 @@ def approve_question(request):
                 Question.delete_question(recieved_id)
 
     return redirect('/needs_validation')
+
+def admin_question_overview(request):
+    user = request.user
+
+    if user.is_superuser:
+        questions = Question.get_all_questions()
+        context = {
+            'questions' : questions
+        }
+        
+        return render(request, 'quiz/list_all_questions.html', context)
+
+    return redirect('/home')
+
+def admin_remove_question(request):
+    
+    user = request.user
+
+    if user.is_authenticated:
+        if user.is_superuser:
+            recieved_id = request.GET['id']
+         
+            Question.delete_question(recieved_id)
+
+            questions = Question.get_all_questions()
+            context = {
+                'questions' : questions
+            }
+
+        #return render(request, 'quiz/list_all_questions.html', context)
+        return redirect('/admin_question_overview')
+    return redirect('/home')
 
 # Question submission methods done
 
@@ -461,7 +505,8 @@ def change_avatar(request):
 
 # secured
 def choose_avatar(request):
-    if(user.request.is_authenticated):
+    user = request.user
+    if(user.is_authenticated):
         template = loader.get_template('quiz/choose_avatar.html')
 
         context = {

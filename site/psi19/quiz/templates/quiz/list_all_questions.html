@@ -1,0 +1,38 @@
+{% extends "quiz/base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        {% for question in questions %}
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card_header">
+                    <h6></h6>
+                </div>
+        
+                <div class="question_card">
+                    <p>{{question.question}}</p>
+                    <p>{{question.answer_one}}</p>
+                    <p>{{question.answer_two}}</p>
+                    <p>{{question.answer_three}}</p>
+                    <p>{{question.answer_four}}</p>
+                    <p>{{question.correct}}</p>
+                </div>
+        
+                <span>   
+                    <form method='GET' action="/admin_remove_question/">
+                        <p class="button_p">
+                            <input type="hidden" name="id" value='{{question.id}}'>
+                            <button type="submit" class="remove_button">Remove question</button>
+                        </p>
+                    </form>
+                </span>            
+            </div>
+        </div>
+        
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}

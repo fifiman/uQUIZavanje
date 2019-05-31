@@ -37,6 +37,11 @@ urlpatterns = [
     url(r'^submit_wants_moderator/$',    views.submit_wants_moderator,       name = 'submit_wants_moderator'),
     # questions/need_validation
     url(r'^needs_validation/$',          views.needs_validation,             name = 'needs_validation'),
+    # 
+    url(r'^admin_question_overview/$',   views.admin_question_overview,      name = 'admin_question_overview'),
+    
+    url(r'^admin_remove_question/$',   views.admin_remove_question,      name = 'admin_remove_question'),
+    
     # /approve_question
     url(r'^approve_question/$',          views.approve_question,             name = 'approve_question'),
     # /moderator_candidates
