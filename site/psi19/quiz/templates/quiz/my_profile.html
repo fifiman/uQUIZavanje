@@ -38,28 +38,28 @@
         <h3>Stats</h3>
 
         <table>
-          <tr>
+          <tr style="color: #2699FB;">
             <td>Games won</td>
             <td>{{ wins }}</td>
           </tr>
 
-          <tr>
+          <tr style="color: #2699FB;">
             <td>Games played</td>
             <td>{{ played }}</td>
           </tr>
-          <tr>
+          <tr style="color: #2699FB;">
             <td>Win %</td>
             <td>{{ percentage }}%</td>
           </tr>
-          <tr>
+          <tr style="color: #2699FB;">
             <td>Lvl</td>
             <td>{{ user.get_level }}</td>
           </tr>
-          <tr>
+          <tr style="color: #2699FB;">
             <td>Ranking</td>
             <td>{{ user.get_ranking }}</td>
           </tr>
-          <tr>
+          <tr style="color: #2699FB;">
             <td>Friends</td>
             <td>{{ number_of_friends }}</td>
           </tr>
@@ -100,7 +100,7 @@
                 {% load static %}
                 <img src='{% get_static_prefix %}{{friend.second_friend_id__picture }}' class="rounded-circle" alt="avatar">    
               {% empty %}
-                <h6>You do not have any friends yet !</h6>
+                <h6 style="color: #2699FB;">You do not have any friends yet !</h6>
               {% endfor %}
             </span>
             <br/>

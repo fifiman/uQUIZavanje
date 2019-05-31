@@ -4,7 +4,7 @@
 <!-- Friends Page Content -->
 
 <div class="container">
-  <div class="row justify-content-center" id="friend_h1">
+  <div class="row justify-content-center friend_h1">
     <h1 class="text-center">My Friends</h1>
   </div>
 
@@ -44,7 +44,10 @@
         </div>
     </div>      
     {% empty %}
+
+    <div class="col-md-12 text-center no_content_message">
       <h3>You do not have any friends yet!</h3>
+    </div>
     {% endfor %}
  
     </div>
@@ -52,7 +55,7 @@
 
 <!-- Recieved -->
   <div class="container">
-    <div class="row justify-content-center" id="friend_h1">
+    <div class="row justify-content-center friend_h1">
       <h1 class="text-center">Recieved requests</h1>
     </div>
   
@@ -98,7 +101,9 @@
           </div>
       </div>
       {% empty %}
+      <div class="col-md-12 text-center no_content_message">
         <h3>You did not recieve any new friend request !</h3>
+      </div>
       {% endfor %}
    
       </div>
@@ -107,7 +112,7 @@
   <!-- /Page Content -->
 
   <div class="container">
-    <div class="row justify-content-center" id="friend_h1">
+    <div class="row justify-content-center friend_h1">
       <h1 class="text-center">Sent requests</h1>
     </div>
   
@@ -149,7 +154,9 @@
           </div>
       </div>
       {% empty %}
+      <div class="col-md-12 text-center no_content_message">
         <h3>You did not send any new friend requests !</h3>
+      </div>
       {% endfor %}
    
       </div>
