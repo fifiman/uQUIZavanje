@@ -32,7 +32,7 @@
                             class="rounded-circle center" alt="avatar">
                     </div>
 
-                    <p>{{record.user.username}}</p>
+                    <p><a href="{% url 'quiz:my_profile' value=record.user.id %}">{{record.user.username}}</a></p>
 
                     <p>{{record.user.rank}}</p>
 
@@ -42,7 +42,7 @@
                         {% if record.already_friends %}
                             
                             <div class="card-body text-center">
-                                <form method="GET" action="/unfriend/">
+                                <form method="GET" action="{% url 'quiz:unfriend' value=user.id %}">
                                     <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
                                     <input type="hidden" name="username" value='{{record.user.username}}'>
                                     <input type="submit" class="btn btn-outline-primary" value="UNFRIEND"></input>
@@ -57,7 +57,7 @@
                                 <!-- ako nisam primio zahtev od korisnika, onda mogu da mu posaljem zahtev-->
                                 {% if not record.request_recieved %}  
                                     <div class="card-body text-center">
-                                        <form method="GET" action="/send_request/">
+                                        <form method="GET" action="{% url 'quiz:send_request' value=user.id %}">
                                             <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
                                             <input type="hidden" name="username" value='{{record.user.username}}'>
                                             <input type="submit" class="btn btn-outline-primary" value="SEND REQUEST"></input>
@@ -66,7 +66,7 @@
                                 {% else %}
                                     <!-- ako mi je ipak poslao zahtev, mogu da ga prihvatim -->
                                     <div class="card-body text-center">
-                                        <form method="GET" action="/confirm_request/">
+                                        <form method="GET" action="{% url 'quiz:confirm_request' value=user.id %}">
                                             <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
                                             <input type="hidden" name="username" value='{{record.user.username}}'>
                                             <input type="submit" class="btn btn-outline-primary" value="CONFIRM REQUEST"></input>
@@ -75,7 +75,7 @@
                                 
                                     <!-- ako mi je ipak poslao zahtev, mogu da ga prihvatim -->
                                     <div class="card-body text-center">
-                                        <form method="GET" action="/deny_request/">
+                                        <form method="GET" action="{% url 'quiz:deny_request' value=user.id %}">
                                             <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
                                             <input type="hidden" name="username" value='{{record.user.username}}'>
                                             <input type="submit" class="btn btn-outline-primary" value="DENY REQUEST"></input>
@@ -87,7 +87,7 @@
                                 
                                 <!-- ako sam poslao zahtev a zelim da ga ponistim -->
                                 <div class="card-body text-center">
-                                    <form method="GET" action="/cancel_request/">
+                                    <form method="GET" action="{% url 'quiz:cancel_request' value=user.id %}">
                                         <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
                                         <input type="hidden" name="username" value='{{record.user.username}}'>
                                         <input type="submit" class="btn btn-outline-primary" value="CANCEL REQUEST"></input>

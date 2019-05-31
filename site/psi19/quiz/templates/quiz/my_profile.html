@@ -7,24 +7,31 @@
     <div class="col-lg-4 col-md-12 profile_big_container">
       <div class="text-center justify-content-center">
         <div class="card-body">
+          {%if user.id == curUser.id%}
           <a href = "{% url 'quiz:choose_avatar' %}">
             {% load static %}
-            <img src="{% get_static_prefix %}{{user.picture}}" class="rounded-circle" />
+            <img src="{% get_static_prefix %}{{curUser.picture}}" class="rounded-circle" />
           </a>
+          {%else%}
+          {% load static %}
+            <img src="{% get_static_prefix %}{{curUser.picture}}" class="rounded-circle" />
+          {%endif%}
         </div>
 
         <div class="p_wrapper_profile">
-          <p>Username : {{ user.get_username }}</p>
-          <p>Fist name :{{ user.first_name }}</p>
-          <p>Last name : {{ user.last_name }}</p>
-          {% if user.get_age != null%}
-          <p>Age : {{ user.get_age }}</p>
+          <p>Username : {{ curUser.get_username }}</p>
+          <p>Fist name :{{ curUser.first_name }}</p>
+          <p>Last name : {{ curUser.last_name }}</p>
+          {% if curUser.get_age != null%}
+          <p>Age : {{ curUser.get_age }}</p>
           {% endif %}
-          {% if senior %}
-            {% if not moderator and not wants_moderator %}
-              <div class="card-body text-center">
-                <a href = "{% url 'quiz:submit_wants_moderator' %}"><button class="btn btn-outline-primary">Moderator</button></a>
-              </div>
+          {%if curUser.id == user.id%}
+            {% if senior %}
+              {% if not moderator and not wants_moderator %}
+                <div class="card-body text-center">
+                  <a href = "{% url 'quiz:submit_wants_moderator' %}"><button class="btn btn-outline-primary">Apply for moderator</button></a>
+                </div>
+              {%endif%}
             {% endif %}
           {% endif %}
         </div>
@@ -53,11 +60,11 @@
           </tr>
           <tr style="color: #2699FB;">
             <td>Lvl</td>
-            <td>{{ user.get_level }}</td>
+            <td>{{ curUser.get_level }}</td>
           </tr>
           <tr style="color: #2699FB;">
             <td>Ranking</td>
-            <td>{{ user.get_ranking }}</td>
+            <td>{{ curUser.get_ranking }}</td>
           </tr>
           <tr style="color: #2699FB;">
             <td>Friends</td>
@@ -84,7 +91,7 @@
 
             <p>
               <button class="btn btn-outline-primary">
-                <a href="{% url 'quiz:trophy_page' %}">Trophy case</a>
+                <a href="{% url 'quiz:trophy_page' value=curUser.id%}">Trophy case</a>
               </button>
             </p>
           </div>
@@ -105,7 +112,7 @@
             </span>
             <br/>
             <button class="btn btn-outline-primary">
-              <a href="{% url 'quiz:friends_page' %}">View Friends</a>
+              <a href="{% url 'quiz:friends_page' value=curUser.id%}">View Friends</a>
             </button>
           </div>
         </div>

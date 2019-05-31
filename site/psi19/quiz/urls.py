@@ -16,23 +16,23 @@ urlpatterns = [
     # /search_results/
     url(r'^search_results/$',            views.search,                       name = 'search_results'),
     # /send_request/
-    url(r'^send_request/$',              views.send_request,                 name = 'send_request'),
+    url(r'^send_request/(?P<value>\d+)/$',              views.send_request,                 name = 'send_request'),
     # /confirm_request
-    url(r'^confirm_request/$',           views.confirm_request,              name = 'confirm_request'),
+    url(r'^confirm_request/(?P<value>\d+)/$',           views.confirm_request,              name = 'confirm_request'),
     # /deny_request
-    url(r'^deny_request/$',              views.deny_request,                 name = 'deny_request'),
+    url(r'^deny_request/(?P<value>\d+)/$',              views.deny_request,                 name = 'deny_request'),
     # /cancel_request
-    url(r'^cancel_request/$',            views.cancel_request,               name = 'cancel_request'),
+    url(r'^cancel_request/(?P<value>\d+)/$',            views.cancel_request,               name = 'cancel_request'),
     # /unfriend
-    url(r'^unfriend/$',                  views.unfriend,                     name = 'unfriend'),
+    url(r'^unfriend/(?P<value>\d+)/$',                  views.unfriend,                     name = 'unfriend'),
     # /submit_question
     url(r'^submit_question/$',           views.submit_a_question,            name = 'submit_a_question'),
     # /my_profile
-    url(r'^my_profile/$',                views.my_profile,                   name = 'my_profile'),
+    url(r'^my_profile/(?P<value>\d+)/$', views.my_profile,                   name = 'my_profile'),
     # /trophy_page
-    url(r'^trophy_page/$',               views.trophy_page,                  name = 'trophy_page'),
+    url(r'^trophy_page/(?P<value>\d+)/$', views.trophy_page,                  name = 'trophy_page'),
     # /friends_page
-    url(r'^friends_page/$',              views.friends_page,                 name = 'friends_page'),
+    url(r'^friends_page/(?P<value>\d+)/$', views.friends_page,                 name = 'friends_page'),
     # /submit_wants_moderator
     url(r'^submit_wants_moderator/$',    views.submit_wants_moderator,       name = 'submit_wants_moderator'),
     # questions/need_validation

@@ -5,7 +5,7 @@
 
 <div class="container">
   <div class="row justify-content-center friend_h1">
-    <h1 class="text-center">My Friends</h1>
+    <h1 class="text-center">{%if user.id == curUser.id%}My{%else%}{{curUser.username}}'s{%endif%} Friends</h1>
   </div>
 
   <div class="row">
@@ -17,24 +17,68 @@
         <div class="user_card">
             <div class="add_friend_card">
                 <div class="card_header">
-                    <h6>{{record.second_friend_id__username}}</h6>
+                    <h6>{{record.0.second_friend_id__username}}</h6>
                 </div>
     
                 <div class="card-body">
                     {% load static %}
-                    <img src='{% get_static_prefix %}{{record.second_friend_id__picture }}' class="rounded-circle center" alt="avatar">
+                    <img src='{% get_static_prefix %}{{record.0.second_friend_id__picture }}' class="rounded-circle center" alt="avatar">
                 </div>
     
-                <p>{{record.second_friend_id__username}}</p>
+                <p><a href="{% url 'quiz:my_profile' value=record.0.second_friend_id %}">{{record.0.second_friend_id__username}}</a></p>
     
-                <p>{{record.second_friend_id__rank}}</p>
+                <p>{{record.0.second_friend_id__rank}}</p>
     
-                <div class="card-body text-center">
-                  <form method="GET" action="/unfriend/">
-                      <input type="hidden" name="username" value='{{record.second_friend_id__username}}'>
-                      <input type="submit" class="btn btn-outline-primary" value="UNFRIEND"></input>
-                  </form>
-                </div>
+                {%if record.0.second_friend_id != user.id %}
+                  {%if user.id == curUser.id%}
+                  <div class="card-body text-center">
+                    <form method="GET" action="{% url 'quiz:unfriend' value=curUser.id %}">
+                        <input type="hidden" name="username" value='{{record.0.second_friend_id__username}}'>
+                        <input type="submit" class="btn btn-outline-primary" value="UNFRIEND"></input>
+                    </form>
+                  </div>
+                  {%elif record.1 == 1%}
+                  <div class="card-body text-center">
+                    <form method="GET" action="{% url 'quiz:unfriend' value=curUser.id %}">
+                        <input type="hidden" name="username" value='{{record.0.second_friend_id__username}}'>
+                        <input type="submit" class="btn btn-outline-primary" value="UNFRIEND"></input>
+                    </form>
+                  </div>
+                  {%elif record.1 == 2%}
+                  <div class="card-body text-center">
+                    <form method="GET" action="{% url 'quiz:cancel_request' value=curUser.id %}">
+                        <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
+                        <input type="hidden" name="username" value='{{record.0.second_friend_id__username}}'>
+                        <input type="submit" class="btn btn-outline-primary" value="CANCEL REQUEST"></input>
+                    </form>
+                  </div>  
+                  {%elif record.1 == 3%}
+                  <div class="card-body text-center">
+                    <form method="GET" action="{% url 'quiz:confirm_request' value=curUser.id %}">
+                        <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
+                        <input type="hidden" name="username" value='{{record.0.second_friend_id__username}}'>
+                        <input type="submit" class="btn btn-outline-primary" value="CONFIRM REQUEST"></input>
+                    </form>
+                  </div>  
+                  <div class="card-body text-center">
+                    <form method="GET" action="{% url 'quiz:deny_request' value=curUser.id %}">
+                        <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
+                        <input type="hidden" name="username" value='{{record.0.second_friend_id__username}}'>
+                        <input type="submit" class="btn btn-outline-primary" value="DENY REQUEST"></input>
+                    </form>
+                  </div>  
+                  {%else%}
+                  <div class="card-body text-center">
+                    <form method="GET" action="{% url 'quiz:send_request' value=curUser.id %}">
+                        <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
+                        <input type="hidden" name="username" value='{{record.0.second_friend_id__username}}'>
+                        <input type="submit" class="btn btn-outline-primary" value="SEND REQUEST"></input>
+                    </form>
+                  </div>
+                  {%endif%}
+                {%endif%}
+
+
     
     
            
@@ -52,7 +96,7 @@
  
     </div>
   </div>
-
+{%if user.id == curUser.id%}
 <!-- Recieved -->
   <div class="container">
     <div class="row justify-content-center friend_h1">
@@ -76,19 +120,19 @@
                       <img src='{% get_static_prefix %}{{record.first_friend_id__picture }}' class="rounded-circle center" alt="avatar">
                   </div>
       
-                  <p>{{record.first_friend_id__username}}</p>
+                  <p><a href="{% url 'quiz:my_profile' value=record.first_friend_id %}">{{record.first_friend_id__username}}</a></p>
       
                   <p>{{record.first_friend_id__rank}}</p>
       
                   <div class="card-body text-center">
-                    <form method="GET" action="/confirm_request/">
+                    <form method="GET" action="{% url 'quiz:confirm_request' value=curUser.id %}">
                         <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
                         <input type="hidden" name="username" value='{{record.first_friend_id__username}}'>
                         <input type="submit" class="btn btn-outline-primary" value="CONFIRM REQUEST"></input>
                     </form>
                   </div>  
                   <div class="card-body text-center">
-                    <form method="GET" action="/deny_request/">
+                    <form method="GET" action="{% url 'quiz:deny_request' value=curUser.id %}">
                         <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
                         <input type="hidden" name="username" value='{{record.first_friend_id__username}}'>
                         <input type="submit" class="btn btn-outline-primary" value="DENY REQUEST"></input>
@@ -102,7 +146,7 @@
       </div>
       {% empty %}
       <div class="col-md-12 text-center no_content_message">
-        <h3>You did not recieve any new friend request !</h3>
+        <h3>You did not receive any new friend request !</h3>
       </div>
       {% endfor %}
    
@@ -133,13 +177,13 @@
                       <img src='{% get_static_prefix %}{{record.second_friend_id__picture }}' class="rounded-circle center" alt="avatar">
                   </div>
       
-                  <p>{{record.second_friend_id__username}}</p>
+                  <p><a href="{% url 'quiz:my_profile' value=record.second_friend_id %}">{{record.second_friend_id__username}}</a></p>
       
                   <p>{{record.second_friend_id__rank}}</p>
                   
                     <!-- ako sam poslao zahtev a zelim da ga ponistim -->
                     <div class="card-body text-center">
-                      <form method="GET" action="/cancel_request/">
+                      <form method="GET" action="{% url 'quiz:cancel_request' value=curUser.id %}">
                           <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
                           <input type="hidden" name="username" value='{{record.second_friend_id__username}}'>
                           <input type="submit" class="btn btn-outline-primary" value="CANCEL REQUEST"></input>
@@ -161,5 +205,5 @@
    
       </div>
     </div>
-
+  {%endif%}
   {% endblock content %}

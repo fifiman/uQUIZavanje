@@ -48,7 +48,8 @@ class User(AbstractUser):
     def get_global_top_10():
         return User.objects.filter(level__gte = 10).order_by('-ranking')[:10]
     
-    
+    def get_by_id(id_val):
+        return User.objects.filter(id=id_val).first()
 
     # returns all users who are not banned
     def get_active_users():
@@ -216,7 +217,7 @@ class Friendship(models.Model):
 
     #needs testing, return 10 friends with best scores
     def top_10_friends(user):
-        friends =  Friendship.objects.filter(first_friend_id = user.id)
+        friends =  Friendship.objects.filter(first_friend_id = user.id, accepted = True)
         friendsLvl = friends.filter(second_friend_id__level__gte = 10)
         friendsLvlId = friendsLvl.values_list('second_friend_id')
         users = User.objects.filter(id__in = friendsLvlId)

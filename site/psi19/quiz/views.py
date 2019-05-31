@@ -118,7 +118,7 @@ def search(request):
 # friendship related methods
 
 # secured    
-def send_request(request):    
+def send_request(request, value):    
 
     if request.user.is_authenticated:    
         if 'username' in request.GET and request.GET['username']:
@@ -129,11 +129,11 @@ def send_request(request):
         if user1 != request.user:
             Friendship.send_request(request.user, user1)
     
-        return redirect('/friends_page')
+        return redirect('/friends_page/'+value)
     return redirect('/home')
 
 # secured
-def cancel_request(request):
+def cancel_request(request, value):
     if request.user.is_authenticated:
         if 'username' in request.GET and request.GET['username']:
             recieved_username = request.GET['username']
@@ -143,11 +143,11 @@ def cancel_request(request):
         if user1 != request.user:
             Friendship.cancel_request(request.user, user1)
     
-        return redirect('/friends_page')
+        return redirect('/friends_page/'+value)
     return redirect('/home')
 
 #secured
-def confirm_request(request):    
+def confirm_request(request, value):    
 
     if request.user.is_authenticated:    
         if 'username' in request.GET and request.GET['username']:
@@ -158,11 +158,11 @@ def confirm_request(request):
         if user1 != request.user:
             Friendship.accept_request(request.user, user1)
         
-        return redirect('/friends_page')
+        return redirect('/friends_page/'+value)
     return redirect('/home')
 
 # secured
-def deny_request(request):    
+def deny_request(request, value):    
 
     if request.user.is_authenticated:
         if 'username' in request.GET and request.GET['username']:
@@ -173,10 +173,10 @@ def deny_request(request):
         if user1 != request.user:
             Friendship.deny_request(request.user, user1)
     
-        return redirect('/friends_page')
+        return redirect('/friends_page/'+value)
     return ('/home')
 # secured
-def unfriend(request):    
+def unfriend(request, value):    
     
     if request.user.is_authenticated:
         if 'username' in request.GET and request.GET['username']:
@@ -187,7 +187,7 @@ def unfriend(request):
         if user1 != request.user:
             Friendship.unfriend(request.user, user1)
 
-        return redirect('/friends_page')
+        return redirect('/friends_page/'+value)
     
     return redirect('/home')
 # friendship related methods done
@@ -362,8 +362,8 @@ def submit_wants_moderator(request):
     return redirect('/my_profile')    
     
 # secured
-def my_profile(request):
-    user = request.user
+def my_profile(request, value):
+    user = User.get_by_id(value)
     if request.user.is_authenticated:
     
         template = loader.get_template('quiz/my_profile.html')
@@ -371,15 +371,15 @@ def my_profile(request):
 
         print(lvl)
 
-        wins = Game.number_of_wins(request.user)
-        played = Game.number_of_games_played(request.user)
+        wins = Game.number_of_wins(user)
+        played = Game.number_of_games_played(user)
         
         if played != 0:
             percentage = (float)(wins/played)
         else:
             percentage = 0
 
-        number_of_friends = Friendship.count_my_friends(request.user)
+        number_of_friends = Friendship.count_my_friends(user)
         friends = Friendship.get_random_four_freinds(user)
         senior = user.is_senior()
         wants_moderator = user.wants_moderator
@@ -395,6 +395,8 @@ def my_profile(request):
             trophies.append({'name': "100 wins", 'src': "quiz/100win.jpg"})
         if lvl>=5:
             trophies.append({'name': "Level 5+", 'src': "quiz/lvl5.jpg"})
+        if lvl>=10:
+            trophies.append({'name': "Level 10+", 'src': "quiz/lvl10.jpg"})  
         if lvl>=20:
             trophies.append({'name': "Level 20+", 'src': "quiz/lvl20.jpg"})  
         if user.is_moderator:
@@ -402,9 +404,8 @@ def my_profile(request):
         if user.is_senior():
             trophies.append({'name': "Senior", 'src': "quiz/senior_user.jpg"})               
         
-        print(wants_moderator)
-
         context = {
+            'curUser': user,
             'wins': wins,
             'played': played,
             'percentage': percentage,
@@ -419,13 +420,13 @@ def my_profile(request):
         return redirect('/home')
     
 # secured
-def trophy_page(request):
+def trophy_page(request, value):
     if request.user.is_authenticated:
-        user = request.user
+        user = User.get_by_id(value)
         template = loader.get_template('quiz/trophy_page.html')
         lvl = user.level
-        wins = Game.number_of_wins(request.user)
-        played = Game.number_of_games_played(request.user)
+        wins = Game.number_of_wins(user)
+        played = Game.number_of_games_played(user)
         if played != 0:
             percentage = (float)(wins/played)
         else: 
@@ -434,6 +435,7 @@ def trophy_page(request):
         moderator = user.moderator()
         #friends = Friendship.count_my_friends(request.user.id)
         context = {
+                'curUser': user,
                 'wins10': wins>=10,
                 'wins50': wins>=50,
                 'wins100': wins>=100,
@@ -448,18 +450,26 @@ def trophy_page(request):
         return redirect('/home')
 
 # secured
-def friends_page(request):
+def friends_page(request, value):
     if request.user.is_authenticated:
-        user = request.user
+        user = User.get_by_id(value)
         template = loader.get_template('quiz/friends_page.html')
         friends = Friendship.get_friends(user)
         recieved = Friendship.get_recieved_friend_requests(user)
         sent = Friendship.get_sent_friend_requests(user)
-
-        print(recieved  )
-
+        statusFriend = []
+        for friend in friends:
+            if Friendship.already_friends(friend["second_friend_id"],request.user.id): 
+                statusFriend.append([friend,1])
+            elif Friendship.request_sent(request.user.id,friend["second_friend_id"]): 
+                statusFriend.append([friend,2])
+            elif Friendship.request_sent(friend["second_friend_id"],request.user.id): 
+                statusFriend.append([friend,3])
+            else: 
+                statusFriend.append([friend,4])
         context = {
-                'friends': friends,
+                'curUser': user,
+                'friends': statusFriend,
                 'recieved': recieved,
                 'sent': sent,
             }
