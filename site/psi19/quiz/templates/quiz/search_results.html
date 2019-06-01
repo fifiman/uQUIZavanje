@@ -1,6 +1,4 @@
 {% extends "quiz/base.html" %}
-
-
 {% block content %}
 
 <div class="container text-center">
@@ -29,35 +27,75 @@
                     </div>
 
                     <div class="card-body">
-                        <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg"
-                            class="rounded-circle center" alt="woman avatar">
+                        {% load static %}
+                        <img src='{% get_static_prefix %}{{record.user.picture }}'
+                            class="rounded-circle center" alt="avatar">
                     </div>
 
-                    <p>{{record.user.username}}</p>
+                    <p><a href="{% url 'quiz:my_profile' value=record.user.id %}">{{record.user.username}}</a></p>
 
                     <p>{{record.user.rank}}</p>
 
-
+                    <!-- Za bilo koju od ovih opcija korisnik mora biti logovan-->
                     {% if user.is_authenticated %}
+
                         {% if record.already_friends %}
-                        <div class="card-body text-center">
-                            <form method="GET" action="/unfollow/">
-                                <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
-                                <input type="hidden" name="username" value='{{record.user.username}}'>
-                                <input type="submit" class="btn btn-outline-primary" value="UNFOLLOW"></input>
-                            </form>
-                        </div>
+                            
+                            <div class="card-body text-center">
+                                <form method="GET" action="{% url 'quiz:unfriend' value=user.id %}">
+                                    <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
+                                    <input type="hidden" name="username" value='{{record.user.username}}'>
+                                    <input type="submit" class="btn btn-outline-primary" value="UNFRIEND"></input>
+                                </form>
+                            </div>
 
                         {% else %}
 
-                        <div class="card-body text-center">
-                            <form method="GET" action="/follow/">
-                                <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
-                                <input type="hidden" name="username" value='{{record.user.username}}'>
-                                <input type="submit" class="btn btn-outline-primary" value="FOLLOW"></input>
-                            </form>
-                        </div>
+                            <!--ako mi korisnik nije prijatelj, a ja nisam poslao zahtev za prijateljstvo -->                        
+                            {% if  not record.request_sent %}
+                                
+                                <!-- ako nisam primio zahtev od korisnika, onda mogu da mu posaljem zahtev-->
+                                {% if not record.request_recieved %}  
+                                    <div class="card-body text-center">
+                                        <form method="GET" action="{% url 'quiz:send_request' value=user.id %}">
+                                            <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
+                                            <input type="hidden" name="username" value='{{record.user.username}}'>
+                                            <input type="submit" class="btn btn-outline-primary" value="SEND REQUEST"></input>
+                                        </form>
+                                    </div>
+                                {% else %}
+                                    <!-- ako mi je ipak poslao zahtev, mogu da ga prihvatim -->
+                                    <div class="card-body text-center">
+                                        <form method="GET" action="{% url 'quiz:confirm_request' value=user.id %}">
+                                            <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
+                                            <input type="hidden" name="username" value='{{record.user.username}}'>
+                                            <input type="submit" class="btn btn-outline-primary" value="CONFIRM REQUEST"></input>
+                                        </form>
+                                    </div>   
+                                
+                                    <!-- ako mi je ipak poslao zahtev, mogu da ga prihvatim -->
+                                    <div class="card-body text-center">
+                                        <form method="GET" action="{% url 'quiz:deny_request' value=user.id %}">
+                                            <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
+                                            <input type="hidden" name="username" value='{{record.user.username}}'>
+                                            <input type="submit" class="btn btn-outline-primary" value="DENY REQUEST"></input>
+                                        </form>
+                                    </div>   
+                                {% endif %}
 
+                            {% else %}
+                                
+                                <!-- ako sam poslao zahtev a zelim da ga ponistim -->
+                                <div class="card-body text-center">
+                                    <form method="GET" action="{% url 'quiz:cancel_request' value=user.id %}">
+                                        <!--!!!! Nabudzeno resenje koje se uzda da su username takodje unique !!!!-->
+                                        <input type="hidden" name="username" value='{{record.user.username}}'>
+                                        <input type="submit" class="btn btn-outline-primary" value="CANCEL REQUEST"></input>
+                                    </form>
+                                </div>     
+                            {% endif %}
+                            
+                    
                         {% endif %}
                     {% endif %}
 

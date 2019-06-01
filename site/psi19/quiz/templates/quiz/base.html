@@ -28,6 +28,9 @@
 
 <body>
 
+        <div id="page_container">  
+            <div id="content_wrapper">
+
     <!-- Header and Menu -->
     <header class="header_area">
 
@@ -43,7 +46,7 @@
                     </div>
                     <div class="col-xs-4 col-md-4 col-xl-6">
                         {% if user.is_authenticated %}
-                        <div class="float-right">
+                        <div class="float-right" id="welcome_message">
                             Welcome, {{ user.get_username }}
                             <a href="/accounts/logout" class="btn btn-outline-primary"><i class="#"></i>Logout</a>
                         </div>
@@ -77,7 +80,7 @@
                                 <span class="navbar-toggler-icon"></span>
                             </button>
 
-                            <div class="collapse navbar-collapse">
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                 <ul class="navbar-nav mr-auto">
                                     <li class="nav-item active">
                                         <a class="nav-link active" href="{% url 'quiz:home' %}">Home</a>
@@ -85,6 +88,11 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="{% url 'quiz:rank_list'%}">Rank List</a>
                                     </li>
+                                    {% if user.is_authenticated %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'quiz:my_profile' value=user.id%}">My Profile</a>
+                                    </li>
+                                    {% endif %}
 
 
                                     <!-- Danlo pls help ovo je ruzno ko djvao :( -->
@@ -99,11 +107,12 @@
                                             Admin options
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <a class="dropdown-item" href="/submit_question/">Dodaj pitanje</a>
-                                            <a class="dropdown-item" href="elements.html">Odobri pitanje</a>
-                                            <a class="dropdown-item" href="single-blog.html">Dodeli moderatora</a>
-                                            <a class="dropdown-item" href="single-blog.html">Blokiraj korisnika</a>
-
+                                            <a class="dropdown-item" href="{% url 'quiz:submit_a_question' %}">Add question</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:needs_validation' %}">Approve question</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:admin_question_overview' %}">All questions</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:moderator_candidates' %}">Grant moderator</a>
+                                            <a class="dropdown-item" href="single-blog.html">Block user</a>
+                                                
                                         </div>
                                     </li>
 
@@ -117,8 +126,8 @@
                                             Moderator options
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <a class="dropdown-item" href="elements.html">Dodaj pitanje</a>
-                                            <a class="dropdown-item" href="elements.html">Odobri pitanje</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:submit_a_question' %}">Add question</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:needs_validation' %}">Approve question</a>
                                         </div>
                                     </li>
                                     {% endif %}
@@ -133,7 +142,7 @@
                                             Senior options
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <a class="dropdown-item" href="elements.html">Dodaj pitanje</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:submit_a_question' %}">Dodaj pitanje</a>
                                             <a class="dropdown-item" href="single-blog.html">Postani moderator</a>
                                         </div>
                                     </li>
@@ -183,6 +192,7 @@
     {% endblock content %}
     <!-- /Page Content -->
 
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -201,6 +211,10 @@
     <script src="{% static 'quiz/bootstrap.min.js' %}"></script>
     <!-- /Scripts -->
 
+</div>
+
 </body>
+
+
 
 </html>

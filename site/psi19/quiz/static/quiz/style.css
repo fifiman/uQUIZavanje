@@ -15,8 +15,9 @@ Table OF Contents
 6  > My Profile
 7  > Login and Signup
 8  > Add Question Form
-9  > Footer
-10 > Responsive
+9  > Avatar Page
+10 > Footer
+11 > Responsive
 
 ------------------------------------*/
 
@@ -144,6 +145,10 @@ body {
 #lupa {
   background-color: #2699FB;
   border:#2699FB;
+}
+
+#welcome_message a{
+  margin-left: 10px;
 }
 
 
@@ -298,11 +303,11 @@ body {
 }
 
 
-#friend_h1 {
-  margin-top: 10px;
+.friend_h1 {
+  margin-top: 20px;
 }
 
-#friend_h1 h1 {
+.friend_h1 h1 {
   color: #2699FB;
   font-family: 'Cabin', sans-serif;
 }
@@ -317,6 +322,15 @@ body {
   font-family: 'Cabin', sans-serif;
 }
 
+.no_content_message {
+  padding-top : 50px;
+  padding-bottom: 50px;
+}
+
+.no_content_message h3 {
+  color: #2699FB;
+}
+
 
 
 /*--------------------------------*\
@@ -325,7 +339,7 @@ body {
 
 
 .homepage_tile {
-  border: black solid;
+  border: 1px black solid;
   margin: 10px;
   padding: 20px;
   background-color: #2699FB;
@@ -548,11 +562,19 @@ body {
 }
 
 
+/*--------------------------------*\
+    Avatar Page
+\*--------------------------------*/
 
+.avatar {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 
-
-
-
+.avatar_bottom {
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
 
 
 /*--------------------------------*\
@@ -562,6 +584,9 @@ body {
 .footer {
   background-color: #2699FB;
   height: 100px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 .footer p {
@@ -650,7 +675,7 @@ body {
 
   .main_menu .nav-item {
     padding: 5px 10px 5px 15px;
-    background-color: #ff8b23;
+    background-color: #2699FB;
   }
 
   .main_menu .navbar-nav .nav-link:hover {
@@ -681,7 +706,7 @@ body {
 
   .main_menu .nav-item {
     padding: 5px 10px 5px 15px;
-    background-color: #ff8b23;
+    background-color: #2699FB;
   }
 
   .main_menu .navbar-nav .nav-link:hover {
@@ -721,4 +746,12 @@ body {
 
 }
 
+#page_container {
+  position: relative;
+  min-height: 100vh;
+}
+
+#content_wrapper {
+  padding-bottom: 100px;
+}
 

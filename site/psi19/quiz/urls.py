@@ -5,13 +5,54 @@ from . import views
 
 app_name = 'quiz'
 urlpatterns = [
-    path('',              views.home,                name = 'home'),
-    path('home',          views.home,                name = 'home'),
-    path('signup',        views.signup,              name = 'signup'),
-    path('rank_list',     views.global_rank_list,    name = 'rank_list'),
-    url(r'^search_results/$',     views.search),
-    url(r'^follow/$',     views.follow),
-    url(r'^unfollow/$',     views.unfollow),
-    url(r'^submit_question/$',     views.submit_a_question),
+    # /
+    path('',                             views.home,                         name = 'home'),
+    # /home
+    path('home',                         views.home,                         name = 'home'),
+    # /signup
+    path('signup',                       views.signup,                       name = 'signup'),
+    # /rank_list
+    path('rank_list',                    views.global_rank_list,             name = 'rank_list'),
+    # /search_results/
+    url(r'^search_results/$',            views.search,                       name = 'search_results'),
+    # /send_request/
+    url(r'^send_request/(?P<value>\d+)/$',              views.send_request,                 name = 'send_request'),
+    # /confirm_request
+    url(r'^confirm_request/(?P<value>\d+)/$',           views.confirm_request,              name = 'confirm_request'),
+    # /deny_request
+    url(r'^deny_request/(?P<value>\d+)/$',              views.deny_request,                 name = 'deny_request'),
+    # /cancel_request
+    url(r'^cancel_request/(?P<value>\d+)/$',            views.cancel_request,               name = 'cancel_request'),
+    # /unfriend
+    url(r'^unfriend/(?P<value>\d+)/$',                  views.unfriend,                     name = 'unfriend'),
+    # /submit_question
+    url(r'^submit_question/$',           views.submit_a_question,            name = 'submit_a_question'),
+    # /my_profile
+    url(r'^my_profile/(?P<value>\d+)/$', views.my_profile,                   name = 'my_profile'),
+    # /trophy_page
+    url(r'^trophy_page/(?P<value>\d+)/$', views.trophy_page,                  name = 'trophy_page'),
+    # /friends_page
+    url(r'^friends_page/(?P<value>\d+)/$', views.friends_page,                 name = 'friends_page'),
+    # /submit_wants_moderator
+    url(r'^submit_wants_moderator/$',    views.submit_wants_moderator,       name = 'submit_wants_moderator'),
+    # questions/need_validation
+    url(r'^needs_validation/$',          views.needs_validation,             name = 'needs_validation'),
+    # 
+    url(r'^admin_question_overview/$',   views.admin_question_overview,      name = 'admin_question_overview'),
+    
+    url(r'^admin_remove_question/$',   views.admin_remove_question,      name = 'admin_remove_question'),
+    
+    # /approve_question
+    url(r'^approve_question/$',          views.approve_question,             name = 'approve_question'),
+    # /moderator_candidates
+    url(r'^moderator_candidates/$',      views.moderator_candidates,         name = 'moderator_candidates'),
+    # /approve_moderator
+    url(r'^approve_moderator/$',         views.approve_moderator,            name = 'approve_moderator'),
+    # /change_avatar
+    url(r'^change_avatar/$',             views.change_avatar,                name = 'change_avatar'),
+    # /choose_avatar
+    url(r'^choose_avatar/$',             views.choose_avatar,                name = 'choose_avatar'),
+
+
     
 ]

@@ -1,0 +1,125 @@
+{% extends "quiz/base.html" %} {% load static %} {% block content %}
+<!-- Page Content -->
+
+<div class="container">
+  <div class="row justify-content-center" style="margin: 10px;">
+    <!-- Profile info -->
+    <div class="col-lg-4 col-md-12 profile_big_container">
+      <div class="text-center justify-content-center">
+        <div class="card-body">
+          {%if user.id == curUser.id%}
+          <a href = "{% url 'quiz:choose_avatar' %}">
+            {% load static %}
+            <img src="{% get_static_prefix %}{{curUser.picture}}" class="rounded-circle" />
+          </a>
+          {%else%}
+          {% load static %}
+            <img src="{% get_static_prefix %}{{curUser.picture}}" class="rounded-circle" />
+          {%endif%}
+        </div>
+
+        <div class="p_wrapper_profile">
+          <p>Username : {{ curUser.get_username }}</p>
+          <p>Fist name :{{ curUser.first_name }}</p>
+          <p>Last name : {{ curUser.last_name }}</p>
+          {% if curUser.get_age != null%}
+          <p>Age : {{ curUser.get_age }}</p>
+          {% endif %}
+          {%if curUser.id == user.id%}
+            {% if senior %}
+              {% if not moderator and not wants_moderator %}
+                <div class="card-body text-center">
+                  <a href = "{% url 'quiz:submit_wants_moderator' %}"><button class="btn btn-outline-primary">Apply for moderator</button></a>
+                </div>
+              {%endif%}
+            {% endif %}
+          {% endif %}
+        </div>
+      
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="col-lg-3 col-md-12 profile_big_container">
+      <div id="stats_container">
+        <h3>Stats</h3>
+
+        <table>
+          <tr style="color: #2699FB;">
+            <td>Games won</td>
+            <td>{{ wins }}</td>
+          </tr>
+
+          <tr style="color: #2699FB;">
+            <td>Games played</td>
+            <td>{{ played }}</td>
+          </tr>
+          <tr style="color: #2699FB;">
+            <td>Win %</td>
+            <td>{{ percentage }}%</td>
+          </tr>
+          <tr style="color: #2699FB;">
+            <td>Lvl</td>
+            <td>{{ curUser.get_level }}</td>
+          </tr>
+          <tr style="color: #2699FB;">
+            <td>Ranking</td>
+            <td>{{ curUser.get_ranking }}</td>
+          </tr>
+          <tr style="color: #2699FB;">
+            <td>Friends</td>
+            <td>{{ number_of_friends }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-12" style="margin: 10px;">
+      <div class="row">
+        <!-- Trophy -->
+        <div class="col-md-12" id="trophy_container">
+          <div class="small_container_content text-center">
+            <h3>Trophies</h3>
+
+            <span>
+              {%for trophy in trophies%}
+              <div style="display: inline">
+                <img src="{% get_static_prefix %}{{ trophy.src }}" />
+              </div>
+              {%endfor%}
+            </span>
+
+            <p>
+              <button class="btn btn-outline-primary">
+                <a href="{% url 'quiz:trophy_page' value=curUser.id%}">Trophy case</a>
+              </button>
+            </p>
+          </div>
+        </div>
+
+        <!-- Friends -->
+        <div class="col-md-12" id="friends_container">
+          <div class="small_container_content text-center">
+            <h3>Friends</h3>
+            <!-- pretvoriti u linkove ka profilima -->
+            <span>
+              {% for friend in friends %}
+                {% load static %}
+                <img src='{% get_static_prefix %}{{friend.second_friend_id__picture }}' class="rounded-circle" alt="avatar">    
+              {% empty %}
+                <h6 style="color: #2699FB;">You do not have any friends yet !</h6>
+              {% endfor %}
+            </span>
+            <br/>
+            <button class="btn btn-outline-primary">
+              <a href="{% url 'quiz:friends_page' value=curUser.id%}">View Friends</a>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- /Page Content -->
+{% endblock content %}
