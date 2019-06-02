@@ -243,32 +243,6 @@ class Friendship(models.Model):
     def count_my_friends(user):
         return Friendship.objects.filter(first_friend_id = user, accepted = True).count()    
 
-class GameQuestions(models.Model):
-    """
-    Table that contains all the questions for 
-    a certain game.
-    """
-    class Meta:
-        unique_together = (('game', 'index'),)
-
-    self.game       = models.ForeignKey(Game)
-    self.index      = models.IntegerField()
-    self.question   = models.ForeignKey(Question)
-
-class GameAnswers(models.Model):
-    """
-    Table that contains the users answers for each question
-    in a game.
-    """
-    class Meta:
-        unique_together = (('game', 'quesiton_index'),)
-
-    self.game           = models.ForeignKey(Game)
-    self.quesiton_index = models.IntegerField()
-    self.answer_index   = models.IntegerField()
-
-    self.correct        = models.BooleanField()
-
 #class containing all game relevant data
 class Game(models.Model):
     # Game constants.
@@ -279,18 +253,21 @@ class Game(models.Model):
     GAME_IN_PLAY        = 1
     GAME_OVER           = 2
 
-    player_one = models.ForeignKey(settings.AUTH_USER_MODEL,related_name = '%(class)s_p1', on_delete=models.DO_NOTHING)
-    player_two = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_p2',on_delete=models.DO_NOTHING)
-    player_three = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_p3', on_delete=models.DO_NOTHING)
-    player_four = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_p4', on_delete=models.DO_NOTHING)
+    player_one = models.ForeignKey(settings.AUTH_USER_MODEL,related_name = '%(class)s_p1', on_delete=models.DO_NOTHING, null=True)
+    player_two = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_p2',on_delete=models.DO_NOTHING, null=True)
+    player_three = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_p3', on_delete=models.DO_NOTHING, null=True)
+    player_four = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_p4', on_delete=models.DO_NOTHING, null=True)
     
-    player_one_pts = models.IntegerField()
-    player_two_pts = models.IntegerField()
-    player_three_pts = models.IntegerField()
-    player_four_pts = models.IntegerField()
+    player_one_pts = models.IntegerField(default=0)
+    player_two_pts = models.IntegerField(default=0)
+    player_three_pts = models.IntegerField(default=0)
+    player_four_pts = models.IntegerField(default=0)
 
     # Current game state.
     game_state      = models.IntegerField(default=0)
+
+    # Number of question in the game.
+    num_questions   = models.IntegerField(default=0)
 
     # Current question index we are, -1 for not started yet.
     cur_question    = models.IntegerField(default=-1)
@@ -304,16 +281,45 @@ class Game(models.Model):
     winner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_win', on_delete=models.DO_NOTHING, blank = True, null = True)
 
     def start_game(self):
+        """
+        Start the game if possible, otherwise return an Exception.
+        """
         if self.cur_question != -1:
             raise Exception('Game has already been started.')
         
         if self.num_players == 0:
             raise Exception('No players inside game, nothing to start.')
+        
+        if self.num_questions == 0:
+            raise Exception("Can't start game if there are no questions.")
 
         self.game_state     = Game.GAME_IN_PLAY
         self.cur_question   = 0
 
         print ('Game has started')
+
+        self.save()
+
+    def join_game(self, user):
+        """
+        Attempt to join the game.
+
+        Returns True/False if joining is possible.
+        """
+        # Check max number of players already.
+        if self.num_players >= Game.MAX_PLAYERS:
+            raise Exception('Max number of players reached.')
+
+        # TODO: Check if is invite only game and only add
+        # user if they are invited.
+
+        # All good, add the user to the game.
+        self.num_players += 1
+
+        all_players = [self.player_one, self.player_two,
+                       self.player_three, self.player_four]
+
+        all_players[self.num_players - 1] = user
 
         self.save()
         return True
@@ -339,11 +345,7 @@ class Game(models.Model):
         question = GameQuestions.objects.get(game=self, index=question_ind)
 
         # Check that the user has not answered before.
-
-
         
-
-
 
     # racuna broj partija koje je pobedio korisnik user
     def number_of_wins(user):
@@ -359,6 +361,19 @@ class Game(models.Model):
         result = p1+p2+p3+p4
 
         return result
+
+    def get_state(self):
+        return {
+            'game_state':       self.game_state,
+            'cur_question':     self.cur_question,
+            'num_players':      self.num_players,
+            'num_answers':      self.num_answers
+        }
+
+
+    def __str__(self):
+        return str(self.get_state())
+
 
 #categorie id's and their names 
 class Category(models.Model):
@@ -380,8 +395,6 @@ class Question(models.Model):
     answer_four = models.TextField(max_length = 20)
     correct = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
-
-
 
     def __str__(self):
         return "Question:" + self.question + " Answers: " + self.answer_one + " " + self.answer_two + " " + self.answer_three + " " + self.answer_four
@@ -432,3 +445,32 @@ class Question(models.Model):
 
         return ret_q_set
 
+class GameQuestions(models.Model):
+    """
+    Table that contains all the questions for 
+    a certain game.
+    """
+    class Meta:
+        unique_together = (('game', 'index'),)
+
+    game       = models.ForeignKey(Game, on_delete=models.DO_NOTHING)
+    index      = models.IntegerField()
+    question   = models.ForeignKey(Question, on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        return '{}, {}, {}'.format(self.game, self.index, self.question)
+
+class GameAnswers(models.Model):
+    """
+    Table that contains the users answers for each question
+    in a game.
+    """
+    class Meta:
+        unique_together = (('game', 'user', 'quesiton_index'),)
+
+    game           = models.ForeignKey(Game, on_delete=models.DO_NOTHING)
+    user           = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    quesiton_index = models.IntegerField()
+    answer_index   = models.IntegerField()
+
+    correct        = models.BooleanField()
