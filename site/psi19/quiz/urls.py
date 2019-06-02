@@ -52,6 +52,8 @@ urlpatterns = [
     url(r'^change_avatar/$',             views.change_avatar,                name = 'change_avatar'),
     # /choose_avatar
     url(r'^choose_avatar/$',             views.choose_avatar,                name = 'choose_avatar'),
+    # /games_overview
+    url(r'^games_overview/(?P<value>\d+)/$',             views.games_overview,                name = 'games_overview'),
 
 
     

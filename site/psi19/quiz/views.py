@@ -477,6 +477,20 @@ def friends_page(request, value):
     else: 
         return redirect('/home')        
 
+def games_overview(request, value):
+    if request.user.is_authenticated:
+        user = User.get_by_id(value)
+        template = loader.get_template('quiz/games_overview.html')
+        games = Game.get_all_games(user)
+        context = {
+                'curUser': user,
+                'games': games,
+            }
+        return HttpResponse(template.render(context, request))
+    else: 
+        return redirect('/home')
+
+
 class EditQuestion(UpdateView): 
     model = Question
     form_class = AdminQuestionForm

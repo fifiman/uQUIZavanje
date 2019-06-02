@@ -261,7 +261,6 @@ class Game(models.Model):
     # racuna broj partija koje je pobedio korisnik user
     def number_of_wins(user):
         return Game.objects.filter(winner = user).count()
-       
 
     # racuna broj partija koje je odigrao korisnik user
     def number_of_games_played(user):
@@ -273,6 +272,9 @@ class Game(models.Model):
         result = p1+p2+p3+p4
 
         return result
+
+    def get_all_games(user):
+        return Game.objects.filter(player_one = user) | Game.objects.filter(player_two = user) | Game.objects.filter(player_three = user) | Game.objects.filter(player_four = user)
 
 #categorie id's and their names 
 class Category(models.Model):
