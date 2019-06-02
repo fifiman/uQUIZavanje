@@ -490,27 +490,35 @@ def games_overview(request, value):
     else: 
         return redirect('/home')
 
+def edit_question(request, pk):
+    user = request.user
+    question = Question.get_by_id(pk)
+    form = QuestionForm(request.POST or None, instance=question)
+    message = ""
+    if user.is_authenticated:
+        if user.is_senior() or user.is_moderator or user.is_superuser:
+            if request.method == 'POST':
+                if form.is_valid():
+                    q = form.cleaned_data.get('question')
+                    q = request.POST['question']
+                    a1 = form.cleaned_data.get('answer_one')
+                    a2 = form.cleaned_data.get('answer_two')
+                    a3 = form.cleaned_data.get('answer_three')
+                    a4 = form.cleaned_data.get('answer_four')
+                    c = form.cleaned_data.get('correct')
+                    cat = Category.objects.filter(id = request.POST['category'])[0]
 
-class EditQuestion(UpdateView): 
-    model = Question
-    form_class = AdminQuestionForm
-    template_name = "quiz/question_update_form.html"
-
-    def get_success_url(self, *args, **kwargs):
-        return reverse('quiz:home')
-
-    def get_object(self, queryset=None):
-    
-        user = self.request.user
-        question = super(EditQuestion, self).get_object(queryset)
-        
-        if not user.is_authenticated:
-            raise Http404("You are not allowed here")
-        else:
-            if not user.is_superuser and not user.is_moderator:
-                raise Http404("You are not allowed here")
-        return question
-
+                    if(c > 4 or c < 0):
+                        message = "Odgovor je van opsega"
+                    else:
+                        if (a1 == a2 or a1 == a3 or a1 == a4 or a2 == a3 or a2 == a4 or a3 == a4):
+                            message = "Neki od odgovora su isti"
+                        else:
+                            form.save()
+                    
+                return redirect('/admin_question_overview')
+            return render(request, 'quiz/edit_question.html', {'form': form, 'message': message, 'qid': question.id}) 
+    return redirect('/home')    
 # secured
 def change_avatar(request):
 

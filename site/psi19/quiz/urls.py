@@ -54,7 +54,8 @@ urlpatterns = [
     url(r'^choose_avatar/$',             views.choose_avatar,                name = 'choose_avatar'),
     # /games_overview
     url(r'^games_overview/(?P<value>\d+)/$',             views.games_overview,                name = 'games_overview'),
-
+    # /edit_question
+    url(r'^edit_question/(?P<pk>\d+)/$',             views.edit_question,                name = 'edit_question'),
 
     
 ]
