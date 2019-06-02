@@ -243,9 +243,42 @@ class Friendship(models.Model):
     def count_my_friends(user):
         return Friendship.objects.filter(first_friend_id = user, accepted = True).count()    
 
+class GameQuestions(models.Model):
+    """
+    Table that contains all the questions for 
+    a certain game.
+    """
+    class Meta:
+        unique_together = (('game', 'index'),)
+
+    self.game       = models.ForeignKey(Game)
+    self.index      = models.IntegerField()
+    self.question   = models.ForeignKey(Question)
+
+class GameAnswers(models.Model):
+    """
+    Table that contains the users answers for each question
+    in a game.
+    """
+    class Meta:
+        unique_together = (('game', 'quesiton_index'),)
+
+    self.game           = models.ForeignKey(Game)
+    self.quesiton_index = models.IntegerField()
+    self.answer_index   = models.IntegerField()
+
+    self.correct        = models.BooleanField()
 
 #class containing all game relevant data
 class Game(models.Model):
+    # Game constants.
+    MAX_PLAYERS = 4
+    NUM_ANSWERS = 4
+
+    GAME_NOT_STARTED    = 0
+    GAME_IN_PLAY        = 1
+    GAME_OVER           = 2
+
     player_one = models.ForeignKey(settings.AUTH_USER_MODEL,related_name = '%(class)s_p1', on_delete=models.DO_NOTHING)
     player_two = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_p2',on_delete=models.DO_NOTHING)
     player_three = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_p3', on_delete=models.DO_NOTHING)
@@ -256,12 +289,65 @@ class Game(models.Model):
     player_three_pts = models.IntegerField()
     player_four_pts = models.IntegerField()
 
+    # Current game state.
+    game_state      = models.IntegerField(default=0)
+
+    # Current question index we are, -1 for not started yet.
+    cur_question    = models.IntegerField(default=-1)
+
+    # Number of players in the room.
+    num_players     = models.IntegerField(default=0)
+
+    # Number of players that have answered the current question.
+    num_answers     = models.IntegerField(default=0)
+
     winner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_win', on_delete=models.DO_NOTHING, blank = True, null = True)
-    
+
+    def start_game(self):
+        if self.cur_question != -1:
+            raise Exception('Game has already been started.')
+        
+        if self.num_players == 0:
+            raise Exception('No players inside game, nothing to start.')
+
+        self.game_state     = Game.GAME_IN_PLAY
+        self.cur_question   = 0
+
+        print ('Game has started')
+
+        self.save()
+        return True
+
+    def answer(self, user, question_ind, answer_ind):
+        # Check all input parameters.
+        all_players = [self.player_one, self.player_two,
+                       self.player_three, self.player_four]
+
+        # Check if we are in a game state to answer a question.
+        if self.game_state != Game.GAME_IN_PLAY:
+            raise Exception('Cannot answer question in current state.')
+
+        # Check if user is part of the game.
+        # NOT SURE IF THIS WORKS LIKE THIS :/
+        if user not in all_players:
+            raise Exception('Player is not part of the current game.')
+
+        if self.cur_question != question_ind:
+            raise Exception('Cannot answer question that is not the current question.')
+
+        # Fetch question from database, it should exist.
+        question = GameQuestions.objects.get(game=self, index=question_ind)
+
+        # Check that the user has not answered before.
+
+
+        
+
+
+
     # racuna broj partija koje je pobedio korisnik user
     def number_of_wins(user):
         return Game.objects.filter(winner = user).count()
-       
 
     # racuna broj partija koje je odigrao korisnik user
     def number_of_games_played(user):
