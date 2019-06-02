@@ -221,7 +221,7 @@ class Friendship(models.Model):
         friendsLvl = friends.filter(second_friend_id__level__gte = 10)
         friendsLvlId = friendsLvl.values_list('second_friend_id')
         users = User.objects.filter(id__in = friendsLvlId)
-        return users.order_by('ranking')[:10]
+        return users.order_by('-ranking')[:10]
 
     
     # returns list of friends 

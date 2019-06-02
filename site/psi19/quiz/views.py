@@ -359,7 +359,7 @@ def submit_wants_moderator(request):
         if user.is_senior() and not user.is_moderator:
             User.set_wants_moderator(user.username)
 
-    return redirect('/my_profile')    
+    return redirect('/home')    
     
 # secured
 def my_profile(request, value):
