@@ -45,10 +45,8 @@ class EngineTestCase(TestCase):
         self.game = Game.objects.create()
 
         # Add question to game.
-        GameQuestions.objects.create(game=self.game, index=0, question=self.question_1)
-        GameQuestions.objects.create(game=self.game, index=1, question=self.question_2)
-        GameQuestions.objects.create(game=self.game, index=2, question=self.question_3)
-        GameQuestions.objects.create(game=self.game, index=3, question=self.question_4)
+        self.game.add_question(self.question_1)
+        self.game.add_question(self.question_2)
 
     def test_start_game_no_players(self):
         """
@@ -66,6 +64,36 @@ class EngineTestCase(TestCase):
         self.game.join_game(self.user4)
 
         self.assertRaises(Exception, self.game.join_game, self.user1)
+
+    def test_gameplay(self):
+        """
+        Test good gameplay.
+        """
+
+        # Players join the game.
+        self.game.join_game(self.user1)
+        self.game.join_game(self.user2)
+
+        # Start the game.
+        self.game.start_game()
+
+        # Users start answering.
+        res1_1 = self.game.answer(self.user1, 0)
+        res1_2 = self.game.answer(self.user2, 0)
+
+        self.assertTrue(res1_1)
+        self.assertTrue(res1_2)
+
+        self.assertEqual(self.game.cur_question, 1)
+
+        res2_1 = self.game.answer(self.user1, 0)
+        res2_2 = self.game.answer(self.user2, 1)
+
+        self.assertTrue(res2_1)
+        self.assertFalse(res2_2)
+
+        # Check that the game is over.
+        self.assertEqual(self.game.game_state, Game.GAME_OVER)
 
     def test_blah(self):
         self.assertEqual(True, True)

@@ -280,6 +280,12 @@ class Game(models.Model):
 
     winner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_win', on_delete=models.DO_NOTHING, blank = True, null = True)
 
+    def add_question(self, question):
+        GameQuestions.objects.create(game=self, index=self.num_questions, question=question)
+        
+        self.num_questions += 1
+        self.save()
+
     def start_game(self):
         """
         Start the game if possible, otherwise return an Exception.
@@ -316,15 +322,21 @@ class Game(models.Model):
         # All good, add the user to the game.
         self.num_players += 1
 
-        all_players = [self.player_one, self.player_two,
-                       self.player_three, self.player_four]
-
-        all_players[self.num_players - 1] = user
+        if self.num_players == 1:
+            self.player_one = user
+        elif self.num_players == 2:
+            self.player_two = user
+        elif self.num_players == 3:
+            self.player_three = user
+        elif self.num_players == 4:
+            self.player_four = user
+        else:
+            raise Exception('BAAAAD')
 
         self.save()
         return True
 
-    def answer(self, user, question_ind, answer_ind):
+    def answer(self, user, answer_ind):
         # Check all input parameters.
         all_players = [self.player_one, self.player_two,
                        self.player_three, self.player_four]
@@ -334,18 +346,41 @@ class Game(models.Model):
             raise Exception('Cannot answer question in current state.')
 
         # Check if user is part of the game.
-        # NOT SURE IF THIS WORKS LIKE THIS :/
         if user not in all_players:
             raise Exception('Player is not part of the current game.')
 
-        if self.cur_question != question_ind:
-            raise Exception('Cannot answer question that is not the current question.')
+        user_ind = all_players.index(user)
 
         # Fetch question from database, it should exist.
-        question = GameQuestions.objects.get(game=self, index=question_ind)
+        question = GameQuestions.objects.get(game=self, index=self.cur_question).question
 
         # Check that the user has not answered before.
+        if GameAnswers.objects.filter(game=self, user=user, question_index=self.cur_question).exists():
+            raise Exception('User has already answered this question')
+
+        # Create answer in database.
+        is_correct = question.correct == answer_ind
+
+        GameAnswers.objects.create(game=self, user=user, question_index=self.cur_question,
+                                   answer_index=answer_ind, correct=is_correct)
+
+        self.num_answers += 1
+
+        # Move on to next question if we have to.
+        if self.num_answers == self.num_players:
+            self.cur_question += 1
+            self.num_answers = 0
+
+        # Check if the game is over.
+        if self.cur_question == self.num_questions:
+            # Game over.
+            self.game_state = Game.GAME_OVER
+
+            # Calculate points and winner.
         
+        self.save()
+
+        return is_correct
 
     # racuna broj partija koje je pobedio korisnik user
     def number_of_wins(user):
@@ -466,11 +501,12 @@ class GameAnswers(models.Model):
     in a game.
     """
     class Meta:
-        unique_together = (('game', 'user', 'quesiton_index'),)
+        unique_together = (('game', 'user', 'question_index'),)
 
     game           = models.ForeignKey(Game, on_delete=models.DO_NOTHING)
     user           = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
-    quesiton_index = models.IntegerField()
-    answer_index   = models.IntegerField()
+    question_index = models.IntegerField()
 
+    # Answer information, not required.
+    answer_index   = models.IntegerField()
     correct        = models.BooleanField()
