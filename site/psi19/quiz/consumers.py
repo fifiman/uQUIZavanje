@@ -2,7 +2,7 @@ from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.conf import settings
 
-from .models import Game
+from .models import Game, User
 
 
 class GameConsumer(AsyncJsonWebsocketConsumer):
@@ -30,17 +30,23 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     async def send_state_to_group(self):
         # Get game state.
         game = await get_game_or_error(int(self.game_id))
-        print (game)
         game_state = game.get_state()
 
         await self.channel_layer.group_send(
             self.game_id,
             {
-                'type':     'game.getstate',
+                'type':     'game.sendstate',
                 'state':    game_state
             }
         )
 
+    async def force_refresh_to_group(self):
+        await self.channel_layer.group_send(
+            self.game_id,
+            {
+                'type':     'force.reload'
+            }
+        )
 
     async def receive_json(self, content):
         print (content)
@@ -59,8 +65,22 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 await self.send_state_to_group()
             elif command == 'answer':
                 answer_ind = content['answer_ind']
+                user_id    = content['user_id']
                 
                 game = await get_game_or_error(int(self.game_id))
+                user = await get_user_or_error(int(user_id))
+
+                is_correct, state_changed = game.answer(user, answer_ind)
+
+                # Send user if their answer is correct or not.
+                await self.send_json({
+                    'msg_type':     settings.MSG_TYPE_ANSWER_STATUS,
+                    'is_correct':   is_correct,
+                    'state_changed':state_changed
+                })
+
+                if state_changed:
+                    await self.force_refresh_to_group()
 
         except Exception as e:
             # Catch any errors and send it back
@@ -77,7 +97,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         await self.close()
 
     ###     Group handlers      ###
-    async def game_getstate(self, event):
+    async def game_sendstate(self, event):
         """
         Sending state to user.
         """
@@ -87,7 +107,16 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 'state':        event['state']
             },
         )
-
+    
+    async def force_reload(self, event):
+        """
+        Send to all users to reload page.
+        """
+        await self.send_json(
+            {
+                'msg_type':     settings.MSG_TYPE_FORCE_REFRESH,
+            },
+        )
 
 @database_sync_to_async
 def get_game_or_error(game_id):
@@ -96,3 +125,11 @@ def get_game_or_error(game_id):
         return game
     except Game.DoesNotExist:
         raise Exception("BAAD, game does not exist.")
+
+@database_sync_to_async
+def get_user_or_error(user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        return user
+    except User.DoesNotExist:
+        raise Exception("BAAD, user does not exist.")

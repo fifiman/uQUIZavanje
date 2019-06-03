@@ -66,6 +66,7 @@ def game_question(request, game):
 
     context = {
         'game_id':      game.id,
+        'user_id':      request.user.id,
         'question':     current_question
     }
 

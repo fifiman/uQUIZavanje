@@ -373,20 +373,25 @@ class Game(models.Model):
             raise Exception('User has already answered this question')
 
         # Create answer in database.
-        is_correct = question.correct == answer_ind
+        is_correct = question.correct == (answer_ind + 1)
 
         GameAnswers.objects.create(game=self, user=user, question_index=self.cur_question,
                                    answer_index=answer_ind, correct=is_correct)
 
         self.num_answers += 1
 
+        question_changed = False
+
         # Move on to next question if we have to.
         if self.num_answers == self.num_players:
             self.cur_question += 1
             self.num_answers = 0
 
+            question_changed = True
+
         # Check if the game is over.
         if self.cur_question == self.num_questions:
+            question_changed = True
             # Game over.
             self.game_state = Game.GAME_OVER
 
@@ -394,7 +399,7 @@ class Game(models.Model):
         
         self.save()
 
-        return is_correct
+        return is_correct, question_changed
 
     # racuna broj partija koje je pobedio korisnik user
     def number_of_wins(user):
