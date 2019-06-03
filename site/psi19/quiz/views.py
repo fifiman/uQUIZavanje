@@ -632,3 +632,14 @@ def create_game(request):
     }
 
     return HttpResponse(template.render(context, request))
+
+
+def game(request):
+
+    template = loader.get_template('quiz/game.html')
+
+    context = {
+
+    }
+
+    return HttpResponse(template.render(context, request))

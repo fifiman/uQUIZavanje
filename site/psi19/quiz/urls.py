@@ -70,4 +70,6 @@ urlpatterns = [
 
     # /create_game
     url(r'^create_game/$',          views.create_game,             name = 'create_game'),
+    # /game
+    url(r'^game/$',                 views.game,                    name = 'game'),
 ]

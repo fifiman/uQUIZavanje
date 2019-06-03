@@ -1,10 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "quiz/base.html" %}
+{% block content %}
 
-</body>
-</html>
+{% load static %}
+
+<div class="container">
+    <div class="row justify-content-center" style="margin: 10px;">
+
+        <!-- Profile info -->
+        <div class="col-lg-3 col-md-7 create_game_add_player_container">
+            <div class="row" style="margin-bottom: 100px">
+                <div class="col-lg-8 text-center">
+                    <img class="center" src="{% static 'quiz/default_avatar.jpg' %}" style="width: 80%"/>
+                    <h3 style="margin-top: 10px; color: #2699FB;">Username</h3>
+                </div>
+                <div class="col-lg-4 d-flex align-self-center">
+                    <h3 style="color: #2699FB; padding: 10px; border: 1px #2699FB solid">Score</h3>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: 100px">
+                <div class="col-lg-8 text-center">
+                    <img class="center" src="{% static 'quiz/default_avatar.jpg' %}" style="width: 80%;"/>
+                    <h3 style="margin-top: 10px; color: #2699FB;">Username</h3>
+                </div>
+                <div class="col-lg-4 d-flex align-self-center">
+                    <h3 style="color: #2699FB; padding: 10px; border: 1px #2699FB solid">Score</h3>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Stats -->
+        <!-- Bitna linija za centriranje !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! align-self-center -->
+        <div class="col-lg-5 col-md-12 align-self-center text-center" style="margin: 40px;">
+
+            <div class="col-lg-12" style="border: 1px #2699FB solid; min-height: 100px; color: #2699FB;">
+                <p>Koliko se utakmica igra u NBA sezoni?</p>
+            </div>
+
+            <form>
+                <input type="hidden" value="82" name="answer1">
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">82</button>
+            </form>
+
+            <form>
+                <input type="hidden" value="72" name="answer2">
+                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">72</button>
+            </form>
+
+            <form>
+                <input type="hidden" value="92" name="answer3">
+                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">92</button>
+            </form>
+
+            <form>
+                <input type="hidden" value="62" name="answer4">
+                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">62</button>
+            </form>
+
+
+
+        </div>
+
+        <!-- Profile info -->
+        <div class="col-lg-3 col-md-7 create_game_add_player_container">
+            <div class="row" style="margin-bottom: 100px">
+                <div class="col-lg-4 d-flex align-self-center">
+                    <h3 style="color: #2699FB; padding: 10px; border: 1px #2699FB solid">Score</h3>
+                </div>
+                <div class="col-lg-8 text-center">
+                    <img class="center" src="{% static 'quiz/default_avatar.jpg' %}" style="width: 80%"/>
+                    <h3 style="margin-top: 10px; color: #2699FB;">Username</h3>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: 100px">
+                <div class="col-lg-4 d-flex align-self-center">
+                    <h3 style="color: #2699FB; padding: 10px; border: 1px #2699FB solid">Score</h3>
+                </div>
+                <div class="col-lg-8 text-center">
+                    <img class="center" src="{% static 'quiz/default_avatar.jpg' %}" style="width: 80%"/>
+                    <h3 style="margin-top: 10px; color: #2699FB;">Username</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+{% endblock content %}
