@@ -33,8 +33,10 @@
     fillData();
 
     var game_id = "{{ game_id }}";
-    var ws_path = 'ws://127.0.0.1:8000/ws/game/{{ game_id }}';
-    // console.log("Connecting to " + ws_path);
+
+    var ws_path = 'ws://' + window.location.host + '/ws/game/{{ game_id }}';
+    console.log("Connecting to " + ws_path);
+
     var gameSocket = new WebSocket(ws_path);
 
     function answer(answer_ind) {
