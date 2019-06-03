@@ -24,7 +24,7 @@ SECRET_KEY = '0w^q@hl1^5^($ymm=l1jdwuaa-^-c#)wx0q%$zl%ceo!@!v%oy'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 ##### Channels-specific settings
 
