@@ -57,5 +57,16 @@ urlpatterns = [
     # /edit_question
     url(r'^edit_question/(?P<pk>\d+)/$',             views.edit_question,                name = 'edit_question'),
 
-    
+
+    #report_form
+    url(r'^report_form/$',             views.report_form,                name = 'report_form'),
+
+    #report_form
+    url(r'^report_form_submit/$',             views.report_form_submit,                name = 'report_form_submit'),
+
+    #report_form
+    url(r'^report_list/$',             views.report_list,                name = 'report_list'),
+
+    #report_form
+    url(r'^approve_report/$',             views.approve_report,                name = 'approve_report'),
 ]

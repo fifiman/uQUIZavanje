@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'quiz.apps.QuizConfig',
-    'django_extensions',
     'channels',  
 ]	
 
@@ -144,8 +143,3 @@ LOGIN_REDIRECT_URL = '/home'
 LOGOUT_REDIRECT_URL = '/home'
 
 AUTH_USER_MODEL = 'quiz.User'
-
-GRAPH_MODELS = {
-  'all_applications': True,
-  'group_models': True,
-}
