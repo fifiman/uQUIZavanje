@@ -19,6 +19,29 @@ def home(request):
 
     return HttpResponse(template.render(context, request))
 
+def quickgame(request, category):
+    """
+    Create a quick game.
+    """
+    if category == 'all':
+        questions = Question.objects.all()[:10]
+    else: 
+        category = Category.objects.get(name=category)
+        questions = Question.objects.filter(category=category)[:10]
+
+    if len(questions) == 0:
+        return HttpResponse('No question in current category.')
+
+    # Create game and add all questions.
+    new_game = Game.objects.create()
+    
+    for question in questions:
+        new_game.add_question(question)
+    
+    new_game.save()
+
+    return game(request, new_game.id)
+
 def game(request, game_id):    
     # Fetch game from DB.
     if not Game.objects.filter(id=game_id).exists():

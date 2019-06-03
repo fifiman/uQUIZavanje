@@ -7,6 +7,7 @@ app_name = 'quiz'
 urlpatterns = [
     # /
     path('',                             views.home,                         name = 'home'),
+
     # /home
     path('home',                         views.home,                         name = 'home'),
     # /signup
@@ -15,6 +16,9 @@ urlpatterns = [
     path('rank_list',                    views.global_rank_list,             name = 'rank_list'),
 
     path('game/<int:game_id>',           views.game,                         name='game'),
+
+    path('quickgame/<str:category>',     views.quickgame,                    name='quickgame'),
+
     # /search_results/
     url(r'^search_results/$',            views.search,                       name = 'search_results'),
     # /send_request/

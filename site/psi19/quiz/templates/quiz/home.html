@@ -6,22 +6,20 @@
 
 
     <div class="row d-flex justify-content-center" style="margin: 15px;">
-        
-
         <div class="col-md-10 homepage_tile">
-            <a href="#"><div class="col-md-12">Make Game</div></a>
+            <a href="{% url 'quiz:quickgame' category='all' %}"><div class="col-md-12">Make Game</div></a>
         </div>
 
         <div class="col-md-5 homepage_tile">
-            <a href="#"><div class="col-md-12">History</div></a>
+            <a href="{% url 'quiz:quickgame' category='History' %}"><div class="col-md-12">History</div></a>
         </div>
 
         <div class="col-md-5 homepage_tile">
-            <a href="#"><div class="col-md-12">Sport</div></a>
+            <a href="{% url 'quiz:quickgame' category='Sport' %}"><div class="col-md-12">Sport</div></a>
         </div>
 
         <div class="col-md-5 homepage_tile">
-            <a href="#"><div class="col-md-12">General Knowledge</div></a>
+            <a href="{% url 'quiz:quickgame' category='General Knowledge' %}"><div class="col-md-12">General Knowledge</div></a>
         </div>
 
         <div class="col-md-5 homepage_tile">
@@ -29,7 +27,7 @@
         </div>
 
         <div class="col-md-5 homepage_tile">
-            <a href="#"><div class="col-md-12">Geography</div></a>
+            <a href="{% url 'quiz:quickgame' category='Geography' %}"><div class="col-md-12">Geography</div></a>
         </div>
 
         <div class="col-md-5 homepage_tile">
