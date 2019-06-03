@@ -98,6 +98,8 @@
                     
                         {% endif %}
 
+                    {% if record.user.is_active %}
+
                     <!-- Report Request -->
                     <div class="card-body text-center">
                         <form method="POST" action="{% url 'quiz:report_form' %}">
@@ -106,6 +108,8 @@
                             <input type="submit" class="btn btn-outline-primary" value="REPORT USER"></input>
                         </form>
                     </div>
+
+                    {% endif %}
 
 
                     {% endif %}
