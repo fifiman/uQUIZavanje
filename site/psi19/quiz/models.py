@@ -306,6 +306,14 @@ class Game(models.Model):
 
         self.save()
 
+        return True
+
+    def user_part_of_game(self, user):
+        all_players = [self.player_one, self.player_two,
+                       self.player_three, self.player_four]
+
+        return user in all_players
+
     def join_game(self, user):
         """
         Attempt to join the game.
@@ -314,10 +322,16 @@ class Game(models.Model):
         """
         # Check max number of players already.
         if self.num_players >= Game.MAX_PLAYERS:
-            raise Exception('Max number of players reached.')
+            print('Max number of players reached.')
+            return False
 
         # TODO: Check if is invite only game and only add
         # user if they are invited.
+
+        # Check that user is part of the game already.
+        if self.user_part_of_game(user):
+            print ('User is already part of the game.')
+            return True
 
         # All good, add the user to the game.
         self.num_players += 1
@@ -398,13 +412,29 @@ class Game(models.Model):
         return result
 
     def get_state(self):
-        return {
+        state =  {
             'game_state':       self.game_state,
             'cur_question':     self.cur_question,
             'num_players':      self.num_players,
-            'num_answers':      self.num_answers
+            'num_answers':      self.num_answers,
+            'player_names':     [],
         }
 
+        # Add player names to state.
+        all_players = [self.player_one, self.player_two,
+                       self.player_three, self.player_four]
+        
+        for player in all_players:
+            state['player_names'].append(player.username if player is not None else '')
+
+        return state
+
+    def get_current_question(self):
+        if self.game_state != Game.GAME_IN_PLAY:
+            raise Exception('Game not in play, cannot get current question.')
+        
+        current_question = GameQuestions.objects.get(game=self, index=self.cur_question).question
+        return current_question
 
     def __str__(self):
         return str(self.get_state())

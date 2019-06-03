@@ -13,6 +13,8 @@ urlpatterns = [
     path('signup',                       views.signup,                       name = 'signup'),
     # /rank_list
     path('rank_list',                    views.global_rank_list,             name = 'rank_list'),
+
+    path('game/<int:game_id>',           views.game,                         name='game'),
     # /search_results/
     url(r'^search_results/$',            views.search,                       name = 'search_results'),
     # /send_request/
@@ -51,8 +53,5 @@ urlpatterns = [
     # /change_avatar
     url(r'^change_avatar/$',             views.change_avatar,                name = 'change_avatar'),
     # /choose_avatar
-    url(r'^choose_avatar/$',             views.choose_avatar,                name = 'choose_avatar'),
-
-
-    
+    url(r'^choose_avatar/$',             views.choose_avatar,                name = 'choose_avatar'),    
 ]

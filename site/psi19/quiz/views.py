@@ -15,10 +15,61 @@ def home(request):
     template = loader.get_template('quiz/home.html')
 
     # Fill with context.        
-    context = {
+    context = {}
 
+    return HttpResponse(template.render(context, request))
+
+def game(request, game_id):    
+    # Fetch game from DB.
+    if not Game.objects.filter(id=game_id).exists():
+        return HttpResponse('Game does not exist.')
+
+    game = Game.objects.get(id=game_id)
+
+    # Game over.
+    if game.game_state == Game.GAME_OVER:
+        return HttpResponse('Game over. Print the stats here.')
+
+    if game.user_part_of_game(request.user):
+        if game.game_state == Game.GAME_IN_PLAY:
+            return game_question(request, game)
+        
+        # Send to waiting room.
+        return waiting_room(request, game_id)
+
+    # Game is in-play, can't join.
+    # We can maybe change this later.
+    if game.game_state == Game.GAME_IN_PLAY:
+        return HttpResponse('Game is in play, cannot join now.')
+
+    # Try to join.
+    join_status = game.join_game(request.user)
+
+    if join_status == False:
+        return HttpResponse("Can't join, too many players in room.")
+
+    return waiting_room(request, game_id)
+
+def waiting_room(request, game_id):
+    # Send to waiting room.
+    template = loader.get_template('quiz/game_waiting_room.html')
+    context = {
+        'game_id':      game_id
     }
 
+    return HttpResponse(template.render(context, request))
+
+def game_question(request, game):
+
+    # Return info to the current question.
+    current_question = game.get_current_question()
+
+    context = {
+        'game_id':      game.id,
+        'question':     current_question
+    }
+
+    template = loader.get_template('quiz/game_question.html')
     return HttpResponse(template.render(context, request))
 
 def signup(request):    
@@ -527,7 +578,3 @@ def choose_avatar(request):
         return HttpResponse(template.render(context, request))
     
     return redirect('\home')
-
-        
-
-

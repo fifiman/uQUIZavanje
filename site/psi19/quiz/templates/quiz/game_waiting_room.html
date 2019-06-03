@@ -1,0 +1,67 @@
+{% extends "quiz/base.html" %}
+
+{% block content %}
+
+<h1>Players in the game:</h1>
+<h3>Player 1: </h3><h3 id="player_one"></h3><br>
+<h3>Player 2: </h3><h3 id="player_two"></h3><br>
+<h3>Player 3: </h3><h3 id="player_three"></h3><br>
+<h3>Player 4: </h3><h3 id="player_four"></h3><br>
+
+<button type="button" onclick="startGame()">Start game.</button>
+
+<script>
+    var game_id = "{{ game_id }}";
+    var player_ids = ["player_one", "player_two", "player_three", "player_four"]
+
+    var ws_path = 'ws://127.0.0.1:8000/ws/game/{{ game_id }}';
+    console.log("Connecting to " + ws_path);
+
+    var gameSocket = new WebSocket(ws_path);
+
+    gameSocket.onmessage = function(message) {
+        console.log('Received message:', message);
+
+        var data = JSON.parse(message.data);
+        
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        if (data.msg_type == 1) {
+            // Check if game has been started, otherwise redirect.
+            if (data.state.game_state > 0) {
+                window.location.replace("/game/" + game_id);
+                return
+            }
+
+            // Get all players from state and update.
+            for (var i = 0; i < player_ids.length; i++) {
+                document.getElementById(player_ids[i]).innerHTML = data.state.player_names[i];
+            }
+
+        }
+        else {
+            // Maybe some error who knows.
+        }
+    };
+
+    gameSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    function startGame() {
+        console.log("Trying to start game.");
+
+        start_game_data = {
+            'command':      'start_game',
+            'game_id':      game_id
+        };
+
+        gameSocket.send(JSON.stringify(start_game_data));
+    }
+
+</script>
+
+{% endblock content %}

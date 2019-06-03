@@ -144,3 +144,7 @@ LOGIN_REDIRECT_URL = '/home'
 LOGOUT_REDIRECT_URL = '/home'
 
 AUTH_USER_MODEL = 'quiz.User'
+
+
+# Message settings
+MSG_TYPE_UPDATE_STATE = 1

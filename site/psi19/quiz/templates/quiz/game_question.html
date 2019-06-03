@@ -1,0 +1,51 @@
+{% extends "quiz/base.html" %}
+
+{% block content %}
+
+<h1>Game Question</h1>
+<h2 id="question_text"></h2><br>
+
+<h3>Answer 1: </h3><h3 id="answer_one"></h3>
+<button type="button" onclick="answer(0);">Answer 1</button><br><br>
+<h3>Answer 2: </h3><h3 id="answer_two"></h3>
+<button type="button" onclick="answer(1);">Answer 2</button><br><br>
+<h3>Answer 3: </h3><h3 id="answer_three"></h3>
+<button type="button" onclick="answer(2);">Answer 3</button><br><br>
+<h3>Answer 4: </h3><h3 id="answer_four"></h3>
+<button type="button" onclick="answer(3);">Answer 4</button><br><br>
+
+<script>
+    var question_id     = "question_text";
+    var question_text   = "{{question.question}}";
+
+    var answer_ids      = ['answer_one', 'answer_two', 'answer_three', 'answer_four'];
+    var answer_texts    = ['{{question.answer_one}}', '{{question.answer_two}}', '{{question.answer_three}}', '{{question.answer_four}}']
+
+    function fillData() {
+        // Fill question.
+        document.getElementById(question_id).innerHTML = question_text;
+
+        for (var i = 0; i < 4; i++)
+            document.getElementById(answer_ids[i]).innerHTML = answer_texts[i];
+    }
+    fillData();
+
+    var game_id = "{{ game_id }}";
+    var ws_path = 'ws://127.0.0.1:8000/ws/game/{{ game_id }}';
+    // console.log("Connecting to " + ws_path);
+    var gameSocket = new WebSocket(ws_path);
+
+    function answer(answer_ind) {
+        console.log("Answer: " + answer_ind);
+
+        answer_data = {
+            'command':      'answer',
+            'game_id':      game_id,
+            'answer_ind':   answer_ind
+        };
+
+        gameSocket.send(JSON.stringify(answer_data));
+    }
+</script>
+
+{% endblock content %}
