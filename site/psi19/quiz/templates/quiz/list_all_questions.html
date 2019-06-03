@@ -20,7 +20,10 @@
                     <p>{{question.correct}}</p>
                 </div>
         
-                <span>   
+                <span>
+                    <span class="button_p">
+                        <a  href="{% url 'quiz:edit_question' pk=question.id %}" ><button class="remove_button">Edit question</button></a>
+                    </span>
                     <form method='GET' action="/admin_remove_question/">
                         <p class="button_p">
                             <input type="hidden" name="id" value='{{question.id}}'>

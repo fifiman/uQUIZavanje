@@ -221,7 +221,7 @@ class Friendship(models.Model):
         friendsLvl = friends.filter(second_friend_id__level__gte = 10)
         friendsLvlId = friendsLvl.values_list('second_friend_id')
         users = User.objects.filter(id__in = friendsLvlId)
-        return users.order_by('ranking')[:10]
+        return users.order_by('-ranking')[:10]
 
     
     # returns list of friends 
@@ -261,7 +261,6 @@ class Game(models.Model):
     # racuna broj partija koje je pobedio korisnik user
     def number_of_wins(user):
         return Game.objects.filter(winner = user).count()
-       
 
     # racuna broj partija koje je odigrao korisnik user
     def number_of_games_played(user):
@@ -273,6 +272,9 @@ class Game(models.Model):
         result = p1+p2+p3+p4
 
         return result
+
+    def get_all_games(user):
+        return Game.objects.filter(player_one = user) | Game.objects.filter(player_two = user) | Game.objects.filter(player_three = user) | Game.objects.filter(player_four = user)
 
 #categorie id's and their names 
 class Category(models.Model):
@@ -299,6 +301,9 @@ class Question(models.Model):
 
     def __str__(self):
         return "Question:" + self.question + " Answers: " + self.answer_one + " " + self.answer_two + " " + self.answer_three + " " + self.answer_four
+
+    def get_by_id(id_val):
+        return Question.objects.filter(id=id_val).first()        
 
     def get_all_questions():
         return Question.objects.all()

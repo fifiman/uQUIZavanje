@@ -70,6 +70,11 @@
             <td>Friends</td>
             <td>{{ number_of_friends }}</td>
           </tr>
+          <tr style="color: #2699FB;">
+            <td style="padding: 30px" colspan="2" align="center">          
+              <a href = "{% url 'quiz:games_overview' value=curUser.id%}"><button class="btn btn-outline-primary">Games overview</button></a>
+            </td>
+          </tr>
         </table>
       </div>
     </div>
