@@ -58,15 +58,16 @@ urlpatterns = [
     url(r'^edit_question/(?P<pk>\d+)/$',             views.edit_question,                name = 'edit_question'),
 
 
-    #report_form
+    # /report_form
     url(r'^report_form/$',             views.report_form,                name = 'report_form'),
-
-    #report_form
-    url(r'^report_form_submit/$',             views.report_form_submit,                name = 'report_form_submit'),
-
-    #report_form
+    # /report_form_submit
+    url(r'^report_form_submit/$',      views.report_form_submit,         name = 'report_form_submit'),
+    # /report_list
     url(r'^report_list/$',             views.report_list,                name = 'report_list'),
+    # /approve_report
+    url(r'^approve_report/$',          views.approve_report,             name = 'approve_report'),
 
-    #report_form
-    url(r'^approve_report/$',             views.approve_report,                name = 'approve_report'),
+
+    # /create_game
+    url(r'^create_game/$',          views.create_game,             name = 'create_game'),
 ]

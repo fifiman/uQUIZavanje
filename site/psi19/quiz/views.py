@@ -620,3 +620,15 @@ def approve_report(request):
             return redirect('/report_list/')
 
     return redirect('/home/')
+
+
+
+def create_game(request):
+
+    template = loader.get_template('quiz/create_game.html')
+
+    context = {
+
+    }
+
+    return HttpResponse(template.render(context, request))
