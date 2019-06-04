@@ -76,8 +76,15 @@ def game(request, game_id):
 def waiting_room(request, game_id):
     # Send to waiting room.
     template = loader.get_template('quiz/game_waiting_room.html')
+    friends = []
+    if request.user.is_authenticated:
+        friends = Friendship.get_friends(request.user)
+
+    print(friends)
+
     context = {
-        'game_id':      game_id
+        'game_id':      game_id,
+        'friends':      friends
     }
 
     return HttpResponse(template.render(context, request))

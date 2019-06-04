@@ -8,7 +8,38 @@
 <h3>Player 3: </h3><h3 id="player_three"></h3><br>
 <h3>Player 4: </h3><h3 id="player_four"></h3><br>
 
+
+
 <button type="button" onclick="startGame()">Start game.</button>
+
+
+{% for friend in friends%}
+<div class="col-md-3 col-sm-6 col-xs-12">
+        <!-- Add Friend card -->
+        <div class="user_card">
+            <div class="add_friend_card">
+                <div class="card_header">
+                    <h6>{{friend.second_friend_id__username}}</h6>
+                </div>
+    
+                <div class="card-body">
+                    {% load static %}
+                    <img src='{% get_static_prefix %}{{friend.second_friend_id__picture }}' class="rounded-circle center" alt="avatar">
+                </div>
+    
+                <p>{{friend.second_friend_id__username}}</p>
+    
+                <p>{{friend.second_friend_id__rank}}</p>
+    
+                <button type="button" onclick="callFriend('{{friend.second_friend_id}}')">INVITE</button>
+        </div>
+        <!-- /Add Friend card -->
+    
+        </div>
+    </div>      
+{% empty %}
+    <h3>Nema prijatelja :(</h3>
+{% endfor%}
 
 <script>
     var game_id = "{{ game_id }}";
@@ -61,6 +92,8 @@
 
         gameSocket.send(JSON.stringify(start_game_data));
     }
+
+    
 
 </script>
 

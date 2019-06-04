@@ -324,7 +324,7 @@ class Game(models.Model):
         if self.num_players >= Game.MAX_PLAYERS:
             print('Max number of players reached.')
             return False
-
+        print('USER' + str(user))
         # TODO: Check if is invite only game and only add
         # user if they are invited.
 
@@ -335,7 +335,7 @@ class Game(models.Model):
 
         # All good, add the user to the game.
         self.num_players += 1
-
+            
         if self.num_players == 1:
             self.player_one = user
         elif self.num_players == 2:

@@ -12,7 +12,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
     async def connect(self):
         # Validate user somehow.
-
         self.game_id = str(self.scope['url_route']['kwargs']['game_id']).strip()
         print ([self.game_id])
         print (self.game_id)
@@ -133,3 +132,75 @@ def get_user_or_error(user_id):
         return user
     except User.DoesNotExist:
         raise Exception("BAAD, user does not exist.")
+
+
+class UserConsumer(AsyncJsonWebsocketConsumer):
+    """
+    Consumer through which clients connect with eachother. 
+    """
+
+    async def connect(self):
+        # on connection we get users id and add him to his group 
+
+        self.user_id = str(self.scope['url_route']['kwargs']['user_id']).strip()
+
+        await self.accept()
+        
+        print(self.user_id)
+
+        # Add this connection to the group.
+        await self.channel_layer.group_add(
+            self.user_id,
+            self.channel_name,
+        )
+        print('connectedre')
+        # after user connects might update his status later, for now nothin'
+        # await self.send_state_to_group()
+        # send state to friends or sth like that 
+    
+    async def receive_json(self, content):
+        
+        print(str(self) + "PRIMIO SADRZAJ")
+        print (content)
+
+        command = content.get('command', None)
+
+        try:
+            if command == "join_my_game":
+                
+                print('PORUKA JE USPESNO PRIMLJENA')
+                id_to = content.get('id')
+                print(id_to)
+                
+                # Send game state after a user joins.
+                await self.channel_layer.group_send(
+                    str(id_to),
+                    {
+                        'type': 'notify',
+                    }
+                )
+                print('Uspesno poslao odgovor')
+                
+        except Exception as e:
+            # Catch any errors and send it back
+            await self.send_json({
+                'error':    str(e)
+            })
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            self.user_id,
+            self.channel_name,
+        )
+
+        await self.close()
+
+    async def notify(self, event):
+        print('NOTIFIKACIJA PRIMLJENA')
+        await self.send_json(
+            {
+                'dummy':'dummy',
+            },
+        )
+        print('PORUKA POSLATA')   
+            
