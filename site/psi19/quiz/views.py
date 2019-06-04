@@ -531,7 +531,7 @@ def change_avatar(request):
         User.update_image(user.username, recieved_avatar)
 
         # TODO change to my_profile
-        return redirect('/my_profile')
+        return redirect("/my_profile/"+str(request.user.id))
 
     # if not logged in just redirect to home    
     return redirect('/home')
