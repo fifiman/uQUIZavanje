@@ -1,0 +1,48 @@
+{% extends "quiz/base.html" %}
+{% block content %}
+
+
+
+<div class="container">
+    <div class="row">
+        {% for report in reports %}
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card_header">
+                    <h6></h6>
+                </div>
+
+                <div class="question_card">
+                    <p>{{report.reporter.username}}</p>
+                    <p>{{report.reported.username}}</p>
+                    <p>{{report.report_text}}</p>
+                </div>
+
+                <span>
+                    <form method='POST' action="{% url 'quiz:approve_report' %}">
+                        {% csrf_token %}
+                        <p class="button_p">
+                            <input type="hidden" name="operation" value='ok'>
+                            <input type="hidden" name="id" value='{{report.id}}'>
+                            <button type="submit" class="add_button"><i class="ti-thumb-up"></i></button>
+                        </p>
+                    </form>
+
+                    <form method='POST' action="{% url 'quiz:approve_report' %}">
+                        {% csrf_token %}
+                        <p class="button_p">
+                            <input type="hidden" name="operation" value='not'>
+                            <input type="hidden" name="id" value='{{report.id}}'>
+                            <button type="submit" class="remove_button"><i class="ti-thumb-down"></i></button>
+                        </p>
+                    </form>
+                </span>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock content %}

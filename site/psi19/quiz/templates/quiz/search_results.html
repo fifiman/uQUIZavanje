@@ -92,11 +92,28 @@
                                         <input type="hidden" name="username" value='{{record.user.username}}'>
                                         <input type="submit" class="btn btn-outline-primary" value="CANCEL REQUEST"></input>
                                     </form>
-                                </div>     
+                                </div>
                             {% endif %}
                             
                     
                         {% endif %}
+
+
+                    <!-- Cant Report Blocked User -->
+                    {% if record.user.is_active %}
+
+                    <!-- Report Request -->
+                    <div class="card-body text-center">
+                        <form method="POST" action="{% url 'quiz:report_form' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="reported" value='{{record.user.username}}'>
+                            <input type="submit" class="btn btn-outline-primary" value="REPORT USER"></input>
+                        </form>
+                    </div>
+
+                    {% endif %}
+
+
                     {% endif %}
 
                 </div>

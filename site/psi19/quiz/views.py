@@ -552,4 +552,94 @@ def choose_avatar(request):
 
         
 
+def report_form(request):
 
+    user = request.user
+
+    if (user.is_authenticated):
+        template = loader.get_template('quiz/report_form.html')
+        reported = request.POST['reported']
+
+        context = {
+            'reported': reported,
+        }
+
+        return HttpResponse(template.render(context, request))
+
+    return home(request)
+
+
+def report_form_submit(request):
+
+    user = request.user
+
+    if (user.is_authenticated):
+
+        reported_username = request.POST['reported']
+        reported = User.objects.filter(username = reported_username)[0]
+
+        report_text = request.POST['report_text']
+
+        Report.add_report(user, reported, report_text)
+
+    return home(request)
+
+
+def report_list(request):
+
+    user = request.user
+
+    if (user.is_authenticated):
+
+        template = loader.get_template('quiz/report_list.html')
+        reports = Report.list_valid_reports()
+
+        context = {
+            'reports': reports,
+        }
+
+        return HttpResponse(template.render(context, request))
+
+    return home(request)
+
+
+def approve_report(request):
+    user = request.user
+
+    if user.is_authenticated:
+        if user.is_superuser:
+            operation = request.POST['operation']
+
+            id = request.POST['id']
+
+            if operation == "ok":
+                Report.approve_report(id)
+            else:
+                Report.deny_report(id)
+
+            return redirect('/report_list/')
+
+    return redirect('/home/')
+
+
+
+def create_game(request):
+
+    template = loader.get_template('quiz/create_game.html')
+
+    context = {
+
+    }
+
+    return HttpResponse(template.render(context, request))
+
+
+def game(request):
+
+    template = loader.get_template('quiz/game.html')
+
+    context = {
+
+    }
+
+    return HttpResponse(template.render(context, request))

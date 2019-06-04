@@ -16,8 +16,9 @@ Table OF Contents
 7  > Login and Signup
 8  > Add Question Form
 9  > Avatar Page
-10 > Footer
-11 > Responsive
+10 > Create Game
+11 > Footer
+12 > Responsive
 
 ------------------------------------*/
 
@@ -506,7 +507,6 @@ body {
 }
 
 
-
 /*--------------------------------*\
     Add Question Form
 \*--------------------------------*/
@@ -575,6 +575,14 @@ body {
   margin-top: 10px;
   margin-bottom: 30px;
 }
+
+
+
+/*--------------------------------*\
+    Create Game
+\*--------------------------------*/
+
+
 
 
 /*--------------------------------*\

@@ -1,6 +1,7 @@
 {% load static %}
 
 <!doctype html>
+
 <html lang="en">
 
 <head>
@@ -111,7 +112,7 @@
                                             <a class="dropdown-item" href="{% url 'quiz:needs_validation' %}">Approve question</a>
                                             <a class="dropdown-item" href="{% url 'quiz:admin_question_overview' %}">All questions</a>
                                             <a class="dropdown-item" href="{% url 'quiz:moderator_candidates' %}">Grant moderator</a>
-                                            <a class="dropdown-item" href="single-blog.html">Block user</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:report_list' %}">Block user</a>
                                                 
                                         </div>
                                     </li>
