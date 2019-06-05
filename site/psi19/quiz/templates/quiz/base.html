@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>HomePage</title>
+    <title>{% block title %} {% endblock %}</title>
 
     <!-- Tab icon -->
     <link rel="icon" href="{% static 'quiz/uqizavanje_logo.png' %}">
@@ -220,6 +220,7 @@
             userSocket.onmessage = function(message){
 
                 //testing 
+                console.log('Recieved message:');
                 console.log(message);
 
                 var data = JSON.parse(message.data);
@@ -227,8 +228,13 @@
                 if(data.error){
                     window.alert(data.error);
                 }
-
-                window.alert(data.dummy)
+                
+                //if user accepts the invite redirect to the game room
+                if(confirm('Invited to game ' + data.game_id +'\n By : ' + data.username)){
+                    window.location.replace("/game/" + data.game_id);
+                }else{
+                    //TODO add reject message
+                }
 
             }
 
@@ -236,11 +242,17 @@
                 console.error('Socket closed unexpectedly');
             }
 
-            function callFriend(id){
+            // invites selected friend to the game room
+            function callFriend(id, game_id, sender){
+                
+                //TODO remove after testing
                 console.log('Calling a friend' + id);
+                console.log('sender is ' + sender);
                 
                 friend_data = {
                     'id' : id,
+                    'game_id' : game_id,
+                    'sender'  : sender,
                     'message' : 'Success',
                     'command' : 'join_my_game'
                 };

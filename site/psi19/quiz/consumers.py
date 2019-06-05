@@ -169,14 +169,23 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
             if command == "join_my_game":
                 
                 print('PORUKA JE USPESNO PRIMLJENA')
+                
+                # id of the recipient
                 id_to = content.get('id')
+                # id of the game sender wants you to join
+                game_id = content.get('game_id')
+                # username of the player who sends the invite
+                sender = content.get('sender')
+                
                 print(id_to)
                 
-                # Send game state after a user joins.
+                # Send the request to the group with userid
                 await self.channel_layer.group_send(
                     str(id_to),
                     {
-                        'type': 'notify',
+                        'type'    : 'notify',
+                        'game_id' : game_id,
+                        'sender'  : sender,  
                     }
                 )
                 print('Uspesno poslao odgovor')
@@ -197,10 +206,14 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
 
     async def notify(self, event):
         print('NOTIFIKACIJA PRIMLJENA')
+        
+        # send json message to the recipient, inviting him to game_id
         await self.send_json(
             {
-                'dummy':'dummy',
+                'game_id'  :    event["game_id"],
+                'username' :    event['sender'],
             },
         )
+        
         print('PORUKA POSLATA')   
             
