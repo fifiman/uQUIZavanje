@@ -29,6 +29,8 @@
         </tbody>
       </table>
     </div>
+
+    {% if user.is_authenticated %}
     <div class="col-md-6">
       <table class="table table-bordered rank_list_table">
         <thead>
@@ -48,6 +50,7 @@
         </tbody>
       </table>
     </div>
+    {% endif %}
   </div>
 </div>
 
