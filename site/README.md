@@ -10,13 +10,18 @@ What is needed to run webserver:
 
 1. Python 3 (>= 3.6)
 2. Pip
-3. Django
+3. Django, channels, channels-redis
+4. redis-server
 
-Python and pip installation instructions can be found online. Once you have python and pip, django can be installed using `pip install Django`. Check whether django is properly installed using `python -m django --version`.
+Python and pip installation instructions can be found online. Once you have python and pip, the needed python packages can be installed using `pip install Django channels channels-redis`. Check whether django is properly installed using `python -m django --version`. Redis-server can be installed on Ubuntu with `sudo apt install redis-server`. Windows users...google it.
 
 ## Running
 
-`python manage.py runserver`
+A redis server must be started before running the django application.
+
+In a seperate terminal window run: `redis-server` which will start redis on it's default port.
+
+And then run `python manage.py runserver 0.0.0.0:8000`. 
 
 ## Source control
 
