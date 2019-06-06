@@ -9,7 +9,9 @@ application = ProtocolTypeRouter({
 
     'websocket': AuthMiddlewareStack(
         URLRouter([
-            path('ws/game/<int:game_id>',       quiz.consumers.GameConsumer)
+            path('ws/game/<int:game_id>',       quiz.consumers.GameConsumer),
+            path('ws/user/<int:user_id>',       quiz.consumers.UserConsumer)
+        
         ]
         )
     ),

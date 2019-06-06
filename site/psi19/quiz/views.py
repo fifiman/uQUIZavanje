@@ -77,8 +77,25 @@ def game(request, game_id):
 def waiting_room(request, game_id):
     # Send to waiting room.
     template = loader.get_template('quiz/game_waiting_room.html')
+    
+    friends_all = []
+    friends_not_in_game = []
+    
+    if request.user.is_authenticated:
+        friends_all = Friendship.get_friends(request.user)
+        
+        '''
+        for friend in friends_all:
+            print(friend)
+
+            if(not Game.is_in_game(friend['second_friend_id'])):
+                friends_not_in_game.append(friend)
+        '''
+    
     context = {
-        'game_id':      game_id
+        'game_id':      game_id,
+        #'friends':      friends_not_in_game
+        'friends':      friends_all
     }
 
     return HttpResponse(template.render(context, request))

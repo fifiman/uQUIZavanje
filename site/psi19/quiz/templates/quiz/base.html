@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>HomePage</title>
+    <title>{% block title %} {% endblock %}</title>
 
     <!-- Tab icon -->
     <link rel="icon" href="{% static 'quiz/uqizavanje_logo.png' %}">
@@ -95,7 +95,6 @@
                                     {% endif %}
 
 
-                                    <!-- Danlo pls help ovo je ruzno ko djvao :( -->
                                     <!--Moderator, admin i senior mogu da dodaju pitanja-->
                               
 
@@ -185,7 +184,6 @@
     </header>
     <!-- /Header and Menu-->
 
-
     <!-- Page Content -->
     {% block content %}
 
@@ -205,6 +203,67 @@
     <!-- /Footer -->
 
     <!-- Scripts -->
+
+
+    {% if user.is_authenticated %}
+        <script>
+            var user_id = "{{user.id}}";
+            
+            console.log(user_id);
+
+            var ws_path = 'ws://' + window.location.host + '/ws/user/{{ user.id }}';
+            
+            console.log("Connecting to " + ws_path);
+
+            var userSocket = new WebSocket(ws_path);
+
+            userSocket.onmessage = function(message){
+
+                //testing 
+                console.log('Recieved message:');
+                console.log(message);
+
+                var data = JSON.parse(message.data);
+
+                if(data.error){
+                    window.alert(data.error);
+                }
+                
+                //if user accepts the invite redirect to the game room
+                if(confirm('Invited to game ' + data.game_id +'\n By : ' + data.username)){
+                    window.location.replace("/game/" + data.game_id);
+                }else{
+                    //TODO add reject message
+                }
+
+            }
+
+            userSocket.onclose = function(e){
+                console.error('Socket closed unexpectedly');
+            }
+
+            // invites selected friend to the game room
+            function callFriend(id, game_id, sender){
+                
+                //TODO remove after testing
+                console.log('Calling a friend' + id);
+                console.log('sender is ' + sender);
+                
+                friend_data = {
+                    'id' : id,
+                    'game_id' : game_id,
+                    'sender'  : sender,
+                    'message' : 'Success',
+                    'command' : 'join_my_game'
+                };
+                
+                userSocket.send(JSON.stringify(friend_data));
+
+            }
+        
+        </script>
+    {% endif %}
+
     <!-- jquery -->
     <script src="{% static 'quiz/jquery-1.12.1.min.js' %}"></script>
     <!-- bootstrap js -->
