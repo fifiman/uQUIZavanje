@@ -163,22 +163,16 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
             self.user_id,
             self.channel_name,
         )
-        print('connectedre')
         # after user connects might update his status later, for now nothin'
         # await self.send_state_to_group()
         # send state to friends or sth like that 
     
     async def receive_json(self, content):
-        
-        print(str(self) + "PRIMIO SADRZAJ")
-        print (content)
 
         command = content.get('command', None)
 
         try:
             if command == "join_my_game":
-                
-                print('PORUKA JE USPESNO PRIMLJENA')
                 
                 # id of the recipient
                 id_to = content.get('id')
@@ -186,9 +180,7 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
                 game_id = content.get('game_id')
                 # username of the player who sends the invite
                 sender = content.get('sender')
-                
-                print(id_to)
-                
+
                 # Send the request to the group with userid
                 await self.channel_layer.group_send(
                     str(id_to),
@@ -198,7 +190,6 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
                         'sender'  : sender,  
                     }
                 )
-                print('Uspesno poslao odgovor')
                 
         except Exception as e:
             # Catch any errors and send it back
@@ -214,16 +205,11 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
 
         await self.close()
 
-    async def notify(self, event):
-        print('NOTIFIKACIJA PRIMLJENA')
-        
+    async def notify(self, event):        
         # send json message to the recipient, inviting him to game_id
         await self.send_json(
             {
                 'game_id'  :    event["game_id"],
                 'username' :    event['sender'],
             },
-        )
-        
-        print('PORUKA POSLATA')   
-            
+        ) 
