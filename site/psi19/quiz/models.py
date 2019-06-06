@@ -19,6 +19,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField( max_length=50)
     level = models.IntegerField(default = 0)
+    exp = models.IntegerField(default = 0)
     picture = models.TextField(default = "quiz/default_avatar.jpg", max_length = 50, blank = True, null = True)
     ranking = models.IntegerField(default = -1)
 
@@ -286,6 +287,9 @@ class Game(models.Model):
         self.num_questions += 1
         self.save()
 
+    def get_questions_for_game(self):
+        return GameQuestions.objects.filter(game = self)
+
     def start_game(self):
         """
         Start the game if possible, otherwise return an Exception.
@@ -372,7 +376,8 @@ class Game(models.Model):
 
         return True
 
-    def answer(self, user, answer_ind):
+    def answer(self, user, answer_ind, msPassed):
+        print("Usao u answer za"+user.username)
         # Check all input parameters.
         all_players = [self.player_one, self.player_two,
                        self.player_three, self.player_four]
@@ -392,7 +397,8 @@ class Game(models.Model):
 
         # Check that the user has not answered before.
         if GameAnswers.objects.filter(game=self, user=user, question_index=self.cur_question).exists():
-            raise Exception('User has already answered this question')
+           print('User has already answered this question')
+           return
 
         # Create answer in database.
         is_correct = question.correct == (answer_ind + 1)
@@ -403,12 +409,48 @@ class Game(models.Model):
         self.num_answers += 1
 
         question_changed = False
+        time_bonus = int((5000 - msPassed)/100)
 
+        if time_bonus<0:
+            time_bonus=0
+
+        if is_correct:
+            if user == self.player_one:
+                self.player_one_pts+=50
+                self.player_one_pts+=time_bonus
+                quest =  GameQuestions.objects.get(game=self, index=self.cur_question)
+                quest.p1_pts = 50+time_bonus
+                quest.save()
+                print("dodao sam poene useru"+user.username)
+
+            if user == self.player_two:
+                self.player_two_pts+=50
+                self.player_two_pts+=time_bonus
+                quest =  GameQuestions.objects.get(game=self, index=self.cur_question)
+                quest.p2_pts = 50+time_bonus
+                quest.save()
+                print("dodao sam poene useru"+user.username)
+
+            if user == self.player_three:
+                self.player_three_pts+=50
+                self.player_three_pts+=time_bonus
+                quest =  GameQuestions.objects.get(game=self, index=self.cur_question)
+                quest.p3_pts = 50+time_bonus
+                quest.save()
+                print("dodao sam poene useru"+user.username)
+
+            if user == self.player_four:
+                self.player_four_pts+=50
+                self.player_four_pts+=time_bonus
+                quest =  GameQuestions.objects.get(game=self, index=self.cur_question)
+                quest.p4_pts = 50+time_bonus
+                quest.save()
+                print("dodao sam poene useru"+user.username)
+            
         # Move on to next question if we have to.
         if self.num_answers == self.num_players:
             self.cur_question += 1
             self.num_answers = 0
-
             question_changed = True
 
         # Check if the game is over.
@@ -416,7 +458,6 @@ class Game(models.Model):
             question_changed = True
             # Game over.
             self.game_state = Game.GAME_OVER
-
             # Calculate points and winner.
         
         self.save()
@@ -745,6 +786,10 @@ class GameQuestions(models.Model):
     game       = models.ForeignKey(Game, on_delete=models.DO_NOTHING)
     index      = models.IntegerField()
     question   = models.ForeignKey(Question, on_delete=models.DO_NOTHING)
+    p1_pts = models.IntegerField(default=0)
+    p2_pts = models.IntegerField(default=0)
+    p3_pts = models.IntegerField(default=0)
+    p4_pts = models.IntegerField(default=0)
 
     def __str__(self):
         return '{}, {}, {}'.format(self.game, self.index, self.question)

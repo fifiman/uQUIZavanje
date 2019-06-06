@@ -7,20 +7,23 @@
 
 {% block content %}
 
+<h2 id="time"></h2><br>
 <h1>Game Question</h1>
 <h2 id="question_text"></h2><br>
-
+<h2 id="feedback"></h2><br>
+<h2 id="countdown"></h2><br>
 <h3>Answer 1: </h3><h3 id="answer_one"></h3>
-<button type="button" onclick="answer(0);">Answer 1</button><br><br>
+<button id = "btn1" type="button" onclick="answer(0);">Answer 1</button><br><br>
 <h3>Answer 2: </h3><h3 id="answer_two"></h3>
-<button type="button" onclick="answer(1);">Answer 2</button><br><br>
+<button id = "btn2" type="button" onclick="answer(1);">Answer 2</button><br><br>
 <h3>Answer 3: </h3><h3 id="answer_three"></h3>
-<button type="button" onclick="answer(2);">Answer 3</button><br><br>
+<button id = "btn3" type="button" onclick="answer(2);">Answer 3</button><br><br>
 <h3>Answer 4: </h3><h3 id="answer_four"></h3>
-<button type="button" onclick="answer(3);">Answer 4</button><br><br>
+<button id = "btn4" type="button" onclick="answer(3);">Answer 4</button><br><br>
 
 <script>
-    var user_id         = "{{user_id}}"
+    var user_id         = "{{user_id}}";
+    var correct_answer = "{{question.correct}}"
 
     var question_id     = "question_text";
     var question_text   = "{{question.question}}";
@@ -44,17 +47,55 @@
 
     var gameSocket = new WebSocket(ws_path);
 
+    var startTime = new Date();
+    var msPassed;
+    setInterval(myTimer, 1);
+
+    function myTimer() {
+      var d = new Date();
+      msPassed = d.getTime() - startTime.getTime();
+      document.getElementById("time").innerHTML = msPassed;
+      if(msPassed>10000){
+          document.getElementById("time").innerHTML = "Time is up";
+         if(document.getElementById("btn1").disabled == false)
+          answer(-1);
+      }
+    }
+
     function answer(answer_ind) {
         console.log("Answer: " + answer_ind);
-        
+        //disable buttons after an answer so that no one can answer twice
+        document.getElementById("btn1").disabled = true;
+        document.getElementById("btn2").disabled = true;
+        document.getElementById("btn3").disabled = true;
+        document.getElementById("btn4").disabled = true;
+        //calculate timeBonus
+        var timeBonus = Math.round((5000 - msPassed)/100)
+        //give feedback to the player (correct answer/incorrect answer)
+        if(correct_answer==(answer_ind+1)) document.getElementById("feedback").innerHTML = "Correct! Time bonus = "+ timeBonus;
+        else document.getElementById("feedback").innerHTML = "Incorrect :(";
+        //colour the user choice
+        if(answer_ind == 0) document.getElementById("btn1").style = "background-color: #FF0000;";
+        if(answer_ind == 1) document.getElementById("btn2").style = "background-color: #FF0000;";
+        if(answer_ind == 2) document.getElementById("btn3").style = "background-color: #FF0000;";
+        if(answer_ind == 3) document.getElementById("btn4").style = "background-color: #FF0000;";
+        //colour the correct button
+        if(correct_answer == 1) document.getElementById("btn1").style = "background-color: #4CAF50;";
+        if(correct_answer == 2) document.getElementById("btn2").style = "background-color: #4CAF50;";
+        if(correct_answer == 3) document.getElementById("btn3").style = "background-color: #4CAF50;";
+        if(correct_answer == 4) document.getElementById("btn4").style = "background-color: #4CAF50;";
         answer_data = {
             'command':      'answer',
             'game_id':      game_id,
             'answer_ind':   answer_ind,
-            'user_id':      user_id
+            'user_id':      user_id,
+            'msPassed':     msPassed
         };
-
-        gameSocket.send(JSON.stringify(answer_data));
+        answer_data = JSON.stringify(answer_data);
+        send_answer(answer_data);
+    }
+    function send_answer(answer_data){
+        gameSocket.send(answer_data);
     }
 
     gameSocket.onmessage = function(message) {
@@ -63,8 +104,13 @@
         var data = JSON.parse(message.data);
         
         if (data.msg_type == 3) {
-            window.location.replace("/game/" + game_id);
-            return
+            //before we move on to the next question, we show a message and a timer so the players can prepare
+            var seconds_to_next = 6;
+            document.getElementById("countdown").innerHTML = "Next question in "+seconds_to_next;
+            setInterval(function(){seconds_to_next--;document.getElementById("countdown").innerHTML = "Next question in "+seconds_to_next; }, 500);
+            setTimeout(function(){window.location.replace("/game/" + game_id);
+            return},3000);
+            
         }
     }
 </script>

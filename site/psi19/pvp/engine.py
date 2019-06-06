@@ -23,7 +23,6 @@ class Engine:
         self.answer_texts = answer_texts    # Text of each answer in Nx4 matrix format.
 
         self.num_questions = len(self.questions)
-
         # User answers will be stored as a matrix.
         # This will be initialized once the game starts and
         # the number of players are known.
