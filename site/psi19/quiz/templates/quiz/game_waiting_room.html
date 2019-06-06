@@ -7,44 +7,87 @@
 
 {% block content %}
 
-<h1>Players in the game:</h1>
-<h3>Player 1: </h3><h3 id="player_one"></h3><br>
-<h3>Player 2: </h3><h3 id="player_two"></h3><br>
-<h3>Player 3: </h3><h3 id="player_three"></h3><br>
-<h3>Player 4: </h3><h3 id="player_four"></h3><br>
-
-
-
-<button type="button" onclick="startGame()">Start game.</button>
-
-
-{% for friend in friends%}
-<div class="col-md-3 col-sm-6 col-xs-12">
-        <!-- Add Friend card -->
-        <div class="user_card">
-            <div class="add_friend_card">
-                <div class="card_header">
-                    <h6>{{friend.second_friend_id__username}}</h6>
+<div class="container">
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-12">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-12 text-center" style="margin-bottom: 20px;">
+                    <h2 style="color: #2699FB;">Players in the game:</h1>
                 </div>
-    
-                <div class="card-body">
-                    {% load static %}
-                    <img src='{% get_static_prefix %}{{friend.second_friend_id__picture }}' class="rounded-circle center" alt="avatar">
+                <div class="col-md-3 text-center" style="margin: 40px; border: 1px #2699FB solid; min-height: 100px;">
+                    <h3 style="color: #2699FB; padding: 10px;">Player 1: </h3><h3 id="player_one" style="color: #2699FB;"></h3>
                 </div>
-    
-                <p>{{friend.second_friend_id__username}}</p>
-    
-                <p>{{friend.second_friend_id__rank}}</p>
-    
-                <button type="button" onclick="callFriend('{{friend.second_friend_id}}', '{{ game_id }}', '{{user.username}}')">INVITE</button>
+                <div class="col-md-3 text-center" style="margin: 40px; border: 1px #2699FB solid; min-height: 100px;">
+                    <h3 style="color: #2699FB; padding: 10px;">Player 2: </h3><h3 id="player_two" style="color: #2699FB;"></h3>
+                </div>
+
+                <div class="col-md-12 d-flex justify-content-center">
+                    <div class="col-md-8">
+                        <button type="button" class="btn btn-primary" onclick="startGame()" style="width: 100%;">Start game.</button>
+                    </div>
+                </div>
+
+                <div class="col-md-3 text-center" style="margin: 40px; border: 1px #2699FB solid; min-height: 100px;">
+                    <h3 style="color: #2699FB; padding: 10px;">Player 3: </h3><h3 id="player_three" style="color: #2699FB;"></h3>
+                </div>
+                <div class="col-md-3 text-center" style="margin: 40px; border: 1px #2699FB solid; min-height: 100px;">
+                    <h3 style="color: #2699FB; padding: 10px;">Player 4: </h3><h3 id="player_four" style="color: #2699FB;"></h3>
+                </div>
+            </div>
         </div>
-        <!-- /Add Friend card -->
-    
+    </div>
+            
+        
+        
+        
+        
+        
+        <div class="row" style="padding-top: 40px; margin-bottom: 50px;">
+                <div class="col-md-12">
+                        <div class="row d-flex justify-content-center">
+                            {% for friend in friends%}
+                            <div class="col-md-2 col-sm-4 col-xs-12">
+                                <!-- Add Friend card -->
+                                <div>
+                                    <div style="border: 1px #2699FB solid">
+                                        <div class="card_header text-center">
+                                            <h6>{{friend.second_friend_id__username}}</h6>
+                                        </div>
+            
+                                        <div>
+                                            {% load static %}
+                                            <img src='{% get_static_prefix %}{{friend.second_friend_id__picture }}'
+                                                class="rounded-circle center" alt="avatar" style="width: 50%; padding-top: 20px;">
+                                        </div>
+            
+                                        <p class="text-center" style="padding-top: 20px; color: #2699FB;">{{friend.second_friend_id__username}}</p>
+            
+                                        <p class="text-center" style="padding-top: 20px; color: #2699FB;">{{friend.second_friend_id__rank}}</p>
+        
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary"
+                                            onclick="callFriend('{{friend.second_friend_id}}', '{{ game_id }}', '{{user.username}}')" value="invite" style="margin: 10px;">INVITE</button>
+                                        </div>
+                                        
+                                    </div>
+                                    <!-- /Add Friend card -->
+            
+                                </div>
+                            </div>
+                            {% empty %}
+                            <h3>Nema prijatelja :(</h3>
+                            {% endfor%}
+                        </div>
+                    </div>
         </div>
-    </div>      
-{% empty %}
-    <h3>Nema prijatelja :(</h3>
-{% endfor%}
+        
+
+
+</div>
+
+
+
+
 
 <script>
     var game_id = "{{ game_id }}";
