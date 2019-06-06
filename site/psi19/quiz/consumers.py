@@ -14,8 +14,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         # Validate user somehow.
 
         self.game_id = str(self.scope['url_route']['kwargs']['game_id']).strip()
-        print ([self.game_id])
-        print (self.game_id)
+        self.user    = self.scope['user']
+
+        print ('User:', self.user, ',Entered game:', self.game_id)
+
         await self.accept()
 
         # Add this connection to the group.
@@ -93,6 +95,14 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             self.game_id,
             self.channel_name,
         )
+
+        # Remove user from game.
+        game = await get_game_or_error(int(self.game_id))
+        if game.game_state == 0:
+            game.leave_game(self.user)
+
+        # Send state to other users.
+        await self.send_state_to_group()
 
         await self.close()
 

@@ -336,18 +336,40 @@ class Game(models.Model):
         # All good, add the user to the game.
         self.num_players += 1
 
-        if self.num_players == 1:
+        if self.player_one is None:
             self.player_one = user
-        elif self.num_players == 2:
+        elif self.player_two is None:
             self.player_two = user
-        elif self.num_players == 3:
+        elif self.player_three is None:
             self.player_three = user
-        elif self.num_players == 4:
+        elif self.player_four is None:
             self.player_four = user
         else:
             raise Exception('BAAAAD')
 
         self.save()
+        return True
+
+    def leave_game(self, user):
+        if self.num_players == 0:
+            print ('Cannot leave empty room')
+            return False
+
+        if self.player_one == user:
+            self.player_one = None
+        elif self.player_two == user:
+            self.player_two = None
+        elif self.player_three == user:
+            self.player_three = None
+        elif self.player_four == user:
+            self.player_four = None
+        else:
+            print ('Player is not in game to leave')
+            return False
+
+        self.num_players -= 1
+        self.save()
+
         return True
 
     def answer(self, user, answer_ind):
