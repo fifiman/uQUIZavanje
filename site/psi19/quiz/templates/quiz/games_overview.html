@@ -1,0 +1,78 @@
+{% extends "quiz/base.html" %} {% block content %}
+
+<!-- Page Content -->
+
+<div class="container">
+  <div class="row justify-content-center" id="trophy_h1">
+    <h1 class="text-center">{{curUser.username}}'s games</h1>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead class="thead-light">
+          <tr>
+              <th scope="col">
+                Game_id
+              </td>
+              <th scope="col">
+                P1
+              </td>
+              <th scope="col">
+                P1_PTS
+              </td>
+              <th scope="col">
+                P2
+              </td>
+              <th scope="col">
+                P2_PTS
+              </td>
+              <th scope="col">
+                P3
+              </td>
+              <th scope="col">
+                P3_PTS
+              </td>
+              <th scope="col">
+                P4
+              </td>
+              <th scope="col">
+                P4_PTS
+              </td>
+          </tr>
+      </thead>
+    {%for game in games%}
+    <tr>
+        <th scope="row">
+          {{game.id}}
+        </td>
+        <td {%if curUser.id == game.player_one.id%} style="font-weight: bold; background: gray" {%endif%}>
+          {{game.player_one.username}}
+        </td>
+        <td {%if curUser.id == game.player_one.id%} style="font-weight: bold; background: gray" {%endif%}>
+          {{game.player_one_pts}}
+        </td>
+        <td {%if curUser.id == game.player_two.id%} style="font-weight: bold; background: gray" {%endif%}>
+          {{game.player_two.username}}
+        </td>
+        <td {%if curUser.id == game.player_two.id%} style="font-weight: bold; background: gray" {%endif%}>
+          {{game.player_two_pts}}
+        </td>
+        <td {%if curUser.id == game.player_three.id%} style="font-weight: bold; background: gray" {%endif%}>
+          {{game.player_three.username}}
+        </td>
+        <td {%if curUser.id == game.player_three.id%} style="font-weight: bold; background: gray" {%endif%}>
+          {{game.player_three_pts}}
+        </td>
+        <td {%if curUser.id == game.player_four.id%} style="font-weight: bold; background: gray" {%endif%}>
+          {{game.player_four.username}}
+        </td>
+        <td {%if curUser.id == game.player_four.id%} style="font-weight: bold; background: gray" {%endif%}>
+          {{game.player_four_pts}}
+        </td>
+    </tr>
+    {%endfor%}
+  </table>
+  </div>
+</div>
+
+<!-- /Page Content -->
+{% endblock content%}

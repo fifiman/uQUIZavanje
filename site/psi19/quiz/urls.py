@@ -57,5 +57,19 @@ urlpatterns = [
     # /change_avatar
     url(r'^change_avatar/$',             views.change_avatar,                name = 'change_avatar'),
     # /choose_avatar
-    url(r'^choose_avatar/$',             views.choose_avatar,                name = 'choose_avatar'),    
+    url(r'^choose_avatar/$',             views.choose_avatar,                name = 'choose_avatar'),
+    # /games_overview
+    url(r'^games_overview/(?P<value>\d+)/$',             views.games_overview,                name = 'games_overview'),
+    # /edit_question
+    url(r'^edit_question/(?P<pk>\d+)/$',             views.edit_question,                name = 'edit_question'),
+
+
+    # /report_form
+    url(r'^report_form/$',             views.report_form,                name = 'report_form'),
+    # /report_form_submit
+    url(r'^report_form_submit/$',      views.report_form_submit,         name = 'report_form_submit'),
+    # /report_list
+    url(r'^report_list/$',             views.report_list,                name = 'report_list'),
+    # /approve_report
+    url(r'^approve_report/$',          views.approve_report,             name = 'approve_report'),
 ]

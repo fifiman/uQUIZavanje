@@ -1,6 +1,7 @@
 {% load static %}
 
 <!doctype html>
+
 <html lang="en">
 
 <head>
@@ -110,7 +111,7 @@
                                             <a class="dropdown-item" href="{% url 'quiz:needs_validation' %}">Approve question</a>
                                             <a class="dropdown-item" href="{% url 'quiz:admin_question_overview' %}">All questions</a>
                                             <a class="dropdown-item" href="{% url 'quiz:moderator_candidates' %}">Grant moderator</a>
-                                            <a class="dropdown-item" href="single-blog.html">Block user</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:report_list' %}">Block user</a>
                                                 
                                         </div>
                                     </li>
@@ -141,8 +142,8 @@
                                             Senior options
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <a class="dropdown-item" href="{% url 'quiz:submit_a_question' %}">Dodaj pitanje</a>
-                                            <a class="dropdown-item" href="single-blog.html">Postani moderator</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:submit_a_question' %}">Add question</a>
+                                            <a class="dropdown-item" href="{% url 'quiz:submit_wants_moderator' %}">Become a moderator</a>
                                         </div>
                                     </li>
 

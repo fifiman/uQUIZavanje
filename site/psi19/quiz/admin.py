@@ -34,7 +34,7 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
         ('Login data', {'fields': ('username','email', 'password')}),
         ('Personal data', {'fields':('first_name', 'last_name', 'age')}),
-        ('Account data', {'fields':('level', 'picture', 'ranking')}),
+        ('Account data', {'fields':('level', 'picture', 'ranking', 'is_active')}),
         ('Moderator data', {'fields':('is_moderator', 'wants_moderator')}),)
     add_fieldsets = (
         ('Login data', {'fields': ('username','email', 'password')}),
@@ -50,6 +50,7 @@ admin.site.register(Category)
 
 admin.site.register(Game)
 admin.site.register(Friendship)
+admin.site.register(Report)
 
 
 

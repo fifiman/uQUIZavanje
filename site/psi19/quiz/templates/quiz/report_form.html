@@ -1,0 +1,24 @@
+{% extends "quiz/base.html" %}
+{% block content %}
+
+<div class="container">
+  <div class="row d-flex justify-content-center">
+      <div class="col-md-12">
+          <h1 class="text-center" style="margin-top: 40px; color: #2699FB;">Report Form</h1>
+      </div>
+
+      <div class="col-md-6">
+          <form action="{% url 'quiz:report_form_submit' %}" class="text-center" method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="reported" value='{{reported}}'>
+              <div class="">
+                  <label for="report_text" style="margin-top: 40px;"><h3 style="color: #2699FB;">Why are you reporting user?</h3></label>
+                  <textarea id="report_text" rows="5" maxlength="200" name="report_text" style="width: 100%; color: #2699FB;"></textarea>
+              </div>
+              <input type="submit" class="btn btn-outline-primary" value="SUBMIT"></input>
+          </form>
+      </div>
+  </div>
+</div>
+
+{% endblock content %}

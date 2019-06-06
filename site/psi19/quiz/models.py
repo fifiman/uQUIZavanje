@@ -221,7 +221,7 @@ class Friendship(models.Model):
         friendsLvl = friends.filter(second_friend_id__level__gte = 10)
         friendsLvlId = friendsLvl.values_list('second_friend_id')
         users = User.objects.filter(id__in = friendsLvlId)
-        return users.order_by('ranking')[:10]
+        return users.order_by('-ranking')[:10]
 
     
     # returns list of friends 
@@ -466,6 +466,8 @@ class Game(models.Model):
     def __str__(self):
         return str(self.get_state())
 
+    def get_all_games(user):
+        return Game.objects.filter(player_one = user) | Game.objects.filter(player_two = user) | Game.objects.filter(player_three = user) | Game.objects.filter(player_four = user)
 
 #categorie id's and their names 
 class Category(models.Model):
@@ -490,6 +492,9 @@ class Question(models.Model):
 
     def __str__(self):
         return "Question:" + self.question + " Answers: " + self.answer_one + " " + self.answer_two + " " + self.answer_three + " " + self.answer_four
+
+    def get_by_id(id_val):
+        return Question.objects.filter(id=id_val).first()        
 
     def get_all_questions():
         return Question.objects.all()
@@ -759,3 +764,30 @@ class GameAnswers(models.Model):
     # Answer information, not required.
     answer_index   = models.IntegerField()
     correct        = models.BooleanField()
+class Report(models.Model):
+    reporter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_f1', on_delete=models.DO_NOTHING)
+    reported = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = '%(class)s_f2', on_delete=models.DO_NOTHING)
+    report_text = models.TextField(max_length = 200)    
+
+
+    def __str__(self):  
+        return "Reporter : " + str(self.reporter) + " Reported :" + str(self.reported) + " beceause of :" + str(self.report_text)
+
+    def add_report(reporter, reported, text):
+        report = Report.objects.create(reporter = reporter, reported = reported, report_text = text)
+        report.save()
+
+
+    # report is valid if reported is still active - 
+    # if admin decides that report is not valid, it will be removed, 
+    # and if he decides otherwise user will not be active anymore
+    def list_valid_reports():    
+        return Report.objects.filter(reported__is_active = True)
+
+    def deny_report(report_id):
+        Report.objects.filter(id = report_id).delete()
+
+    def approve_report(report_id):
+        reported = Report.objects.filter(id = report_id).values('reported')[0]
+        rep_id = reported['reported']
+        User.objects.filter(id = rep_id).update(is_active = False)    
