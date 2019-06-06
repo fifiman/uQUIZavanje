@@ -480,7 +480,7 @@ class Question(models.Model):
 
     # nema smisla da admin i moderator potvrdjuju pitanja koja su dodali
     def privileged_submit_a_question(question_in, answer_one_in, answer_two_in, answer_three_in, answer_four_in, correct_in, category_in):
-        new_question = Question.objects.create(question = question_in, answer_one = answer_two_in,answer_two = answer_two_in, answer_three=answer_three_in, answer_four=answer_four_in, correct=correct_in, category=category_in, is_valid = True)
+        new_question = Question.objects.create(question = question_in, answer_one = answer_one_in,answer_two = answer_two_in, answer_three=answer_three_in, answer_four=answer_four_in, correct=correct_in, category=category_in, is_valid = True)
         new_question.save()
  
 
@@ -515,6 +515,198 @@ class Question(models.Model):
 
         return ret_q_set
 
+    # empty db, and add default questions
+    def reset_to_default():
+
+        # clear all game question data
+        GameQuestions.objects.all().delete()
+
+        # clear all game answer data
+        GameAnswers.objects.all().delete()
+
+        # clear all the data from the table
+        Question.objects.all().delete()
+
+        # clear all the data from categories table
+        Category.objects.all().delete()
+
+        # clear all games data
+        Game.objects.all().delete()
+
+
+        # create a category and create, and fill the database 
+        sport = Category.objects.create(name = "Sport")
+        sport.save()
+
+        new_question = Question.objects.create(question = 'Koje godine je rodjen Leo Messi?', answer_one = '1987',answer_two = '1990', answer_three = '1986', answer_four='1988', correct = 1, category= sport, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koje godine su se spojile NBA i ABA(American Basketball Association)?', answer_one = '1966',answer_two = '1976', answer_three = '1986', answer_four='1996', correct = 2, category = sport, is_valid = True)
+        new_question.save()
+ 
+        new_question = Question.objects.create(question = 'Koja reprezentacija je osvojila prvo svetsko prvenstvo u fudbalu?', answer_one = 'Brazil',answer_two = 'Argentina', answer_three = 'Urugvaj', answer_four='Paragvaj', correct = 3, category = sport, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koji NBA tim ima najvise sampionskih titula?', answer_one = 'Boston Celtics',answer_two = 'LA Lakers', answer_three = 'Golden State Warriors', answer_four='Milwaukee Bucks', correct = 1, category = sport, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'U kom timu je Kristijano Ronaldo zapoceo svoju profesionalnu karijeru?', answer_one = 'Real Madrid',answer_two = 'Mancester junajted', answer_three = 'Sporting', answer_four='Porto', correct = 3, category = sport, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koliko ukupno olimpijskih medalja ima Majkl Felps?', answer_one = '30',answer_two = '28', answer_three = '26', answer_four='24', correct = 2, category = sport, is_valid = True)
+        new_question.save()
+        
+        new_question = Question.objects.create(question = 'Koji tim ima najvise osvojenih titula u Premier ligi(od njenog osnivanja 1992)?', answer_one = 'Liverpul', answer_two = 'Celsi', answer_three = 'Mancester junajted', answer_four='Arsenal', correct = 3, category = sport, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koji je jedini tim u Premier ligi koji je imao savrsenu sezonu(sezonu bez poraza)?', answer_one = 'Liverpul',answer_two = 'Arsenal', answer_three = 'Mancester junajted', answer_four='Mancester siti', correct = 2, category = sport, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Kako se zove covek koji je izmislio kosarku?', answer_one = 'Dzejms Nejsmit',answer_two = 'Dzejms Harden', answer_three = 'Dzejms Lebron', answer_four='Dzejms Bond', correct = 1, category = sport, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koje godine je FK Partizan igrao finale Lige Sampiona?', answer_one = '1946',answer_two = '1956', answer_three = '1966', answer_four='Nikad', correct = 3, category = sport, is_valid = True)
+        new_question.save()
+
+        # create a category and create, and fill the database 
+        music = Category.objects.create(name = "Music")
+        music.save()
+
+        new_question = Question.objects.create(question = 'Koji Jamajcanski reper je 1995 izdao pesmu "Bombastic"?', answer_one = 'Shaggy',answer_two = 'Sean Paul', answer_three = 'Shuggy', answer_four='Shrek th rapper', correct = 1, category= music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Dopunite naslov pesme grupe U2: "Hold me, Thrill Me, Kiss me ..."', answer_one = 'Feel me',answer_two = 'Beat me', answer_three = 'Kill me', answer_four='Miss me', correct = 3, category = music, is_valid = True)
+        new_question.save()
+ 
+        new_question = Question.objects.create(question = 'Koje godine su Bitlsi (The Beatles) izdali pesmu "Hey Jude"?', answer_one = '1963',answer_two = '1964', answer_three = '1966', answer_four='1968', correct = 4, category = music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koji Svedski DJ je 2004te izdao pesmu "Call on me"?', answer_one = 'Avicii',answer_two = 'Sweedish House Mafia', answer_three = 'Eric Prydz', answer_four='Tiesto', correct = 3, category = music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Tekst  "Since you\'ve gone I\'ve been lost without a trace /I dream at night I can only see your face" je deo koje Stingove pesme?', answer_one = 'Every breath you take',answer_two = 'Shape of my heart', answer_three = 'Desert rose', answer_four='Englishman in New York', correct = 1, category = music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Tekst "They told him don\'t you ever come around here / Don\'t want to see your face, you better disappear" je deo koje Majkl Dzeksonove pesme?', answer_one = 'Bad',answer_two = 'They don\'t care about us', answer_three = 'Beat it', answer_four='Smooth criminal', correct = 3, category = music, is_valid = True)
+        new_question.save()
+        
+        new_question = Question.objects.create(question = 'Koje godine je preminuo reper Mac Miller?', answer_one = '1998', answer_two = '2008', answer_three = '2017', answer_four='2018', correct = 4, category = music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koje godine je grupa Queen izdala pesmu "Bohemian rhapsody"?', answer_one = '1974',answer_two = '1975', answer_three = '1976', answer_four='1977', correct = 2, category = music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koje godine je rodjen reper Snoop Dogg?', answer_one = '1967',answer_two = '1971', answer_three = '1974', answer_four='1973', correct = 2, category = music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Gde se nalazi Rock\'n\'roll kuca slavnih?', answer_one = 'Springfild',answer_two = 'Nju Jork', answer_three = 'Klivland', answer_four='Hjuston', correct = 3, category = music, is_valid = True)
+        new_question.save()
+
+        # create a category and create, and fill the database 
+        music = Category.objects.create(name = "Music")
+        music.save()
+
+        new_question = Question.objects.create(question = 'Koji Jamajcanski reper je 1995 izdao pesmu "Bombastic"?', answer_one = 'Shaggy',answer_two = 'Sean Paul', answer_three = 'Shuggy', answer_four='Shrek th rapper', correct = 1, category= music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Dopunite naslov pesme grupe U2: "Hold me, Thrill Me, Kiss me ..."', answer_one = 'Feel me',answer_two = 'Beat me', answer_three = 'Kill me', answer_four='Miss me', correct = 3, category = music, is_valid = True)
+        new_question.save()
+ 
+        new_question = Question.objects.create(question = 'Koje godine su Bitlsi (The Beatles) izdali pesmu "Hey Jude"?', answer_one = '1963',answer_two = '1964', answer_three = '1966', answer_four='1968', correct = 4, category = music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koji Svedski DJ je 2004te izdao pesmu "Call on me"?', answer_one = 'Avicii',answer_two = 'Sweedish House Mafia', answer_three = 'Eric Prydz', answer_four='Tiesto', correct = 3, category = music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Tekst  "Since you\'ve gone I\'ve been lost without a trace /I dream at night I can only see your face" je deo koje Stingove pesme?', answer_one = 'Every breath you take',answer_two = 'Shape of my heart', answer_three = 'Desert rose', answer_four='Englishman in New York', correct = 1, category = music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Tekst "They told him don\'t you ever come around here / Don\'t want to see your face, you better disappear" je deo koje Majkl Dzeksonove pesme?', answer_one = 'Bad',answer_two = 'They don\'t care about us', answer_three = 'Beat it', answer_four='Smooth criminal', correct = 3, category = music, is_valid = True)
+        new_question.save()
+        
+        new_question = Question.objects.create(question = 'Koje godine je preminuo reper Mac Miller?', answer_one = '1998', answer_two = '2008', answer_three = '2017', answer_four='2018', correct = 4, category = music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koje godine je grupa Queen izdala pesmu "Bohemian rhapsody"?', answer_one = '1974',answer_two = '1975', answer_three = '1976', answer_four='1977', correct = 2, category = music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koje godine je rodjen reper Snoop Dogg?', answer_one = '1967',answer_two = '1971', answer_three = '1974', answer_four='1973', correct = 2, category = music, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Gde se nalazi Rock\'n\'roll kuca slavnih?', answer_one = 'Springfild',answer_two = 'Nju Jork', answer_three = 'Klivland', answer_four='Hjuston', correct = 3, category = music, is_valid = True)
+        new_question.save()
+        
+        # create a category and create, and fill the database 
+        geography = Category.objects.create(name = "Geography")
+        geography.save()
+
+        new_question = Question.objects.create(question = 'Koji je najseverniji glavni grad na svet?', answer_one = 'Otava',answer_two = 'Rejkjavik', answer_three = 'Ulanbator', answer_four='Helsinki', correct = 1, category= geography, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koja od ovih drzava ima tri glavna grada?', answer_one = 'Juznoafricka republika',answer_two = 'Holandija', answer_three = 'Izrael', answer_four='Bolivia', correct = 1, category = geography, is_valid = True)
+        new_question.save()
+ 
+        new_question = Question.objects.create(question = 'Koji je drugi po povrsini najveci kontinent na svetu?', answer_one = 'Afrika',answer_two = 'Severna Amerika', answer_three = 'Juzna Amerika', answer_four='Evvropa', correct = 1, category = geography, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koja zemlja ima najduzu obalu na svetu?', answer_one = 'Australia',answer_two = 'Kanada', answer_three = 'Indonezija', answer_four='Grcka', correct = 2, category = geography, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Kako se zove glavni grad Jordan-a?', answer_one = 'Abu dabi(Abu Dhabi)',answer_two = 'Kito(Quito)', answer_three = 'Aman(Amman)', answer_four='Dakar(Dakar)', correct = 3, category = geography, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Kako se zove glavni grad Gane', answer_one = 'Beirut(Beirut)',answer_two = 'Manila(Manilla)', answer_three = 'Akra(Accra)', answer_four='Kinsasa(Kinshasa)', correct = 3, category = geography, is_valid = True)
+        new_question.save()
+        
+        new_question = Question.objects.create(question = 'Kako se zove glavni grad Nigerije?', answer_one = 'Gitega(Gitega)', answer_two = 'Harare(Harare)', answer_three = 'Abudza(Abuja)', answer_four='Aman(Amman)', correct = 3, category = geography, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koji je bio glavni grad Obale slonovace od 1933 do 1983 godine?', answer_one = 'Daloa',answer_two = 'Kumasi', answer_three = 'Abidjan', answer_four='San Pedro', correct = 3, category = geography, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koji je bio glavni grad Zapadne Nemacke od 1949 do 1990', answer_one = 'Zapadni Berlin',answer_two = 'Bon', answer_three = 'Stutgart', answer_four='Bremen', correct = 3, category = geography, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koji je bio glavni grad Kine od 1945 do 1949?', answer_one = 'Nanking',answer_two = 'Chang\'an', answer_three = 'Kaifeng', answer_four='Hangzhou', correct = 1, category = geography, is_valid = True)
+        new_question.save()
+        
+
+        # NOTE dovrsiti popunjavanje za istoriju
+        # create a category and create, and fill the database 
+        history = Category.objects.create(name = "History")
+        history.save()
+
+        new_question = Question.objects.create(question = 'Koja istorijska licnost je zivela od 1758 do 1794?', answer_one = 'Fernando Magelan',answer_two = 'Maksimilijan Robespijer', answer_three = 'Frencis Bejkon', answer_four='Napoleon', correct = 1, category= history, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Kako se zove Portugalski istrazivac koji je poznat kao prvi Evropljanin koji je doplovio do Indije kroz Rt Dobre Nade?', answer_one = 'Amerigo Vespuci',answer_two = 'Vasko Da Gama', answer_three = 'Francisko Pizaro', answer_four='Bartolomeo Dijaz', correct = 2, category = history, is_valid = True)
+        new_question.save()
+ 
+        new_question = Question.objects.create(question = 'Kako se zove prvi istrazivac koji je tvrdio da Kolumbo nije doplovio do istocne Azije, vec do novog(do tada nepoznatog) sveta?', answer_one = 'Amerigo Vespuci',answer_two = 'Marko Polo', answer_three = 'Bartolomeo Dijaz', answer_four='Francisko Pizaro', correct = 1, category = history, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'U kom gradu je izvrsen atentat na Abrahama Linkolna?', answer_one = 'Vasington DC',answer_two = 'Nju Jork', answer_three = 'Atlanta', answer_four='Ricmond', correct = 2, category = history, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'U kom gradu je izvrsen atentat na Dzona F. Kenedija?', answer_one = 'Nju Jork',answer_two = 'Nju Orleans', answer_three = 'Dalas', answer_four='Vasington DC', correct = 3, category = history, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = '', answer_one = 'Beirut(Beirut)',answer_two = 'Manila(Manilla)', answer_three = 'Akra(Accra)', answer_four='Kinsasa(Kinshasa)', correct = 3, category = history, is_valid = True)
+        new_question.save()
+        
+        new_question = Question.objects.create(question = 'Kako se zove glavni grad Nigerije?', answer_one = 'Gitega(Gitega)', answer_two = 'Harare(Harare)', answer_three = 'Abudza(Abuja)', answer_four='Aman(Amman)', correct = 3, category = history, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koji je bio glavni grad Obale slonovace od 1933 do 1983 godine?', answer_one = 'Daloa',answer_two = 'Kumasi', answer_three = 'Abidjan', answer_four='San Pedro', correct = 3, category = history, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koji je bio glavni grad Zapadne Nemacke od 1949 do 1990', answer_one = 'Zapadni Berlin',answer_two = 'Bon', answer_three = 'Stutgart', answer_four='Bremen', correct = 3, category = history, is_valid = True)
+        new_question.save()
+
+        new_question = Question.objects.create(question = 'Koji je bio glavni grad Kine od 1945 do 1949?', answer_one = 'Nanking',answer_two = 'Chang\'an', answer_three = 'Kaifeng', answer_four='Hangzhou', correct = 1, category = history, is_valid = True)
+        new_question.save()
+
+        
 class GameQuestions(models.Model):
     """
     Table that contains all the questions for 
