@@ -1,0 +1,89 @@
+{% extends "quiz/base.html" %} {% block content %}
+
+<!-- Page Content -->
+
+<div class="container">
+  <div class="row justify-content-center" id="trophy_h1">
+    <h1 class="text-center">Game stats</h1>
+  </div>
+  <h2>WINNER: {{game.winner.username}}</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead class="thead-light">
+          <tr>
+              <th scope="col">
+                Q/P
+              </td>
+              <th scope="col">
+                {{game.player_one.username}}
+              </td>
+              <th scope="col">
+                {{game.player_two.username}}
+              </td>
+              <th scope="col">
+                {{game.player_three.username}}
+              </td>
+              <th scope="col">
+                {{game.player_four.username}}
+              </td>
+          </tr>
+      </thead>
+    {%for question in questions%}
+    <tr>
+        <td>
+        {{question.index}}
+        </td>
+        <td>
+        {{question.p1_pts}}
+        </td>
+        <td>
+        {{question.p2_pts}}
+        </td>
+        <td>
+        {{question.p3_pts}}
+        </td>
+        <td>
+        {{question.p4_pts}}
+        </td>
+    </tr>
+    {%endfor%}
+    <tr>
+        <td>
+        Total
+        </td>
+        <td>
+        {{game.player_one_pts}}
+        </td>
+        <td>
+        {{game.player_two_pts}}
+        </td>
+        <td>
+        {{game.player_three_pts}}
+        </td>
+        <td>
+        {{game.player_four_pts}}
+        </td>
+    </tr>
+    <tr>
+        <td>
+        Exp+
+        </td>
+        <td>
+        {{p1exp}}
+        </td>
+        <td>
+        {{p2exp}}
+        </td>
+        <td>
+        {{p3exp}}
+        </td>
+        <td>
+        {{p4exp}}
+        </td>
+    </tr>
+  </table>
+  </div>
+</div>
+
+<!-- /Page Content -->
+{% endblock content%}

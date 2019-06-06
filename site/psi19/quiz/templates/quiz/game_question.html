@@ -7,27 +7,42 @@
 
 {% block content %}
 
+
+
 <div class="container">
-    <div class="row d-flex justify-content-center text-center">
-        <div class="col-md-10" style="margin-top: 50px; margin-bottom: 50px; border: 1px #2699FB solid; padding: 20px;">
+    <div class="row d-flex justify-content-center">
+
+        <div class="col-md-10 text-center" style="margin-top: 50px; margin-bottom: 50px; border: 1px #2699FB solid; padding: 20px;">
             <h3 style="color: #2699FB; margin-bottom: 10px;">Game Question</h3>
             <h3 id="question_text" style="color: #2699FB"></h3>
         </div>
 
-        <div class="col-md-5" style="margin: 5px; border: 1px #2699FB solid; background: #2699FB">
-            <button type="button" class="btn" onclick="answer(0);" style="width: 100%; height: 100%;"><h3 id="answer_one" style="color: white;"></h3></button>
+        <div class="col-md-10 text-center">
+            <h3 id="time" style="color: #2699FB"></h3>
         </div>
 
-        <div class="col-md-5" style="margin: 5px; border: 1px #2699FB solid; background: #2699FB">  
-            <button type="button" class="btn" onclick="answer(1);" style="width: 100%; height: 100%;"><h3 id="answer_two" style="color: white;"></h3></button>
+        <div class="col-md-10 text-center">
+            <h3 id="feedback" style="color: #2699FB"></h3>
         </div>
 
-        <div class="col-md-5" style="margin: 5px; border: 1px #2699FB solid; background: #2699FB">
-            <button type="button" class="btn" onclick="answer(2);" style="width: 100%; height: 100%;"><h3 id="answer_three" style="color: white;"></h3></button>
+        <div class="col-md-10 text-center">
+            <h3 id="countdown" style="color: #2699FB"></h3>
         </div>
 
-        <div class="col-md-5" style="margin: 5px; border: 1px #2699FB solid; background: #2699FB">      
-            <button type="button" class="btn" onclick="answer(3);" style="width: 100%; height: 100%;"><h3 id="answer_four" style="color: white;"></h3></button>
+        <div id="btn1-wrapper" class="col-md-5" style="background: #2699FB; margin: 10px;">
+                <button id = "btn1" class="btn" type="button" onclick="answer(0);" style="width: 100%; height:100%;"><h3 id="answer_one" style="color: white;"></h3></button>
+        </div>
+
+        <div id="btn1-wrapper" class="col-md-5" style="background: #2699FB; margin: 10px;">
+                <button id = "btn2" class="btn" type="button" onclick="answer(1);" style="width: 100%; height:100%;"><h3 id="answer_two" style="color: white;"></h3></button>
+        </div>
+
+        <div id="btn1-wrapper" class="col-md-5" style="background: #2699FB; margin: 10px;">
+                <button id = "btn3" class="btn" type="button" onclick="answer(2);" style="width: 100%; height:100%;"><h3 id="answer_three" style="color: white;"></h3></button>
+        </div>
+
+        <div id="btn1-wrapper" class="col-md-5" style="background: #2699FB; margin: 10px;">
+            <button id = "btn4" class="btn" type="button" onclick="answer(3);" style="width: 100%; height:100%;"><h3 id="answer_four" style="color: white;"></h3></button>
         </div>
 
 
@@ -41,8 +56,15 @@
 
 
 
+
+
+
+
+
+
 <script>
-    var user_id         = "{{user_id}}"
+    var user_id         = "{{user_id}}";
+    var correct_answer = "{{question.correct}}"
 
     var question_id     = "question_text";
     var question_text   = "{{question.question}}";
@@ -66,17 +88,55 @@
 
     var gameSocket = new WebSocket(ws_path);
 
+    var startTime = new Date();
+    var msPassed;
+    setInterval(myTimer, 1);
+
+    function myTimer() {
+      var d = new Date();
+      msPassed = d.getTime() - startTime.getTime();
+      document.getElementById("time").innerHTML = msPassed;
+      if(msPassed>10000){
+          document.getElementById("time").innerHTML = "Time is up";
+         if(document.getElementById("btn1").disabled == false)
+          answer(-1);
+      }
+    }
+
     function answer(answer_ind) {
         console.log("Answer: " + answer_ind);
-        
+        //disable buttons after an answer so that no one can answer twice
+        document.getElementById("btn1").disabled = true;
+        document.getElementById("btn2").disabled = true;
+        document.getElementById("btn3").disabled = true;
+        document.getElementById("btn4").disabled = true;
+        //calculate timeBonus
+        var timeBonus = Math.round((5000 - msPassed)/100)
+        //give feedback to the player (correct answer/incorrect answer)
+        if(correct_answer==(answer_ind+1)) document.getElementById("feedback").innerHTML = "Correct! Time bonus = "+ timeBonus;
+        else document.getElementById("feedback").innerHTML = "Incorrect :(";
+        //colour the user choice
+        if(answer_ind == 0) document.getElementById("btn1-wrapper").style = "background-color: #FF0000; margin: 10px;";
+        if(answer_ind == 1) document.getElementById("btn2-wrapper").style = "background-color: #FF0000; margin: 10px;";
+        if(answer_ind == 2) document.getElementById("btn3-wrapper").style = "background-color: #FF0000; margin: 10px;";
+        if(answer_ind == 3) document.getElementById("btn4-wrapper").style = "background-color: #FF0000; margin: 10px;";
+        //colour the correct button
+        if(correct_answer == 1) document.getElementById("btn1-wrapper").style = "background-color: #4CAF50; margin: 10px;";
+        if(correct_answer == 2) document.getElementById("btn2-wrapper").style = "background-color: #4CAF50; margin: 10px;";
+        if(correct_answer == 3) document.getElementById("btn3-wrapper").style = "background-color: #4CAF50; margin: 10px;";
+        if(correct_answer == 4) document.getElementById("btn4-wrapper").style = "background-color: #4CAF50; margin: 10px;";
         answer_data = {
             'command':      'answer',
             'game_id':      game_id,
             'answer_ind':   answer_ind,
-            'user_id':      user_id
+            'user_id':      user_id,
+            'msPassed':     msPassed
         };
-
-        gameSocket.send(JSON.stringify(answer_data));
+        answer_data = JSON.stringify(answer_data);
+        send_answer(answer_data);
+    }
+    function send_answer(answer_data){
+        gameSocket.send(answer_data);
     }
 
     gameSocket.onmessage = function(message) {
@@ -85,8 +145,13 @@
         var data = JSON.parse(message.data);
         
         if (data.msg_type == 3) {
-            window.location.replace("/game/" + game_id);
-            return
+            //before we move on to the next question, we show a message and a timer so the players can prepare
+            var seconds_to_next = 6;
+            document.getElementById("countdown").innerHTML = "Next question in "+seconds_to_next;
+            setInterval(function(){seconds_to_next--;document.getElementById("countdown").innerHTML = "Next question in "+seconds_to_next; }, 500);
+            setTimeout(function(){window.location.replace("/game/" + game_id);
+            return},3000);
+            
         }
     }
 </script>

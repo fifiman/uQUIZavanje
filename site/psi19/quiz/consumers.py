@@ -67,11 +67,11 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             elif command == 'answer':
                 answer_ind = content['answer_ind']
                 user_id    = content['user_id']
-                
+                msPassed = content['msPassed']
                 game = await get_game_or_error(int(self.game_id))
                 user = await get_user_or_error(int(user_id))
 
-                is_correct, state_changed = game.answer(user, answer_ind)
+                is_correct, state_changed = game.answer(user, answer_ind, msPassed)
 
                 # Send user if their answer is correct or not.
                 await self.send_json({

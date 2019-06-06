@@ -8,7 +8,7 @@ from quiz.forms import *
 from django.views import generic
 from django.views.generic import UpdateView
 from django.http import Http404
-
+import math
 
 
 def home(request):
@@ -52,7 +52,94 @@ def game(request, game_id):
 
     # Game over.
     if game.game_state == Game.GAME_OVER:
-        return HttpResponse('Game over. Print the stats here.')
+        template = loader.get_template('quiz/game_end_stats.html')
+        max_pts = max([game.player_one_pts, game.player_two_pts, game.player_three_pts, game.player_four_pts])
+        if game.num_players == 1:
+            multiplier = 0
+        elif game.num_players == 2:
+            multiplier = 1
+        elif game.num_players == 3:
+            multiplier = 2
+        elif game.num_players == 4:
+            multiplier = 3
+        #player one wins, update rankings
+        if game.player_one_pts==max_pts:
+            game.winner = game.player_one
+            game.player_one.ranking+=20
+            if game.player_two is not None:
+                    game.player_two.ranking-=20
+            if game.player_three is not None:
+                game.player_three.ranking-=20
+            if game.player_four is not None:    
+                game.player_four.ranking-=20
+        #player two wins, update rankings
+        if game.player_two_pts==max_pts:
+            game.winner = game.player_two
+            game.player_one.ranking-=20
+            if game.player_two is not None:
+                game.player_two.ranking+=20
+            if game.player_three is not None:
+                game.player_three.ranking-=20
+            if game.player_four is not None:
+                game.player_four.ranking-=20
+        #player three wins, update rankings
+        if game.player_three_pts==max_pts:
+            game.winner = game.player_three
+            game.player_one.ranking-=20
+            if game.player_two is not None:
+                game.player_two.ranking-=20
+            if game.player_three is not None:
+                game.player_three.ranking+=20
+            if game.player_four is not None:
+                game.player_four.ranking-=20
+        #player four wins, update rankings
+        if game.player_four_pts==max_pts:
+            game.winner = game.player_four
+            game.player_one.ranking-=20
+            if game.player_two is not None:
+                game.player_two.ranking-=20
+            if game.player_three is not None:
+                game.player_three.ranking-=20
+            if game.player_four is not None:
+                game.player_four.ranking+=20
+        #make sure no one has a negative ranking
+        if game.player_one.ranking<0:
+            game.player_one.ranking = 0
+        #add points to experience and calculate new levels  
+        game.player_one.exp+=int((game.player_one_pts/10))*multiplier
+        game.player_one.level = math.floor(game.player_one.exp/200)+1
+        if game.player_two is not None:
+            if game.player_two.ranking<0:
+                game.player_two.ranking = 0
+            game.player_two.exp+=int((game.player_two_pts/10))*multiplier
+            game.player_two.level = math.floor(game.player_two.exp/200)+1
+        if game.player_three is not None:
+            if game.player_three.ranking<0:
+                game.player_three.ranking = 0
+            game.player_three.exp+=int((game.player_three_pts/10))*multiplier
+            game.player_three.level = math.floor(game.player_four.exp/200)+1
+        if game.player_four is not None:
+            if game.player_four.ranking<0:
+                game.player_four.ranking = 0 
+            game.player_four.exp+=int((game.player_four_pts/10))*multiplier
+            game.player_four.level = math.floor(game.player_four.exp/200)+1
+        game.player_one.save()
+        if game.player_two is not None:
+            game.player_two.save()
+        if game.player_three is not None:
+            game.player_three.save()
+        if game.player_four is not None:
+            game.player_four.save()
+        game.save()
+        context = {
+            "game": game,
+            "questions": Game.get_questions_for_game(game),
+            "p1exp": int((game.player_one_pts/10))*multiplier,
+            "p2exp": int((game.player_two_pts/10))*multiplier,
+            "p3exp": int((game.player_three_pts/10))*multiplier,
+            "p4exp": int((game.player_four_pts/10))*multiplier,
+        }
+        return HttpResponse(template.render(context,request))
 
     if game.user_part_of_game(request.user):
         if game.game_state == Game.GAME_IN_PLAY:
