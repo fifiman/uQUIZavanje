@@ -40,7 +40,8 @@ def quickgame(request, category):
     
     new_game.save()
 
-    return game(request, new_game.id)
+    # Redirect to view with game id.
+    return redirect('/game/' + str(new_game.id))
 
 def game(request, game_id):    
     # Fetch game from DB.
