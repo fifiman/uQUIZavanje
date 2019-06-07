@@ -10,7 +10,16 @@ from django.views.generic import UpdateView
 from django.http import Http404
 import math
 
-
+'''
+Zbog strukture koda koju zahteva Django, umesto klasa u ovom projektu postoji jedan veliki views.py fajl i jedan veliki models.py fajl.
+Ovi fajlovi enkapsuliraju najveci deo onoga sto u nekom drugom okruzenju predstavljaju modeli i kontroleri
+S obzirom na monolitnost samih fajlova, nije moguce odrediti dve osobe odgovorne za svaki fajl, jer su im svi clanovi tima znacajno doprineli   
+'''
+'''
+Home metoda koja vraca glavnu stranicu aplikacije
+@param Request request
+@return HttpResponse
+'''
 def home(request):
     template = loader.get_template('quiz/home.html')
 
@@ -18,7 +27,11 @@ def home(request):
     context = {}
 
     return HttpResponse(template.render(context, request))
-
+'''
+Metoda koja se poziva prilikom kreiranja nove partije, i kao argument uzima kategoriju pitanja za tu partiju
+@param Request request, Category category
+@return HttpResponse
+'''
 def quickgame(request, category):
     """
     Create a quick game.
@@ -48,7 +61,12 @@ def quickgame(request, category):
 
     # Redirect to view with game id.
     return redirect('/game/' + str(new_game.id))
-
+'''
+Metoda koja realizuje logiku igre, u zavisnosti od stanja partije poslace korisnika u cekaonicu, na sledece pitanje ili na ekran za kraj igre
+Prima argument game_id koji upucuje na partiju kreiranu u metodu quickgame
+@param Request request, Int game_id
+@return HttpResponse
+'''
 def game(request, game_id):    
     # Fetch game from DB.
     if not Game.objects.filter(id=game_id).exists():
@@ -195,7 +213,12 @@ def game(request, game_id):
         return HttpResponse("Can't join, too many players in room.")
 
     return waiting_room(request, game_id)
-
+'''
+Metoda koju poziva game ukoliko partija nije pocela, vraca waiting_room.html
+Prima argument game_id koji upucuje na partiju kreiranu u metodu quickgame
+@param Request request, Int game_id
+@return HttpResponse
+'''
 def waiting_room(request, game_id):
     # Send to waiting room.
     template = loader.get_template('quiz/game_waiting_room.html')
@@ -221,7 +244,12 @@ def waiting_room(request, game_id):
     }
 
     return HttpResponse(template.render(context, request))
-
+'''
+Metoda koju poziva game ukoliko je partija u toku i korisnik je u partiji, vraca game_question.html
+Prima argument game koji upucuje na partiju kreiranu u metodu quickgame
+@param Request request, Game game
+@return HttpResponse
+'''
 def game_question(request, game):
 
     # Return info to the current question.
@@ -236,7 +264,12 @@ def game_question(request, game):
 
     template = loader.get_template('quiz/game_question.html')
     return HttpResponse(template.render(context, request))
-
+'''
+Metoda za stvaranje novog korisnika, ukoliko je pozvana prvi put (klikom na dugme) vraca signup.html
+Ukoliko je pozvana post metodom, radi provere parametara i ispisuje gresku odnosno stvara novog korisnika u bazi
+@param Request request
+@return HttpResponse
+'''
 def signup(request):    
     message = None  
 
@@ -281,7 +314,11 @@ def signup(request):
         context['message'] = message
 
     return HttpResponse(template.render(context, request))
-
+'''
+Metoda koja puni i vraca stranicu rank_list.html sa 10 najbolje rankiranih igraca i prijatelja
+@param Request request
+@return HttpResponse
+'''
 #searches for 10 best players overall
 def global_rank_list(request):
     template = loader.get_template('quiz/rank_list.html')
@@ -295,7 +332,11 @@ def global_rank_list(request):
 
     return HttpResponse(template.render(context, request))
 
-
+'''
+Metoda koja puni i vraca stranicu search_results rezultatima pretrage korisnika po unetoj reci
+@param Request request
+@return HttpResponse
+'''
 # search by username
 def search(request):
 
@@ -332,7 +373,12 @@ def search(request):
     return render(request, 'quiz/search_results.html', {'found' : ret})
 
 # friendship related methods
-
+'''
+Metoda koja sadrzi logiku slanja zahteva za prijateljstvo
+Value argument sluzi da bi se razlikovao korisnik u sesiji i korisnik ciji profil posecujemo, a na koji treba da nas vrati ova metoda
+@param Request request, Int value
+@return HttpResponse
+'''
 # secured    
 def send_request(request, value):    
 
@@ -347,7 +393,12 @@ def send_request(request, value):
     
         return redirect('/friends_page/'+value)
     return redirect('/home')
-
+'''
+Metoda koja sadrzi logiku ponistavanja zahteva za prijateljstvo
+Value argument sluzi da bi se razlikovao korisnik u sesiji i korisnik ciji profil posecujemo, a na koji treba da nas vrati ova metoda
+@param Request request, Int value
+@return HttpResponse
+'''
 # secured
 def cancel_request(request, value):
     if request.user.is_authenticated:
@@ -361,7 +412,12 @@ def cancel_request(request, value):
     
         return redirect('/friends_page/'+value)
     return redirect('/home')
-
+'''
+Metoda koja sadrzi logiku prihvatanja zahteva za prijateljstvo
+Value argument sluzi da bi se razlikovao korisnik u sesiji i korisnik ciji profil posecujemo, a na koji treba da nas vrati ova metoda
+@param Request request, Int value
+@return HttpResponse
+'''
 #secured
 def confirm_request(request, value):    
 
@@ -376,7 +432,12 @@ def confirm_request(request, value):
         
         return redirect('/friends_page/'+value)
     return redirect('/home')
-
+'''
+Metoda koja sadrzi logiku odbijanja zahteva za prijateljstvo
+Value argument sluzi da bi se razlikovao korisnik u sesiji i korisnik ciji profil posecujemo, a na koji treba da nas vrati ova metoda
+@param Request request, Int value
+@return HttpResponse
+'''
 # secured
 def deny_request(request, value):    
 
@@ -391,6 +452,12 @@ def deny_request(request, value):
     
         return redirect('/friends_page/'+value)
     return ('/home')
+'''
+Metoda koja sadrzi logiku brisanja prijatelja
+Value argument sluzi da bi se razlikovao korisnik u sesiji i korisnik ciji profil posecujemo, a na koji treba da nas vrati ova metoda
+@param Request request, Int value
+@return HttpResponse
+'''
 # secured
 def unfriend(request, value):    
     
@@ -409,7 +476,11 @@ def unfriend(request, value):
 # friendship related methods done
 
 # Question submission methods : SENIOR + only - 
-
+'''
+Metoda koja vraca formu za dodavanje prijatelja ukoliko je korisnik sa odgovarajucim privilegijama
+@param Request request
+@return HttpResponse
+'''
 # secured
 def submit_a_question(request):
     user = request.user
@@ -457,7 +528,11 @@ def submit_a_question(request):
             return render(request, 'quiz/add_question.html', {'form': form, 'message' : message})
 
     return redirect('/home')        
-
+'''
+Metoda koja vraca stranicu za prihvatanje predlozenih pitanja za moderatora
+@param Request request
+@return HttpResponse
+'''
 # secured
 def needs_validation(request):
     
@@ -475,7 +550,11 @@ def needs_validation(request):
             return HttpResponse(template.render(context, request))
 
     return redirect('\home')
-
+'''
+Metoda koja sadrzi logiku prihvatanja predlozenih pitanja za moderatora
+@param Request request
+@return HttpResponse
+'''
 # secured
 def approve_question(request):
     
@@ -492,7 +571,11 @@ def approve_question(request):
                 Question.delete_question(recieved_id)
 
     return redirect('/needs_validation')
-
+'''
+Metoda koja vraca pregled svih pitanja za administratora
+@param Request request
+@return HttpResponse
+'''
 def admin_question_overview(request):
     user = request.user
 
@@ -505,7 +588,11 @@ def admin_question_overview(request):
         return render(request, 'quiz/list_all_questions.html', context)
 
     return redirect('/home')
-
+'''
+Metoda koja sadrzi logiku brisanja pitanja za administratora
+@param Request request
+@return HttpResponse
+'''
 def admin_remove_question(request):
     
     user = request.user
@@ -530,6 +617,11 @@ def admin_remove_question(request):
 # moderator related views
 
 # secured
+'''
+Metoda koja vraca prikaz kandidata za moderatorsku poziciju
+@param Request request
+@return HttpResponse
+'''
 def moderator_candidates(request):
 
     user = request.user
@@ -545,7 +637,11 @@ def moderator_candidates(request):
             return HttpResponse(template.render(context, request))
     
     return redirect('/home')
-
+'''
+Metoda koja sadrzi logiku prihvatanja ili odbijanja kandidata za moderatorsku poziciju
+@param Request request
+@return HttpResponse
+'''
 # secured
 def approve_moderator(request):
     
@@ -565,7 +661,11 @@ def approve_moderator(request):
             return redirect('/moderator_candidates/')
 
     return redirect('/home')
-
+'''
+Metoda koja sadrzi logiku slanja zahteva za moderatorstvo
+@param Request request
+@return HttpResponse
+'''
 # secured    
 def submit_wants_moderator(request):
     user = request.user
@@ -576,7 +676,12 @@ def submit_wants_moderator(request):
             User.set_wants_moderator(user.username)
 
     return redirect('/home')    
-    
+'''
+Metoda koja sadrzi puni i vraca stranicu my_profile.html
+Parametar value sluzi da razlikujemo korisnika iz sesije i korisnika ciji profil posecujemo
+@param Request request, Int value
+@return HttpResponse
+'''
 # secured
 def my_profile(request, value):
     user = User.get_by_id(value)
@@ -637,7 +742,12 @@ def my_profile(request, value):
         return HttpResponse(template.render(context, request))
     else: 
         return redirect('/home')
-    
+'''
+Metoda koja sadrzi puni i vraca stranicu trophy_page.html
+Parametar value sluzi da razlikujemo korisnika iz sesije i korisnika ciji profil posecujemo
+@param Request request, Int value
+@return HttpResponse
+'''   
 # secured
 def trophy_page(request, value):
     if request.user.is_authenticated:
@@ -667,7 +777,12 @@ def trophy_page(request, value):
         return HttpResponse(template.render(context, request))
     else: 
         return redirect('/home')
-
+'''
+Metoda koja sadrzi puni i vraca stranicu friends_page.html
+Parametar value sluzi da razlikujemo korisnika iz sesije i korisnika ciji profil posecujemo
+@param Request request, Int value
+@return HttpResponse
+'''   
 # secured
 def friends_page(request, value):
     if request.user.is_authenticated:
@@ -695,7 +810,12 @@ def friends_page(request, value):
         return HttpResponse(template.render(context, request))
     else: 
         return redirect('/home')        
-
+'''
+Metoda koja sadrzi puni i vraca stranicu games_overview.html
+Parametar value sluzi da razlikujemo korisnika iz sesije i korisnika ciji profil posecujemo
+@param Request request, Int value
+@return HttpResponse
+'''   
 def games_overview(request, value):
     if request.user.is_authenticated:
         user = User.get_by_id(value)
@@ -708,7 +828,12 @@ def games_overview(request, value):
         return HttpResponse(template.render(context, request))
     else: 
         return redirect('/home')
-
+'''
+Metoda koja vraca stranicu za izmenu pitanja (ukoliko je pozvana prvi put) ili radi neophodne provere i azurira pitanje ako je pozvana post metodom
+Parametar pk sluzi da pristupimo pitanju koje menjamo
+@param Request request, Int pk
+@return HttpResponse
+''' 
 def edit_question(request, pk):
     user = request.user
     question = Question.get_by_id(pk)
@@ -737,7 +862,12 @@ def edit_question(request, pk):
                     
                 return redirect('/admin_question_overview')
             return render(request, 'quiz/edit_question.html', {'form': form, 'message': message, 'qid': question.id}) 
-    return redirect('/home')    
+    return redirect('/home')
+'''
+Metoda koja sadrzi logiku za izmenu avatara
+@param Request request
+@return HttpResponse
+'''     
 # secured
 def change_avatar(request):
 
@@ -754,7 +884,11 @@ def change_avatar(request):
 
     # if not logged in just redirect to home    
     return redirect('/home')
-
+'''
+Metoda koja vraca stranicu za izbor avatara
+@param Request request
+@return HttpResponse
+'''  
 # secured
 def choose_avatar(request):
     user = request.user
@@ -768,7 +902,11 @@ def choose_avatar(request):
         return HttpResponse(template.render(context, request))
     
     return redirect('\home')
-
+'''
+Metoda koja vraca stranicu za podnosenje zahteva za blokiranje korisnika
+@param Request request
+@return HttpResponse
+'''  
 def report_form(request):
 
     user = request.user
@@ -785,7 +923,11 @@ def report_form(request):
 
     return home(request)
 
-
+'''
+Metoda koja sadrzi logiku podnosenja zahteva za blokiranje korisnika
+@param Request request
+@return HttpResponse
+''' 
 def report_form_submit(request):
 
     user = request.user
@@ -801,7 +943,11 @@ def report_form_submit(request):
 
     return home(request)
 
-
+'''
+Metoda koja vraca prikaz zahteva za blokiranje korisnika
+@param Request request
+@return HttpResponse
+''' 
 def report_list(request):
 
     user = request.user
@@ -819,7 +965,11 @@ def report_list(request):
 
     return home(request)
 
-
+'''
+Metoda koja sadrzi logiku za odobravanje ili brisanje zahteva za blokiranje korisnika
+@param Request request
+@return HttpResponse
+''' 
 def approve_report(request):
     user = request.user
 
