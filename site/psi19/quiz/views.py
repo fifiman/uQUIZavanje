@@ -62,46 +62,47 @@ def game(request, game_id):
             multiplier = 2
         elif game.num_players == 4:
             multiplier = 3
-        #player one wins, update rankings
-        if game.player_one_pts==max_pts:
-            game.winner = game.player_one
-            game.player_one.ranking+=20
-            if game.player_two is not None:
+        if game.num_players>1:
+            #player one wins, update rankings
+            if game.player_one_pts==max_pts:
+                game.winner = game.player_one
+                game.player_one.ranking+=20
+                if game.player_two is not None:
+                        game.player_two.ranking-=20
+                if game.player_three is not None:
+                    game.player_three.ranking-=20
+                if game.player_four is not None:    
+                    game.player_four.ranking-=20
+            #player two wins, update rankings
+            if game.player_two_pts==max_pts:
+                game.winner = game.player_two
+                game.player_one.ranking-=20
+                if game.player_two is not None:
+                    game.player_two.ranking+=20
+                if game.player_three is not None:
+                    game.player_three.ranking-=20
+                if game.player_four is not None:
+                    game.player_four.ranking-=20
+            #player three wins, update rankings
+            if game.player_three_pts==max_pts:
+                game.winner = game.player_three
+                game.player_one.ranking-=20
+                if game.player_two is not None:
                     game.player_two.ranking-=20
-            if game.player_three is not None:
-                game.player_three.ranking-=20
-            if game.player_four is not None:    
-                game.player_four.ranking-=20
-        #player two wins, update rankings
-        if game.player_two_pts==max_pts:
-            game.winner = game.player_two
-            game.player_one.ranking-=20
-            if game.player_two is not None:
-                game.player_two.ranking+=20
-            if game.player_three is not None:
-                game.player_three.ranking-=20
-            if game.player_four is not None:
-                game.player_four.ranking-=20
-        #player three wins, update rankings
-        if game.player_three_pts==max_pts:
-            game.winner = game.player_three
-            game.player_one.ranking-=20
-            if game.player_two is not None:
-                game.player_two.ranking-=20
-            if game.player_three is not None:
-                game.player_three.ranking+=20
-            if game.player_four is not None:
-                game.player_four.ranking-=20
-        #player four wins, update rankings
-        if game.player_four_pts==max_pts:
-            game.winner = game.player_four
-            game.player_one.ranking-=20
-            if game.player_two is not None:
-                game.player_two.ranking-=20
-            if game.player_three is not None:
-                game.player_three.ranking-=20
-            if game.player_four is not None:
-                game.player_four.ranking+=20
+                if game.player_three is not None:
+                    game.player_three.ranking+=20
+                if game.player_four is not None:
+                    game.player_four.ranking-=20
+            #player four wins, update rankings
+            if game.player_four_pts==max_pts:
+                game.winner = game.player_four
+                game.player_one.ranking-=20
+                if game.player_two is not None:
+                    game.player_two.ranking-=20
+                if game.player_three is not None:
+                    game.player_three.ranking-=20
+                if game.player_four is not None:
+                    game.player_four.ranking+=20
         #make sure no one has a negative ranking
         if game.player_one.ranking<0:
             game.player_one.ranking = 0
@@ -138,6 +139,7 @@ def game(request, game_id):
             "p2exp": int((game.player_two_pts/10))*multiplier,
             "p3exp": int((game.player_three_pts/10))*multiplier,
             "p4exp": int((game.player_four_pts/10))*multiplier,
+            "winner": game.num_players>1,
         }
         return HttpResponse(template.render(context,request))
 
