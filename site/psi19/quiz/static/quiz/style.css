@@ -582,7 +582,11 @@ body {
     Create Game
 \*--------------------------------*/
 
-
+.player_in_game {
+  margin-left: 20px; 
+  margin-right: 20px; 
+  border: 1px #2699FB solid;
+}
 
 
 /*--------------------------------*\
