@@ -3,10 +3,14 @@
 <!-- Page Content -->
 
 <div class="container">
-  <div class="row justify-content-center" id="trophy_h1">
+  <div class="row justify-content-center">
     <h1 class="text-center">Game stats</h1>
   </div>
-  <h2>WINNER: {{game.winner.username}}</h2>
+  {%if winner%}
+  <div class="row justify-content-center">
+      <h2 class="text-center" style="color: green">Winner: {{game.winner.username}}</h2>
+  </div>
+  {%endif%}
   <div class="table-responsive">
     <table class="table table-bordered">
       <thead class="thead-light">

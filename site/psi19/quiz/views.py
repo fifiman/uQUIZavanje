@@ -172,6 +172,7 @@ def game(request, game_id):
             "p2exp": int((game.player_two_pts/10))*multiplier,
             "p3exp": int((game.player_three_pts/10))*multiplier,
             "p4exp": int((game.player_four_pts/10))*multiplier,
+            "winner": game.num_players>1,
         }
         return HttpResponse(template.render(context,request))
 
@@ -229,7 +230,8 @@ def game_question(request, game):
     context = {
         'game_id':      game.id,
         'user_id':      request.user.id,
-        'question':     current_question
+        'question':     current_question,
+        'game':         game,
     }
 
     template = loader.get_template('quiz/game_question.html')
@@ -804,7 +806,7 @@ def report_list(request):
 
     user = request.user
 
-    if (user.is_authenticated):
+    if (user.is_superuser):
 
         template = loader.get_template('quiz/report_list.html')
         reports = Report.list_valid_reports()

@@ -8,39 +8,42 @@
 {% block content %}
 
 <div class="container text-center">
-
-
-    <div class="row d-flex justify-content-center" style="margin: 15px;">
+    <div class="row d-flex justify-content-center" style="margin: 15px; padding-top: 100px">
         <div class="col-md-10 homepage_tile">
-            <a href="{% url 'quiz:quickgame' category='all' %}"><div class="col-md-12">Make Game</div></a>
+            <a href="{% url 'quiz:quickgame' category='all' %}"><div class="col-md-12">General knowledge</div></a>
         </div>
 
-        <div class="col-md-5 homepage_tile">
-            <a href="{% url 'quiz:quickgame' category='History' %}"><div class="col-md-12">History</div></a>
+        <div class="col-md-10 homepage_tile">
+            <a id = "Sport"><div class="col-md-12">Sport</div></a>
         </div>
 
-        <div class="col-md-5 homepage_tile">
-            <a href="{% url 'quiz:quickgame' category='Sport' %}"><div class="col-md-12">Sport</div></a>
+        <div class="col-md-10 homepage_tile">
+            <a id = "Music"><div class="col-md-12">Music</div></a>
         </div>
 
-        <div class="col-md-5 homepage_tile">
-            <a href="{% url 'quiz:quickgame' category='General Knowledge' %}"><div class="col-md-12">General Knowledge</div></a>
-        </div>
-
-        <div class="col-md-5 homepage_tile">
-            <a href="#"><div class="col-md-12">Movie</div></a>
-        </div>
-
-        <div class="col-md-5 homepage_tile">
-            <a href="{% url 'quiz:quickgame' category='Geography' %}"><div class="col-md-12">Geography</div></a>
-        </div>
-
-        <div class="col-md-5 homepage_tile">
-            <a href="#"><div class="col-md-12">Literature</div></a>
+        <div class="col-md-10 homepage_tile">
+                <a id = "Film"><div class="col-md-12">Film</div></a>
         </div>
 
     </div>
 
 </div>
-
+<script>
+    var lvl = "{{user.level}}";
+    if(lvl>=3) {
+        document.getElementById("Sport").href = "{% url 'quiz:quickgame' category='Sport' %}";
+    }
+     else{   document.getElementById("Sport").innerHTML = "Enable by reaching level 3";    
+    }
+    if(lvl>=5) {
+        document.getElementById("Music").href = "{% url 'quiz:quickgame' category='Music' %}";}
+        else{
+        document.getElementById("Music").innerHTML = "Enable by reaching level 5";    
+    }
+    if(lvl>=7) {
+        document.getElementById("Film").href = "{% url 'quiz:quickgame' category='Film' %}";}
+        else{
+        document.getElementById("Film").innerHTML = "Enable by reaching level 7";    
+    }
+</script>   
 {% endblock content %}
