@@ -34,7 +34,7 @@
           {% endif %}
           {%if curUser.id == user.id%}
             {% if senior %}
-              {% if not moderator and not wants_moderator %}
+              {% if show_apply_for_moderator %}
                 <div class="card-body text-center">
                   <a href = "{% url 'quiz:submit_wants_moderator' %}"><button class="btn btn-outline-primary">Apply for moderator</button></a>
                 </div>

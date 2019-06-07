@@ -21,7 +21,7 @@ class User(AbstractUser):
     level = models.IntegerField(default = 0)
     exp = models.IntegerField(default = 0)
     picture = models.TextField(default = "quiz/default_avatar.jpg", max_length = 50, blank = True, null = True)
-    ranking = models.IntegerField(default = -1)
+    ranking = models.IntegerField(default = 0)
 
     def __str__(self):
         temp = str(self.username) + " Level: " + str(self.level)
@@ -570,7 +570,7 @@ class Question(models.Model):
         
         ret_q_set = Question.objects.none()
         # ako nema odabranih kategorija
-        if(not categories):
+        if(categories[0] == 'all'):
             ret_q_set = Question.objects.all().order_by('?')[:10]
         else:
             # dohvati pitanja iz svih prosledjenih kategorija i skupi ih u jedan q_set
@@ -671,40 +671,6 @@ class Question(models.Model):
         new_question.save()
 
         # create a category and create, and fill the database 
-        music = Category.objects.create(name = "Music")
-        music.save()
-
-        new_question = Question.objects.create(question = 'Koji Jamajcanski reper je 1995 izdao pesmu "Bombastic"?', answer_one = 'Shaggy',answer_two = 'Sean Paul', answer_three = 'Shuggy', answer_four='Shrek th rapper', correct = 1, category= music, is_valid = True)
-        new_question.save()
-
-        new_question = Question.objects.create(question = 'Dopunite naslov pesme grupe U2: "Hold me, Thrill Me, Kiss me ..."', answer_one = 'Feel me',answer_two = 'Beat me', answer_three = 'Kill me', answer_four='Miss me', correct = 3, category = music, is_valid = True)
-        new_question.save()
- 
-        new_question = Question.objects.create(question = 'Koje godine su Bitlsi (The Beatles) izdali pesmu "Hey Jude"?', answer_one = '1963',answer_two = '1964', answer_three = '1966', answer_four='1968', correct = 4, category = music, is_valid = True)
-        new_question.save()
-
-        new_question = Question.objects.create(question = 'Koji Svedski DJ je 2004te izdao pesmu "Call on me"?', answer_one = 'Avicii',answer_two = 'Sweedish House Mafia', answer_three = 'Eric Prydz', answer_four='Tiesto', correct = 3, category = music, is_valid = True)
-        new_question.save()
-
-        new_question = Question.objects.create(question = 'Tekst  "Since you\'ve gone I\'ve been lost without a trace /I dream at night I can only see your face" je deo koje Stingove pesme?', answer_one = 'Every breath you take',answer_two = 'Shape of my heart', answer_three = 'Desert rose', answer_four='Englishman in New York', correct = 1, category = music, is_valid = True)
-        new_question.save()
-
-        new_question = Question.objects.create(question = 'Tekst "They told him don\'t you ever come around here / Don\'t want to see your face, you better disappear" je deo koje Majkl Dzeksonove pesme?', answer_one = 'Bad',answer_two = 'They don\'t care about us', answer_three = 'Beat it', answer_four='Smooth criminal', correct = 3, category = music, is_valid = True)
-        new_question.save()
-        
-        new_question = Question.objects.create(question = 'Koje godine je preminuo reper Mac Miller?', answer_one = '1998', answer_two = '2008', answer_three = '2017', answer_four='2018', correct = 4, category = music, is_valid = True)
-        new_question.save()
-
-        new_question = Question.objects.create(question = 'Koje godine je grupa Queen izdala pesmu "Bohemian rhapsody"?', answer_one = '1974',answer_two = '1975', answer_three = '1976', answer_four='1977', correct = 2, category = music, is_valid = True)
-        new_question.save()
-
-        new_question = Question.objects.create(question = 'Koje godine je rodjen reper Snoop Dogg?', answer_one = '1967',answer_two = '1971', answer_three = '1974', answer_four='1973', correct = 2, category = music, is_valid = True)
-        new_question.save()
-
-        new_question = Question.objects.create(question = 'Gde se nalazi Rock\'n\'roll kuca slavnih?', answer_one = 'Springfild',answer_two = 'Nju Jork', answer_three = 'Klivland', answer_four='Hjuston', correct = 3, category = music, is_valid = True)
-        new_question.save()
-        
-        # create a category and create, and fill the database 
         geography = Category.objects.create(name = "Geography")
         geography.save()
 
@@ -732,7 +698,7 @@ class Question(models.Model):
         new_question = Question.objects.create(question = 'Koji je bio glavni grad Obale slonovace od 1933 do 1983 godine?', answer_one = 'Daloa',answer_two = 'Kumasi', answer_three = 'Abidjan', answer_four='San Pedro', correct = 3, category = geography, is_valid = True)
         new_question.save()
 
-        new_question = Question.objects.create(question = 'Koji je bio glavni grad Zapadne Nemacke od 1949 do 1990', answer_one = 'Zapadni Berlin',answer_two = 'Bon', answer_three = 'Stutgart', answer_four='Bremen', correct = 3, category = geography, is_valid = True)
+        new_question = Question.objects.create(question = 'Koji je bio glavni grad Zapadne Nemacke od 1949 do 1990', answer_one = 'Zapadni Berlin',answer_two = 'Bon', answer_three = 'Stutgart', answer_four='Bremen', correct = 2, category = geography, is_valid = True)
         new_question.save()
 
         new_question = Question.objects.create(question = 'Koji je bio glavni grad Kine od 1945 do 1949?', answer_one = 'Nanking',answer_two = 'Chang\'an', answer_three = 'Kaifeng', answer_four='Hangzhou', correct = 1, category = geography, is_valid = True)

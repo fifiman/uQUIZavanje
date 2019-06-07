@@ -23,12 +23,18 @@ def quickgame(request, category):
     """
     Create a quick game.
     """
+
+    categories = []
+    categories.append(category)
+
+    questions = Question.get_questions_from_categories(categories)
+    '''
     if category == 'all':
-        questions = Question.objects.all()[:10]
+        questions = Question.get_questions_from_categories()
     else: 
         category = Category.objects.get(name=category)
         questions = Question.objects.filter(category=category)[:10]
-
+    '''
     if len(questions) == 0:
         return HttpResponse('No question in current category.')
 
@@ -62,52 +68,76 @@ def game(request, game_id):
             multiplier = 2
         elif game.num_players == 4:
             multiplier = 3
+        
         #player one wins, update rankings
         if game.player_one_pts==max_pts:
             game.winner = game.player_one
-            game.player_one.ranking+=20
+            if game.player_one.is_senior():
+                game.player_one.ranking+=20
             if game.player_two is not None:
+                if game.player_two.is_senior():
                     game.player_two.ranking-=20
             if game.player_three is not None:
-                game.player_three.ranking-=20
-            if game.player_four is not None:    
-                game.player_four.ranking-=20
+                if game.player_three.is_senior():
+                    game.player_three.ranking-=20
+            if game.player_four is not None:
+                if game.player_four.is_senior():
+                    game.player_four.ranking-=20
+        
         #player two wins, update rankings
         if game.player_two_pts==max_pts:
             game.winner = game.player_two
-            game.player_one.ranking-=20
-            if game.player_two is not None:
-                game.player_two.ranking+=20
+            if game.player_two.is_senior():
+                game.player_one.ranking+=20
+            if game.player_one is not None:
+                if game.player_one.is_senior():
+                    game.player_one.ranking-=20
             if game.player_three is not None:
-                game.player_three.ranking-=20
+                if game.player_three.is_senior():
+                    game.player_three.ranking-=20
             if game.player_four is not None:
-                game.player_four.ranking-=20
+                if game.player_four.is_senior():
+                    game.player_four.ranking-=20
+        
         #player three wins, update rankings
         if game.player_three_pts==max_pts:
             game.winner = game.player_three
-            game.player_one.ranking-=20
-            if game.player_two is not None:
-                game.player_two.ranking-=20
-            if game.player_three is not None:
+            if game.player_three.is_senior():
                 game.player_three.ranking+=20
+            if game.player_two is not None:
+                if game.player_two.is_senior():
+                    game.player_two.ranking-=20
+            if game.player_one is not None:
+                if game.player_one.is_senior():
+                    game.player_one.ranking-=20
             if game.player_four is not None:
-                game.player_four.ranking-=20
+                if game.player_four.is_senior():
+                    game.player_four.ranking-=20
+        
         #player four wins, update rankings
         if game.player_four_pts==max_pts:
             game.winner = game.player_four
-            game.player_one.ranking-=20
-            if game.player_two is not None:
-                game.player_two.ranking-=20
-            if game.player_three is not None:
-                game.player_three.ranking-=20
-            if game.player_four is not None:
+            if game.player_four.is_senior():
                 game.player_four.ranking+=20
+            if game.player_two is not None:
+                if game.player_two.is_senior():
+                    game.player_two.ranking-=20
+            if game.player_three is not None:
+                if game.player_three.is_senior():
+                    game.player_three.ranking-=20
+            if game.player_one is not None:
+                if game.player_one.is_senior():
+                    game.player_one.ranking-=20
+        
         #make sure no one has a negative ranking
         if game.player_one.ranking<0:
             game.player_one.ranking = 0
+        
         #add points to experience and calculate new levels  
         game.player_one.exp+=int((game.player_one_pts/10))*multiplier
         game.player_one.level = math.floor(game.player_one.exp/200)+1
+        
+        #
         if game.player_two is not None:
             if game.player_two.ranking<0:
                 game.player_two.ranking = 0
@@ -123,6 +153,8 @@ def game(request, game_id):
                 game.player_four.ranking = 0 
             game.player_four.exp+=int((game.player_four_pts/10))*multiplier
             game.player_four.level = math.floor(game.player_four.exp/200)+1
+ 
+        # save changes to plate
         game.player_one.save()
         if game.player_two is not None:
             game.player_two.save()
@@ -130,7 +162,9 @@ def game(request, game_id):
             game.player_three.save()
         if game.player_four is not None:
             game.player_four.save()
+
         game.save()
+        
         context = {
             "game": game,
             "questions": Game.get_questions_for_game(game),
@@ -549,20 +583,22 @@ def my_profile(request, value):
         template = loader.get_template('quiz/my_profile.html')
         lvl = user.level
 
-        print(lvl)
-
         wins = Game.number_of_wins(user)
         played = Game.number_of_games_played(user)
         
         if played != 0:
-            percentage = (float)(wins/played)
+            percentage = float("{0:.2f}".format(((float)(wins/played) * 100)))
         else:
             percentage = 0
 
         number_of_friends = Friendship.count_my_friends(user)
         friends = Friendship.get_random_four_freinds(user)
         senior = user.is_senior()
+        
+        # bool for apply for moderator button
         wants_moderator = user.wants_moderator
+        moderator = user.is_moderator
+        show_apply_for_moderator = not wants_moderator and senior and not moderator 
 
         trophies = []
         trophies.append({'name': "New user", 'src':"quiz/new_user.jpg"})
@@ -593,8 +629,9 @@ def my_profile(request, value):
             'trophies': trophies,
             'friends' : friends,
             'senior' : senior,
-            'wants_moderator' : wants_moderator,
+            'show_apply_for_moderator' : show_apply_for_moderator,
         }
+
         return HttpResponse(template.render(context, request))
     else: 
         return redirect('/home')
