@@ -12,6 +12,14 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
     async def connect(self):
         # Validate user somehow.
+        '''
+            Vrsi konekciju
+            
+            @param GameConsumer self
+            
+            @return void
+        '''
+        
         self.game_id = str(self.scope['url_route']['kwargs']['game_id']).strip()
         self.user    = self.scope['user']
 
@@ -29,7 +37,13 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         await self.send_state_to_group()
     
     async def send_state_to_group(self):
-        # Get game state.
+          '''
+            Get game state.
+            
+            @param GameConsumer self
+            
+            @return void
+        '''
         game = await get_game_or_error(int(self.game_id))
         game_state = game.get_state()
 
@@ -50,6 +64,14 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         )
     
     async def group_send_next_question(self, question):
+        '''
+            Salje sledece pitanje
+            
+            @param GameConsumer self, Question question
+            
+            @return void
+        '''
+        
         await self.channel_layer.group_send(
             self.game_id,
             {
@@ -66,6 +88,15 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def receive_json(self, content):
+        
+        '''
+            Metoda za prijem poruka
+            
+            
+            @param GameConsumer self, JSON content
+            
+            @return void
+        '''
         print (content)
 
         command = content.get('command', None)
@@ -103,6 +134,16 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             })
 
     async def disconnect(self, close_code):
+        '''
+        
+            Poziva se pri prekidu konekcije
+            
+            @param GameConsumer self, Question question
+            
+            @return void
+        '''
+        
+        
         await self.channel_layer.group_discard(
             self.game_id,
             self.channel_name,
@@ -150,6 +191,14 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
 @database_sync_to_async
 def get_game_or_error(game_id):
+    '''
+        Dohvata partiju iz baze
+        
+        @param game_id
+        
+        @return Game
+            
+    '''
     try:
         game = Game.objects.get(id=game_id)
         return game
@@ -158,6 +207,16 @@ def get_game_or_error(game_id):
 
 @database_sync_to_async
 def get_user_or_error(user_id):
+    
+    '''
+    
+        Dohvata korisnika iz baze
+        
+        @param user_od
+        
+        @return User
+    '''
+    
     try:
         user = User.objects.get(id=user_id)
         return user
@@ -166,6 +225,14 @@ def get_user_or_error(user_id):
 
 @database_sync_to_async
 def get_games_current_question(game):
+    '''
+    
+        Dohvata trenutno pitanje iz baze
+        
+        @param game
+        
+        @return Question
+    '''
     return game.get_current_question()
 
 class UserConsumer(AsyncJsonWebsocketConsumer):
@@ -175,7 +242,14 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
 
     async def connect(self):
         # on connection we get users id and add him to his group 
-
+         '''
+            Vrsi konekciju
+            
+            @param UserConsumer self
+            
+            @return void
+        '''
+        
         self.user_id = str(self.scope['url_route']['kwargs']['user_id']).strip()
 
         await self.accept()
@@ -192,7 +266,15 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
         # send state to friends or sth like that 
     
     async def receive_json(self, content):
-
+          '''
+            Metoda za prijem poruka
+            
+            
+            @param UserConsumer self, JSON content
+            
+            @return void
+        '''
+        
         command = content.get('command', None)
 
         try:
@@ -222,6 +304,13 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
             })
 
     async def disconnect(self, close_code):
+        '''
+        Poziva se pri prekidu konekcije
+        
+        @parmas UserConsumer self
+        
+        @ return void
+        '''
         await self.channel_layer.group_discard(
             self.user_id,
             self.channel_name,
@@ -231,6 +320,12 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
 
     async def notify(self, event):        
         # send json message to the recipient, inviting him to game_id
+        '''
+        Salje primaocu notifikaciju
+        
+        @parmas UserConsumer self, Event event
+        @ return void
+        '''
         await self.send_json(
             {
                 'game_id'  :    event["game_id"],
