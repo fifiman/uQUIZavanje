@@ -133,7 +133,7 @@
         var timeBonus = Math.max(0, Math.round((5000 - msPassed)/100));
         //give feedback to the player (correct answer/incorrect answer)
         if(correct_answer==(answer_ind+1)) document.getElementById("feedback").innerHTML = "Correct! Time bonus = "+ timeBonus;
-        else document.getElementById("feedback").innerHTML = "Incorrect :(";
+        else document.getElementById("feedback").innerHTML = "Incorrect";
         //colour the user choice
         if(answer_ind == 0) document.getElementById("btn1-wrapper").style = "background-color: #FF0000; margin: 10px;";
         if(answer_ind == 1) document.getElementById("btn2-wrapper").style = "background-color: #FF0000; margin: 10px;";
@@ -217,7 +217,7 @@
             window.location.replace("/game/" + game_id);
         }
         else if (data.msg_type == 4) {
-            start_countdown(6, fillNewQuestion, data);
+            start_countdown(3, fillNewQuestion, data);
         }
     }
 </script>
