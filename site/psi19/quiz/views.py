@@ -767,7 +767,7 @@ def report_list(request):
 
     user = request.user
 
-    if (user.is_authenticated):
+    if (user.is_superuser):
 
         template = loader.get_template('quiz/report_list.html')
         reports = Report.list_valid_reports()
