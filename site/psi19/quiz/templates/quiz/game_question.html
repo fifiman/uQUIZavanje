@@ -61,7 +61,7 @@
 
 
 
-
+<!-- SCRIPTS -->
 <script>
     var user_id         = "{{user_id}}";
     var correct_answer = "{{question.correct}}"
@@ -92,9 +92,12 @@
     setInterval(myTimer, 1);
 
     function myTimer() {
-      var d = new Date();
-      msPassed = d.getTime() - startTime.getTime();
-      document.getElementById("time").innerHTML = msPassed;
+      var current_time = new Date();
+      msPassed = current_time.getTime() - startTime.getTime();
+      var seconds = 9 - Math.floor(msPassed * 0.001);
+      var miliseconds = 1000 - msPassed % 1000;
+
+      document.getElementById("time").innerHTML = seconds + " s " + miliseconds + " ms";
       if(msPassed>10000){
           document.getElementById("time").innerHTML = "Time is up";
          if(document.getElementById("btn1").disabled == false)
@@ -124,6 +127,10 @@
         if(correct_answer == 2) document.getElementById("btn2-wrapper").style = "background-color: #4CAF50; margin: 10px;";
         if(correct_answer == 3) document.getElementById("btn3-wrapper").style = "background-color: #4CAF50; margin: 10px;";
         if(correct_answer == 4) document.getElementById("btn4-wrapper").style = "background-color: #4CAF50; margin: 10px;";
+
+        //remove timer onclick
+        document.getElementById("time").style.display = "none";
+
         answer_data = {
             'command':      'answer',
             'game_id':      game_id,
@@ -147,7 +154,11 @@
             //before we move on to the next question, we show a message and a timer so the players can prepare
             var seconds_to_next = 6;
             document.getElementById("countdown").innerHTML = "Next question in "+seconds_to_next;
-            setInterval(function(){seconds_to_next--;document.getElementById("countdown").innerHTML = "Next question in "+seconds_to_next; }, 500);
+            setInterval(function(){
+                seconds_to_next--;
+                document.getElementById("countdown").innerHTML = "Next question in "+seconds_to_next;
+            }, 500);
+            
             setTimeout(function(){window.location.replace("/game/" + game_id);
             return},3000);
             
