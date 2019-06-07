@@ -87,25 +87,42 @@
 
     var gameSocket = new WebSocket(ws_path);
 
-    var startTime = new Date();
+    var timerId;
     var msPassed;
-    setInterval(myTimer, 1);
+    var startTime;
 
-    function myTimer() {
-      var current_time = new Date();
-      msPassed = current_time.getTime() - startTime.getTime();
-      var seconds = 9 - Math.floor(msPassed * 0.001);
-      var miliseconds = 1000 - msPassed % 1000;
+    function questionTimer() {
+        startTime = new Date();
 
-      document.getElementById("time").innerHTML = seconds + " s " + miliseconds + " ms";
-      if(msPassed>10000){
-          document.getElementById("time").innerHTML = "Time is up";
-         if(document.getElementById("btn1").disabled == false)
-          answer(-1);
-      }
+        function myTimer() {
+            var current_time = new Date();
+            msPassed = current_time.getTime() - startTime.getTime();
+            var seconds = 9 - Math.floor(msPassed * 0.001);
+            var miliseconds = 1000 - msPassed % 1000;
+
+            document.getElementById("time").innerHTML = seconds + " s " + miliseconds + " ms";
+            if(msPassed>10000){
+                document.getElementById("time").innerHTML = "Time is up";
+
+                if(document.getElementById("btn1").disabled == false){
+                    answer(-1);
+                }
+                window.clearInterval(timerId);
+                document.getElementById("time").innerHTML = "";
+            }
+        }
+
+        timerId = setInterval(myTimer, 1);
     }
 
+    questionTimer();
+
+    
+
     function answer(answer_ind) {
+        window.clearInterval(timerId);
+        document.getElementById("time").innerHTML = "";
+        
         console.log("Answer: " + answer_ind);
         //disable buttons after an answer so that no one can answer twice
         document.getElementById("btn1").disabled = true;
@@ -113,7 +130,7 @@
         document.getElementById("btn3").disabled = true;
         document.getElementById("btn4").disabled = true;
         //calculate timeBonus
-        var timeBonus = Math.round((5000 - msPassed)/100)
+        var timeBonus = Math.max(0, Math.round((5000 - msPassed)/100));
         //give feedback to the player (correct answer/incorrect answer)
         if(correct_answer==(answer_ind+1)) document.getElementById("feedback").innerHTML = "Correct! Time bonus = "+ timeBonus;
         else document.getElementById("feedback").innerHTML = "Incorrect :(";
@@ -127,9 +144,6 @@
         if(correct_answer == 2) document.getElementById("btn2-wrapper").style = "background-color: #4CAF50; margin: 10px;";
         if(correct_answer == 3) document.getElementById("btn3-wrapper").style = "background-color: #4CAF50; margin: 10px;";
         if(correct_answer == 4) document.getElementById("btn4-wrapper").style = "background-color: #4CAF50; margin: 10px;";
-
-        //remove timer onclick
-        document.getElementById("time").style.display = "none";
 
         answer_data = {
             'command':      'answer',
@@ -145,23 +159,65 @@
         gameSocket.send(answer_data);
     }
 
+    function load_new_question(question_data) {
+
+        return;
+    }
+
+    var countdown_left;
+    var countdown_interval_id;
+    function start_countdown(countdown_seconds, callback, data) {
+        countdown_left = countdown_seconds;
+
+        countdown_interval_id = setInterval(function () {
+            document.getElementById("countdown").innerHTML = "Next question in "+ countdown_left;
+
+            if (countdown_left <= 0) {
+                window.clearInterval(countdown_interval_id);
+                callback(data);
+            }
+            
+            countdown_left--;
+        }, 1000);
+    }
+
+    function clearAnswer() {
+        document.getElementById("btn1").disabled = false;
+        document.getElementById("btn2").disabled = false;
+        document.getElementById("btn3").disabled = false;
+        document.getElementById("btn4").disabled = false;
+
+        document.getElementById("btn1-wrapper").style = "background-color: #2699FB; margin: 10px;";
+        document.getElementById("btn2-wrapper").style = "background-color: #2699FB; margin: 10px;";
+        document.getElementById("btn3-wrapper").style = "background-color: #2699FB; margin: 10px;";
+        document.getElementById("btn4-wrapper").style = "background-color: #2699FB; margin: 10px;";
+
+        document.getElementById("feedback").innerHTML = "";
+        document.getElementById("countdown").innerHTML = "";
+    }
+
+    function fillNewQuestion(data) {
+        console.log(data);
+
+        question_text = data.question;
+        answer_texts  = data.answers;
+        correct_answer = data.correct_ind;
+
+        fillData();
+        clearAnswer();
+        questionTimer();
+    }
+
     gameSocket.onmessage = function(message) {
         console.log('Received json: ', message);
 
         var data = JSON.parse(message.data);
         
         if (data.msg_type == 3) {
-            //before we move on to the next question, we show a message and a timer so the players can prepare
-            var seconds_to_next = 6;
-            document.getElementById("countdown").innerHTML = "Next question in "+seconds_to_next;
-            setInterval(function(){
-                seconds_to_next--;
-                document.getElementById("countdown").innerHTML = "Next question in "+seconds_to_next;
-            }, 500);
-            
-            setTimeout(function(){window.location.replace("/game/" + game_id);
-            return},3000);
-            
+            window.location.replace("/game/" + game_id);
+        }
+        else if (data.msg_type == 4) {
+            start_countdown(6, fillNewQuestion, data);
         }
     }
 </script>

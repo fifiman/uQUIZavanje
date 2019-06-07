@@ -48,6 +48,22 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 'type':     'force.reload'
             }
         )
+    
+    async def group_send_next_question(self, question):
+        await self.channel_layer.group_send(
+            self.game_id,
+            {
+                'type':     'send.nextquestion',
+                'question': question.question,
+                'answers': [
+                    question.answer_one,
+                    question.answer_two,
+                    question.answer_three,
+                    question.answer_four,
+                ],
+                'correct_ind': question.correct
+            }
+        )
 
     async def receive_json(self, content):
         print (content)
@@ -73,15 +89,12 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
                 is_correct, state_changed = game.answer(user, answer_ind, msPassed)
 
-                # Send user if their answer is correct or not.
-                await self.send_json({
-                    'msg_type':     settings.MSG_TYPE_ANSWER_STATUS,
-                    'is_correct':   is_correct,
-                    'state_changed':state_changed
-                })
-
                 if state_changed:
-                    await self.force_refresh_to_group()
+                    if game.game_state != Game.GAME_OVER:
+                        question = await get_games_current_question(game)
+                        await self.group_send_next_question(question)
+                    else:
+                        await self.force_refresh_to_group()
 
         except Exception as e:
             # Catch any errors and send it back
@@ -117,6 +130,14 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             },
         )
     
+    async def send_nextquestion(self, event):
+        """
+
+        """
+        # Add message type to event and send that.
+        event['msg_type'] = settings.MSG_TYPE_NEXT_QUESTION,
+        await self.send_json(event)
+    
     async def force_reload(self, event):
         """
         Send to all users to reload page.
@@ -143,6 +164,9 @@ def get_user_or_error(user_id):
     except User.DoesNotExist:
         raise Exception("BAAD, user does not exist.")
 
+@database_sync_to_async
+def get_games_current_question(game):
+    return game.get_current_question()
 
 class UserConsumer(AsyncJsonWebsocketConsumer):
     """
