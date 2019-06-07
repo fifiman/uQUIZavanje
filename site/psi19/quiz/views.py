@@ -197,7 +197,8 @@ def game_question(request, game):
     context = {
         'game_id':      game.id,
         'user_id':      request.user.id,
-        'question':     current_question
+        'question':     current_question,
+        'game':         game,
     }
 
     template = loader.get_template('quiz/game_question.html')
