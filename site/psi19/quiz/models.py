@@ -29,7 +29,7 @@ class User(AbstractUser):
             temp = temp + " Rating: " + str(self.ranking) 
 
         return temp
-
+        
     def moderator(self):
         return self.is_moderator
 
@@ -47,7 +47,7 @@ class User(AbstractUser):
 
     # gets 10 best players overall
     def get_global_top_10():
-        return User.objects.filter(level__gte = 10).order_by('-ranking')[:10]
+        return User.objects.filter(level__gte = 10, is_active=true).order_by('-ranking')[:10]
     
     def get_by_id(id_val):
         return User.objects.filter(id=id_val).first()
