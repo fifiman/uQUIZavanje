@@ -37,7 +37,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         await self.send_state_to_group()
     
     async def send_state_to_group(self):
-          '''
+        '''
             Get game state.
             
             @param GameConsumer self
@@ -114,7 +114,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             elif command == 'answer':
                 answer_ind = content['answer_ind']
                 user_id    = content['user_id']
-                msPassed = content['msPassed']
+                msPassed   = content['msPassed']
                 game = await get_game_or_error(int(self.game_id))
                 user = await get_user_or_error(int(user_id))
 
@@ -226,7 +226,6 @@ def get_user_or_error(user_id):
 @database_sync_to_async
 def get_games_current_question(game):
     '''
-    
         Dohvata trenutno pitanje iz baze
         
         @param game
@@ -242,7 +241,7 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
 
     async def connect(self):
         # on connection we get users id and add him to his group 
-         '''
+        '''
             Vrsi konekciju
             
             @param UserConsumer self
@@ -266,7 +265,7 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
         # send state to friends or sth like that 
     
     async def receive_json(self, content):
-          '''
+        '''
             Metoda za prijem poruka
             
             
