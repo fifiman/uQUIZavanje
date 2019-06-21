@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 import random
 
+from django.db import transaction
+
 # Marko Stefanovic 0425/16
 # Nenad Bauk 0441/16
 # Danilo Jovanovic 0374/16
@@ -682,7 +684,10 @@ class Game(models.Model):
         GameAnswers.objects.create(game=self, user=user, question_index=self.cur_question,
                                    answer_index=answer_ind, correct=is_correct)
 
-        self.num_answers += 1
+        with transaction.atomic():
+            self.refresh_from_db()
+            self.num_answers += 1
+            self.save()
 
         question_changed = False
         time_bonus = int((5000 - msPassed)/100)
@@ -722,21 +727,26 @@ class Game(models.Model):
                 quest.p4_pts = 50+time_bonus
                 quest.save()
                 print("dodao sam poene useru"+user.username)
-            
-        # Move on to next question if we have to.
-        if self.num_answers == self.num_players:
-            self.cur_question += 1
-            self.num_answers = 0
-            question_changed = True
-
-        # Check if the game is over.
-        if self.cur_question == self.num_questions:
-            question_changed = True
-            # Game over.
-            self.game_state = Game.GAME_OVER
-            # Calculate points and winner.
         
         self.save()
+
+        with transaction.atomic():
+            self.refresh_from_db()
+
+            # Move on to next question if we have to.
+            if self.num_answers == self.num_players:
+                self.cur_question += 1
+                self.num_answers = 0
+                question_changed = True
+
+            # Check if the game is over.
+            if self.cur_question == self.num_questions:
+                question_changed = True
+                # Game over.
+                self.game_state = Game.GAME_OVER
+                # Calculate points and winner.
+        
+            self.save()
 
         return is_correct, question_changed
 

@@ -115,10 +115,12 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 answer_ind = content['answer_ind']
                 user_id    = content['user_id']
                 msPassed   = content['msPassed']
-                game = await get_game_or_error(int(self.game_id))
-                user = await get_user_or_error(int(user_id))
 
-                is_correct, state_changed = game.answer(user, answer_ind, msPassed)
+
+                user = await get_user_or_error(int(user_id))
+                game = await get_game_or_error(int(self.game_id))
+
+                is_correct, state_changed = await answer_game_question_or_error(game, user, answer_ind, msPassed)
 
                 if state_changed:
                     if game.game_state != Game.GAME_OVER:
@@ -188,6 +190,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 'msg_type':     settings.MSG_TYPE_FORCE_REFRESH,
             },
         )
+
+@database_sync_to_async
+def answer_game_question_or_error(game, user, answer_ind, msPassed):
+    return game.answer(user, answer_ind, msPassed)
 
 @database_sync_to_async
 def get_game_or_error(game_id):
