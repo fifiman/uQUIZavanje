@@ -1,7 +1,10 @@
 from django.db import models
+from django.db.models import F
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 import random
+
+from django.db import transaction
 
 # Marko Stefanovic 0425/16
 # Nenad Bauk 0441/16
@@ -524,8 +527,10 @@ class Game(models.Model):
         '''        
         GameQuestions.objects.create(game=self, index=self.num_questions, question=question)
         
-        self.num_questions += 1
-        self.save()
+        with transaction.atomic():
+            self.refresh_from_db()    
+            self.num_questions += 1
+            self.save()
 
     def get_questions_for_game(self):
         '''
@@ -549,6 +554,7 @@ class Game(models.Model):
         @raise Exception('No players inside game, nothing to start.')
         @raise Exception("Can't start game if there are no questions.")
         """
+        self.refresh_from_db()
         if self.cur_question != -1:
             raise Exception('Game has already been started.')
         
@@ -558,13 +564,14 @@ class Game(models.Model):
         if self.num_questions == 0:
             raise Exception("Can't start game if there are no questions.")
 
-        self.game_state     = Game.GAME_IN_PLAY
-        self.cur_question   = 0
+        with transaction.atomic():
+            self.refresh_from_db()
+            self.game_state     = Game.GAME_IN_PLAY
+            self.cur_question   = 0
+
+            self.save()
 
         print ('Game has started')
-
-        self.save()
-
         return True
 
     def user_part_of_game(self, user):
@@ -591,6 +598,7 @@ class Game(models.Model):
 
         @return True
         """
+        self.refresh_from_db()
         # Check max number of players already.
         if self.num_players >= Game.MAX_PLAYERS:
             print('Max number of players reached.')
@@ -604,42 +612,46 @@ class Game(models.Model):
             print ('User is already part of the game.')
             return True
 
-        # All good, add the user to the game.
-        self.num_players += 1
+        with transaction.atomic():
+            self.refresh_from_db()
+            # All good, add the user to the game.
+            self.num_players += 1
 
-        if self.player_one is None:
-            self.player_one = user
-        elif self.player_two is None:
-            self.player_two = user
-        elif self.player_three is None:
-            self.player_three = user
-        elif self.player_four is None:
-            self.player_four = user
-        else:
-            raise Exception('BAAAAD')
+            if self.player_one is None:
+                self.player_one = user
+            elif self.player_two is None:
+                self.player_two = user
+            elif self.player_three is None:
+                self.player_three = user
+            elif self.player_four is None:
+                self.player_four = user
+            else:
+                raise Exception('BAAAAD')
 
-        self.save()
+            self.save()
         return True
 
     def leave_game(self, user):
-        if self.num_players == 0:
-            print ('Cannot leave empty room')
-            return False
+        with transaction.atomic():
+            self.refresh_from_db()
+            if self.num_players == 0:
+                print ('Cannot leave empty room')
+                return False
 
-        if self.player_one == user:
-            self.player_one = None
-        elif self.player_two == user:
-            self.player_two = None
-        elif self.player_three == user:
-            self.player_three = None
-        elif self.player_four == user:
-            self.player_four = None
-        else:
-            print ('Player is not in game to leave')
-            return False
+            if self.player_one == user:
+                self.player_one = None
+            elif self.player_two == user:
+                self.player_two = None
+            elif self.player_three == user:
+                self.player_three = None
+            elif self.player_four == user:
+                self.player_four = None
+            else:
+                print ('Player is not in game to leave')
+                return False
 
-        self.num_players -= 1
-        self.save()
+            self.num_players -= 1
+            self.save()
 
         return True
 
@@ -682,7 +694,12 @@ class Game(models.Model):
         GameAnswers.objects.create(game=self, user=user, question_index=self.cur_question,
                                    answer_index=answer_ind, correct=is_correct)
 
-        self.num_answers += 1
+        with transaction.atomic():
+            self.refresh_from_db
+            self.num_answers += 1
+            self.save()
+
+        # print ('User incremented num answers:', user, ' from', old_num, 'to', old_num + 1)
 
         question_changed = False
         time_bonus = int((5000 - msPassed)/100)
@@ -722,21 +739,26 @@ class Game(models.Model):
                 quest.p4_pts = 50+time_bonus
                 quest.save()
                 print("dodao sam poene useru"+user.username)
-            
-        # Move on to next question if we have to.
-        if self.num_answers == self.num_players:
-            self.cur_question += 1
-            self.num_answers = 0
-            question_changed = True
-
-        # Check if the game is over.
-        if self.cur_question == self.num_questions:
-            question_changed = True
-            # Game over.
-            self.game_state = Game.GAME_OVER
-            # Calculate points and winner.
         
         self.save()
+
+        with transaction.atomic():
+            self.refresh_from_db()
+
+            # Move on to next question if we have to.
+            if self.num_answers == self.num_players:
+                self.cur_question += 1
+                self.num_answers = 0
+                question_changed = True
+
+            # Check if the game is over.
+            if self.cur_question == self.num_questions:
+                question_changed = True
+                # Game over.
+                self.game_state = Game.GAME_OVER
+                # Calculate points and winner.
+        
+            self.save()
 
         return is_correct, question_changed
 

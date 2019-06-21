@@ -143,6 +143,11 @@
     var msPassed;
     var startTime;
 
+    function sleepFor( sleepDuration ){
+        var now = new Date().getTime();
+        while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
+    }
+
     function questionTimer() {
         startTime = new Date();
 
@@ -157,6 +162,8 @@
                 document.getElementById("time").innerHTML = "Time is up";
 
                 if(document.getElementById("btn1").disabled == false){
+                    var delay = Math.floor(Math.random() * 2000);
+                    sleepFor(delay);
                     answer(-1);
                 }
                 window.clearInterval(timerId);
