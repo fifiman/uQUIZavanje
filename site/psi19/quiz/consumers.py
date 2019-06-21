@@ -37,7 +37,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         await self.send_state_to_group()
     
     async def send_state_to_group(self):
-          '''
+        '''
             Get game state.
             
             @param GameConsumer self
@@ -63,7 +63,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             }
         )
     
-    async def group_send_next_question(self, question):
+    async def group_send_next_question(self, question, game):
         '''
             Salje sledece pitanje
             
@@ -83,7 +83,11 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     question.answer_three,
                     question.answer_four,
                 ],
-                'correct_ind': question.correct
+                'correct_ind': question.correct,
+                'p1': game.player_one_pts,
+                'p2': game.player_two_pts,
+                'p3': game.player_three_pts,
+                'p4': game.player_four_pts
             }
         )
 
@@ -114,7 +118,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             elif command == 'answer':
                 answer_ind = content['answer_ind']
                 user_id    = content['user_id']
-                msPassed = content['msPassed']
+                msPassed   = content['msPassed']
                 game = await get_game_or_error(int(self.game_id))
                 user = await get_user_or_error(int(user_id))
 
@@ -123,7 +127,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 if state_changed:
                     if game.game_state != Game.GAME_OVER:
                         question = await get_games_current_question(game)
-                        await self.group_send_next_question(question)
+                        await self.group_send_next_question(question,game)
                     else:
                         await self.force_refresh_to_group()
 
@@ -226,7 +230,6 @@ def get_user_or_error(user_id):
 @database_sync_to_async
 def get_games_current_question(game):
     '''
-    
         Dohvata trenutno pitanje iz baze
         
         @param game
@@ -242,7 +245,7 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
 
     async def connect(self):
         # on connection we get users id and add him to his group 
-         '''
+        '''
             Vrsi konekciju
             
             @param UserConsumer self
@@ -266,7 +269,7 @@ class UserConsumer(AsyncJsonWebsocketConsumer):
         # send state to friends or sth like that 
     
     async def receive_json(self, content):
-          '''
+        '''
             Metoda za prijem poruka
             
             

@@ -10,10 +10,28 @@
 
 
 <div class="container">
+        <div class="row justify-content-center">
+                <div class="col-md-2 text-center" style="background: rgb(132, 228, 132); border: 2px #358d5b solid; margin-top: 20px; margin-bottom: 20px; margin-right: 10px; margin-left: 10px; color: #358d5b;">
+                    <h6 id="p1u">Username</h6>
+                    <h3 id="p1s">Score</h3>
+                </div>
+                <div id="p2" class="col-md-2 text-center" style="background: rgb(225, 159, 255); border: 2px #9b499d solid; margin-top: 20px; margin-bottom: 20px; margin-right: 10px; margin-left: 10px; color: #9b499d;">
+                    <h6 id="p2u">Username</h6>
+                    <h3 id="p2s">Score</h3>
+                </div>
+                <div id="p3" class="col-md-2 text-center" style="background: rgb(255, 196, 142); border: 2px #f68f54 solid; margin-top: 20px; margin-bottom: 20px; margin-right: 10px; margin-left: 10px; color: #f68f54;">
+                    <h6 id="p3u">Username</h6>
+                    <h3 id="p3s">Score</h3>
+                </div>
+                <div id="p4" class="col-md-2 text-center" style="background: rgb(230, 124, 124); border: 2px #bd2729 solid; margin-top: 20px; margin-bottom: 20px; margin-right: 10px; margin-left: 10px; color: #bd2729;">
+                    <h6 id="p4u">Username</h6>
+                    <h3 id="p4s">Score</h3>
+                </div>
+            </div>
     <div class="row d-flex justify-content-center">
 
         <div class="col-md-10 text-center" style="margin-top: 50px; margin-bottom: 50px; border: 1px #2699FB solid; padding: 20px;">
-            <h3 style="color: #2699FB; margin-bottom: 10px;">Game Question</h3>
+            <h3 style="color: #2699FB; margin-bottom: 10px;" id="questionNo"></h3>
             <h3 id="question_text" style="color: #2699FB"></h3>
         </div>
 
@@ -72,16 +90,50 @@
     var answer_ids      = ['answer_one', 'answer_two', 'answer_three', 'answer_four'];
     var answer_texts    = ['{{question.answer_one}}', '{{question.answer_two}}', '{{question.answer_three}}', '{{question.answer_four}}']
 
+    var player_one = "{{game.player_one}}";
+    var player_two = "{{game.player_two}}";
+    var player_three = "{{game.player_three}}";
+    var player_four = "{{game.player_four}}";
+    var qid = 0;
+    var pts1 = "{{game.player_one_pts}}";
+    var pts2 = "{{game.player_two_pts}}";
+    var pts3 = "{{game.player_three_pts}}";
+    var pts4 = "{{game.player_four_pts}}";
     function fillData() {
         // Fill question.
+        qid++;
+        document.getElementById("questionNo").innerHTML = qid+"/10";
         document.getElementById(question_id).innerHTML = question_text;
+        var num_players = "{{ game.num_players }}";
 
         for (var i = 0; i < 4; i++)
             document.getElementById(answer_ids[i]).innerHTML = answer_texts[i];
+        console.log("Number of players is "+num_players);
+        // Fill players.
+        document.getElementById("p1u").innerHTML = player_one;
+        document.getElementById("p2u").innerHTML = player_two;
+        document.getElementById("p3u").innerHTML = player_three;
+        document.getElementById("p4u").innerHTML = player_four;
+        document.getElementById("p1s").innerHTML = pts1;
+        document.getElementById("p2s").innerHTML = pts2;
+        document.getElementById("p3s").innerHTML = pts3;
+        document.getElementById("p4s").innerHTML = pts4;
+
+        if(player_four=="None"){
+            document.getElementById("p4").style.visibility = 'hidden';
+        }
+        if(player_three=="None"){
+            document.getElementById("p3").style.visibility = 'hidden';
+        }
+        if(player_two=="None"){
+            document.getElementById("p2").style.visibility = 'hidden';
+        }
+        if(player_one=="None"){
+            document.getElementById("p1").style.visibility = 'hidden';
+        }
     }
     fillData();
     var game_id = "{{ game_id }}";
-
     var ws_path = 'ws://' + window.location.host + '/ws/game/{{ game_id }}';
     console.log("Connecting to " + ws_path);
 
@@ -121,7 +173,7 @@
 
     function answer(answer_ind) {
         window.clearInterval(timerId);
-        document.getElementById("time").innerHTML = "";
+        document.getElementById("time").innerHTML = "Wait for other players to answer";
         
         console.log("Answer: " + answer_ind);
         //disable buttons after an answer so that no one can answer twice
@@ -202,8 +254,12 @@
         question_text = data.question;
         answer_texts  = data.answers;
         correct_answer = data.correct_ind;
-
+        pts1 = data.p1;
+        pts2 = data.p2;
+        pts3 = data.p3;
+        pts4 = data.p4;
         fillData();
+        
         clearAnswer();
         questionTimer();
     }
