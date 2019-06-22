@@ -14,15 +14,15 @@
         </div>
 
         <div class="col-md-10 homepage_tile">
-            <a id = "Sport"><div class="col-md-12">Sport</div></a>
+            <a id = "Geography"><div class="col-md-12">Geography</div></a>
         </div> 
 
         <div class="col-md-10 homepage_tile">
-            <a id = "Music"><div class="col-md-12">Music</div></a>
+            <a id = "Sport"><div class="col-md-12">Sport</div></a>
         </div>
 
         <div class="col-md-10 homepage_tile">
-                <a id = "Film"><div class="col-md-12">Film</div></a>
+                <a id = "Music"><div class="col-md-12">Music</div></a>
         </div>
 
     </div>
@@ -40,21 +40,21 @@
     }
 
     if(lvl>=3) {
-        document.getElementById("Sport").href = "{% url 'quiz:quickgame' category='Sport' %}";
+        document.getElementById("Geography").href = "{% url 'quiz:quickgame' category='Geography' %}";
     }else{
-        document.getElementById("Sport").innerHTML = "Enable by reaching level 3";    
+        document.getElementById("Geography").innerHTML = "Enable by reaching level 3";    
     }
 
     if(lvl>=5) {
-        document.getElementById("Music").href = "{% url 'quiz:quickgame' category='Music' %}";}
+        document.getElementById("Sport").href = "{% url 'quiz:quickgame' category='Sport' %}";}
     else{
-        document.getElementById("Music").innerHTML = "Enable by reaching level 5";    
+        document.getElementById("Sport").innerHTML = "Enable by reaching level 5";    
     }
 
     if(lvl>=7) {
-        document.getElementById("Film").href = "{% url 'quiz:quickgame' category='Film' %}";}
+        document.getElementById("Music").href = "{% url 'quiz:quickgame' category='Music' %}";}
     else{
-        document.getElementById("Film").innerHTML = "Enable by reaching level 7";    
+        document.getElementById("Music").innerHTML = "Enable by reaching level 7";    
     }
 
 </script>   

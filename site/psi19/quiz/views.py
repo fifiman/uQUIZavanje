@@ -88,7 +88,7 @@ def game(request, game_id):
             multiplier = 3
         
         #player one wins, update rankings
-        if game.player_one_pts==max_pts:
+        if game.player_one is not None and game.player_one_pts==max_pts:
             game.winner = game.player_one
             if game.player_one.is_senior():
                 game.player_one.ranking+=20
@@ -103,7 +103,7 @@ def game(request, game_id):
                     game.player_four.ranking-=20
         
         #player two wins, update rankings
-        if game.player_two_pts==max_pts:
+        if game.player_two is not None and game.player_two_pts==max_pts:
             game.winner = game.player_two
             if game.player_two.is_senior():
                 game.player_one.ranking+=20
@@ -118,7 +118,7 @@ def game(request, game_id):
                     game.player_four.ranking-=20
         
         #player three wins, update rankings
-        if game.player_three_pts==max_pts:
+        if game.player_three is not None and game.player_three_pts==max_pts:
             game.winner = game.player_three
             if game.player_three.is_senior():
                 game.player_three.ranking+=20
@@ -133,7 +133,7 @@ def game(request, game_id):
                     game.player_four.ranking-=20
         
         #player four wins, update rankings
-        if game.player_four_pts==max_pts:
+        if game.player_four is not None and game.player_four_pts==max_pts:
             game.winner = game.player_four
             if game.player_four.is_senior():
                 game.player_four.ranking+=20
