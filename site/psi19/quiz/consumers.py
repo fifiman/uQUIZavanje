@@ -54,6 +54,15 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 'state':    game_state
             }
         )
+    
+    async def disconnect_everyone(self):
+        await self.channel_layer.group_send(
+            self.game_id,
+            {
+                'type':     'force.dc'
+            }
+        )
+
 
     async def force_refresh_to_group(self):
         await self.channel_layer.group_send(
@@ -159,6 +168,13 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         game = await get_game_or_error(int(self.game_id))
         if game.game_state == 0:
             game.leave_game(self.user)
+        elif game.game_state == 1 and game.cur_question > 0:
+            await dc_game(game)
+
+            await self.disconnect_everyone()
+
+            await self.close()
+            return       
 
         # Send state to other users.
         await self.send_state_to_group()
@@ -194,6 +210,17 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 'msg_type':     settings.MSG_TYPE_FORCE_REFRESH,
             },
         )
+
+    async def force_dc(self, event):
+        await self.send_json(
+            {
+                'msg_type':     settings.MSG_TYPE_DISCONNECT,
+            },
+        )
+
+@database_sync_to_async
+def dc_game(game):
+    return game.dc_game()
 
 @database_sync_to_async
 def answer_game_question_or_error(game, user, answer_ind, msPassed):

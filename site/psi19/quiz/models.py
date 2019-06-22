@@ -474,6 +474,7 @@ class Game(models.Model):
     GAME_NOT_STARTED    = 0
     GAME_IN_PLAY        = 1
     GAME_OVER           = 2
+    GAME_DC             = 3
 
     # @var int player_one - predstavlja strani kljuc
     player_one = models.ForeignKey(settings.AUTH_USER_MODEL,related_name = '%(class)s_p1', on_delete=models.DO_NOTHING, null=True)
@@ -587,6 +588,12 @@ class Game(models.Model):
                        self.player_three, self.player_four]
 
         return user in all_players
+
+    def dc_game(self):
+        with transaction.atomic():
+            self.refresh_from_db()
+            self.game_state = Game.GAME_DC
+            self.save()
 
     def join_game(self, user):
         """

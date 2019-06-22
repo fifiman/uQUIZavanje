@@ -284,6 +284,11 @@
         else if (data.msg_type == 4) {
             start_countdown(3, fillNewQuestion, data);
         }
+        else if (data.msg_type == 5 || (data.msg_type == 1 && data.state.game_state == 3)) {
+            window.alert("A user has disconnected. The game cannot be continued.");
+            window.location.replace("/");
+            return;
+        }
     }
 </script>
 
